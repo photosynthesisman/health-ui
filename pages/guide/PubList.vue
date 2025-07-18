@@ -92,12 +92,15 @@ interface PageItemData {
     | 'wholeMenu'
     | 'commonProfile'
     | 'DirectMessage'
+    | 'pointStore'
     | 'setting'
     | 'community'
     | 'common'
     | 'dashboard'
+    | 'payment'
     | 'guide'
     | 'lottery'
+    | 'smartRing'
   status?: 'completed' | 'ing' | 'pending' | '' | undefined // status를 optional로 만들고 빈 문자열 및 undefined 허용
 }
 
@@ -121,12 +124,16 @@ const sectionTabs = [
   { title: '전체메뉴', key: 'wholeMenu' },
   { title: '회원프로필 ', key: 'commonProfile' },
   { title: '설정', key: 'setting' },
+  { title: '설정', key: 'setting' },
   { title: 'DM', key: 'DirectMessage' },
   { title: '커뮤니티', key: 'community' },
   { title: '공통', key: 'common' },
   { title: '대시보드', key: 'dashboard' },
+  { title: '결제', key: 'payment' },
+  { title: '포인트스토어', key: 'pointStore' },
   { title: '가이드', key: 'guide' },
-  { title: '리워드보관함', key: 'lottery' }
+  { title: '리워드보관함', key: 'lottery' },
+  { title: '스마트링', key: 'smartRing' }
 ]
 
 // BoxedTabs를 위한 상태 탭 데이터
@@ -160,11 +167,18 @@ const pageListData: PageItemData[] = [
     section: 'common',
     status: ''
   },
-
   {
     title: '공지사항 목록',
     description: '공지사항 목록 화면',
     path: '/common/customerCenter/noticeIndex',
+    category: '고객센터',
+    section: 'common',
+    status: ''
+  },
+  {
+    title: '공지사항 목록 없음',
+    description: '공지사항 없는 목록 화면',
+    path: '/common/customerCenter/emptyNoticeIndex',
     category: '고객센터',
     section: 'common',
     status: ''
@@ -245,6 +259,24 @@ const pageListData: PageItemData[] = [
     status: ''
   },
 
+  // 결제내역
+  {
+    title: '결제내역',
+    description: '결제내역 리스트',
+    path: '/common/payment',
+    category: '결제내역',
+    section: 'payment',
+    status: ''
+  },
+  {
+    title: '결제 상세내역',
+    description: '결제 상세내역 페이지',
+    path: '/common/payment/[id]',
+    category: '결제내역',
+    section: 'payment',
+    status: ''
+  },
+
   // 친환경 캠페인
   {
     title: '친환경 캠페인',
@@ -288,8 +320,8 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
-    title: 'MY병원찾기',
-    description: 'MY병원찾기',
+    title: 'MY병원 등록',
+    description: 'MY병원 등록',
     path: '/insu/claim/paperless/findHospitals',
     category: '보험청구',
     section: 'insu',
@@ -346,7 +378,7 @@ const pageListData: PageItemData[] = [
   {
     title: '최초청구 기본정보',
     description: '서류없이 찾기 - 주소 찾기',
-    path: '/insu/claim/inputDefaultInfoData',
+    path: '/insu/claim/paperless/inputDefaultInfoData',
     category: '보험청구',
     section: 'insu',
     status: ''
@@ -354,7 +386,7 @@ const pageListData: PageItemData[] = [
   {
     title: '주소검색',
     description: '주소찾기 공통',
-    path: '/insu/claim/searchAddress',
+    path: '/insu/claim/paperless/searchAddress',
     category: '보험청구',
     section: 'insu',
     status: ''
@@ -370,7 +402,7 @@ const pageListData: PageItemData[] = [
   {
     title: '사고내용(상해)',
     description: '사고(내원) 내용 입력',
-    path: '/insu/claim/accidentDetailsInjured1',
+    path: '/insu/claim/paperless/accidentDetailsInjured1',
     category: '보험청구',
     section: 'insu',
     status: ''
@@ -378,7 +410,7 @@ const pageListData: PageItemData[] = [
   {
     title: '사고(상해)가 일어난 주소',
     description: '사고(상해)가 일어난 주소입력',
-    path: '/insu/claim/accidentDetailsInjured2',
+    path: '/insu/claim/paperless/accidentDetailsInjured2',
     category: '보험청구',
     section: 'insu',
     status: ''
@@ -394,12 +426,171 @@ const pageListData: PageItemData[] = [
   {
     title: '서류첨부',
     description: '서류첨부',
-    path: '/insu/claim/attachMedicalCertificate',
+    path: '/insu/claim/paperless/attachClaimFiles',
     category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '서류 발급 안내',
+    description: '서류 발급 안내',
+    path: '/insu/claim/paperless/guideCopyCertificateDoc',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '수익자 정보입력',
+    description: '수익자 정보입력',
+    path: '/insu/claim/paperless/beneficiaryInfo',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '청구내용',
+    description: '청구내용',
+    path: '/insu/claim/paperless/claimDetails',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '청구완료',
+    description: '청구완료',
+    path: '/insu/claim/paperless/claimCompleted',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 병원검색(직접 병원 찾기)',
+    description: '사진찍어청구 - 병원검색(직접 병원 찾기)',
+    path: '/insu/claim/picture/findSelfHospitals',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 주민등록번호 입력',
+    description: '사진찍어청구 - 주민등록번호 입력',
+    path: '/insu/claim/picture/inputIdentification',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 보험사 선택',
+    description: '사진찍어청구 - 보험사 선택',
+    path: '/insu/claim/picture/selectInsuranceCompany',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 최초청구 기본정보',
+    description: '사진찍어청구 - 최초청구 기본정보',
+    path: '/insu/claim/picture/inputDefaultInfoData',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 주소검색',
+    description: '사진찍어청구 - 주소찾기 공통',
+    path: '/insu/claim/picture/searchAddress',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 사고내용(상해)',
+    description: '사진찍어청구 - 사고(내원) 내용 입력',
+    path: '/insu/claim/picture/accidentDetailsInjured1',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 사고(상해)가 일어난 주소',
+    description: '사진찍어청구 - 사고(상해)가 일어난 주소입력',
+    path: '/insu/claim/picture/accidentDetailsInjured2',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 수익자 정보입력',
+    description: '사진찍어청구 - 수익자 정보입력',
+    path: '/insu/claim/picture/beneficiaryInfo',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 서류첨부',
+    description: '사진찍어청구 - 서류첨부',
+    path: '/insu/claim/picture/attachClaimFiles',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 청구내용',
+    description: '사진찍어청구 - 청구내용',
+    path: '/insu/claim/picture/claimDetails',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 팩스번호',
+    description: '사진찍어청구 - 팩스번호',
+    path: '/insu/claim/picture/claimFax',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '사진찍어청구 - 청구완료',
+    description: '사진찍어청구 - 청구완료',
+    path: '/insu/claim/picture/claimCompleted',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '서비스 안내',
+    description: '서비스 안내',
+    path: '/insu/claim/subrogation/serviceNotInUse/signupInfo',
+    category: '보험금 대리청구 가입(설계사, 설계사 대리인)',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '약관보기',
+    description: '약관보기',
+    path: '/insu/claim/subrogation/serviceNotInUse/term',
+    category: '보험금 대리청구 가입(설계사, 설계사 대리인)',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '서비스 가입(설계사)',
+    description: '서비스 가입(설계사)',
+    path: '/insu/claim/subrogation/serviceNotInUse/selectInsuranceCompany',
+    category: '보험금 대리청구 가입(설계사, 설계사 대리인)',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '가입완료',
+    description: '가입완료',
+    path: '/insu/claim/subrogation/serviceNotInUse/successSubrogation',
+    category: '보험금 대리청구 가입(설계사, 설계사 대리인)',
     section: 'insu',
     status: 'ing'
   },
-
   // 걷기왕 섹션
   {
     title: '걷기왕 홈',
@@ -437,6 +628,22 @@ const pageListData: PageItemData[] = [
     title: '챌린지 모집(참가전) - 개인',
     description: '리워드 상품',
     path: '/walkingKing/individualChallengeRecruitmentType2',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕챌린지_BS참가하기',
+    description: '챌린지 참가하기',
+    path: '/walkingKing/individualChallengeBSJoin',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕챌린지_참가신청완료_Toast',
+    description: '참가신청 완료',
+    path: '/walkingKing/individualChallengeParticipantCompletion',
     category: '건강관리',
     section: 'walkingKing',
     status: ''
@@ -497,7 +704,87 @@ const pageListData: PageItemData[] = [
     section: 'walkingKing',
     status: ''
   },
-
+  {
+    title: '걷기왕챌린지_진행중_미션',
+    description: '챌린지 미션',
+    path: '/walkingKing/individualChallengeInProgressMission',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕챌린지_진행중_일일걸음수내역',
+    description: '일일걸음수내역',
+    path: '/walkingKing/individualChallengeInProgressDailyWalkingCountList',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕-챌린지-참가자프로필',
+    description: '참가자프로필',
+    path: '/walkingKing/individualChallengeParticipantProfile',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  // 걷기왕 챌린지 - 팀전
+  {
+    title: '걷기왕-챌린지-참가전-팀전',
+    description: '챌린지 팀전',
+    path: '/walkingKing/teamChallengeRecruitment',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕-챌린지(팀전)-대회개요-친구초대하기',
+    description: '친구 초대하기',
+    path: '/walkingKing/teamChallengeInviteFriends',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕-챌린지-참가전-팀전-초대랜딩',
+    description: '초대랜딩',
+    path: '/walkingKing/teamChallengeInviteLanding',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕-챌린지-팀정보등록',
+    description: '팀정보등록',
+    path: '/walkingKing/teamChallengeTeamRegistration',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕-챌린지-팀정보변경',
+    description: '팀정보변경',
+    path: '/walkingKing/teamChallengeTeamModification',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕-챌린지-팀프로필',
+    description: '팀정보변경',
+    path: '/walkingKing/teamChallengeTeamProfile',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕-챌린지-참가자프로필',
+    description: '팀정보변경',
+    path: '/walkingKing/teamChallengeParticipantProfile',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
   // login
   {
     title: '랜딩 페이지',
@@ -898,6 +1185,40 @@ const pageListData: PageItemData[] = [
     section: 'lottery',
     status: ''
   },
+  // 포인트 스토어
+  {
+    title: '레몬포인트 메인',
+    description: '환전신청내역',
+    path: '/common/point/exchangeRequestList',
+    category: '포인트 스토어',
+    section: 'pointStore',
+    status: ''
+  },
+  {
+    title: '포인트 환전신청내역',
+    description: '환전신청내역',
+    path: '/common/point/exchangeRequestList',
+    category: '포인트 스토어',
+    section: 'pointStore',
+    status: ''
+  },
+  {
+    title: '포인트 환전 상세내역',
+    description: '환전 상세내역',
+    path: '/common/point/exchangeRequestDetail',
+    category: '포인트 스토어',
+    section: 'pointStore',
+    status: ''
+  },
+  {
+    title: '포인트 스토어',
+    description: '레몬포인트 환전 신청',
+    path: '/common/point/exchangeRequest',
+    category: '포인트 스토어',
+    section: 'pointStore',
+    status: ''
+  },
+
   // 커뮤니티 섹션
   {
     title: '마음일기',
@@ -914,6 +1235,38 @@ const pageListData: PageItemData[] = [
     category: '커뮤니티',
     section: 'community',
     status: 'ing'
+  },
+  {
+    title: '커뮤니티 상세',
+    description: '커뮤니티 상세 - 병원형',
+    path: '/community/[community]/type/hospital',
+    category: '커뮤니티',
+    section: 'community',
+    status: 'ing'
+  },
+  {
+    title: '커뮤니티 상세',
+    description: '커뮤니티 상세 - 청구의신',
+    path: '/community/[community]/type/insu',
+    category: '커뮤니티',
+    section: 'community',
+    status: 'ing'
+  },
+  {
+    title: '게시글 상세',
+    description: '커뮤니티 공통-게시글 상세/글쓰기',
+    path: '/community/[community]/board/[boardID]/[postId]',
+    category: '커뮤니티',
+    section: 'community',
+    status: ''
+  },
+  {
+    title: '게시글 글쓰기',
+    description: '커뮤니티 공통-게시글 상세/글쓰기',
+    path: '/community/[community]/board/[boardID]/create',
+    category: '커뮤니티',
+    section: 'community',
+    status: ''
   },
   // 가이드 페이지
   {
@@ -947,6 +1300,31 @@ const pageListData: PageItemData[] = [
     category: '가이드',
     section: 'guide',
     status: 'ing'
+  },
+  // 스마트링
+  {
+    title: '스마트링 소개',
+    description: '스마트링 소개/최초',
+    path: '/smartRing/introSmartRing',
+    category: '스마트링',
+    section: 'smartRing',
+    status: ''
+  },
+  {
+    title: '스마트링 권한',
+    description: '스마트링 소개/최초',
+    path: '/smartRing/smartRingPermission',
+    category: '스마트링',
+    section: 'smartRing',
+    status: ''
+  },
+  {
+    title: '신체 정보 입력',
+    description: '스마트링 소개/최초',
+    path: '/smartRing/smartRingBodyInfo',
+    category: '스마트링',
+    section: 'smartRing',
+    status: ''
   }
 ]
 
@@ -1012,7 +1390,8 @@ const getSectionText = (section: string) => {
     login: '로그인 섹션',
     community: '커뮤니티',
     common: '공통',
-    guide: '가이드'
+    guide: '가이드',
+    smartRing: '스마트링'
   }
   return sectionMap[section] || section
 }

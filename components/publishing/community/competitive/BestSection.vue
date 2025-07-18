@@ -6,7 +6,7 @@
       :slides="commList"
       slide-type="custom"
       :slides-per-view="1.2"
-      :space-between="0"
+      :space-between="12"
       :navigation="false"
       :pagination="false"
       :scrollbar="false"
@@ -33,7 +33,7 @@ import { computed } from 'vue'
 import Button from '~/components/publishing/button/Button.vue'
 import TitleBox from '~/components/common/TitleBox.vue'
 import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
-import CommItem from '~/components/publishing/community/competitive/CommItem.vue'
+import CommItem from '~/components/publishing/community/common/CommItem.vue'
 
 const rating = '4.0'
 const number = '1234'
@@ -104,9 +104,8 @@ const commList = [
   margin: 0 -2rem;
 }
 ::v-deep(swiper-slide) {
-  padding: 0 0.6rem;
   &.swiper-slide-active {
-    padding-left: 2rem;
+    margin-left: 1.8rem;
   }
 }
 .review-slide {

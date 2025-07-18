@@ -255,6 +255,21 @@ function onSearchClick() {
       background-color: #f4f4f4;
       color: #959595;
     }
+    &:has(.has-no-border) {
+      padding: 2.1rem 0.8rem 2.1rem 0;
+      border: none;
+      border-bottom: 0.1rem solid #eee;
+
+      &:hover,
+      &:focus-within {
+        background: #fff;
+        border-color: #eee;
+        border-radius: 0;
+      }
+      .c-inp {
+        font-weight: 700;
+      }
+    }
 
     .c-inp {
       flex: 1 1 auto;
@@ -262,6 +277,8 @@ function onSearchClick() {
       font-size: 1.6rem;
       font-weight: 500;
       background-color: transparent;
+      min-width: 0;
+
       &::placeholder {
         color: #959595;
       }
@@ -282,6 +299,7 @@ function onSearchClick() {
 
     .input-unit {
       width: fit-content;
+      flex: 0 0 auto;
       &.left {
         margin-right: 0.2rem;
       }

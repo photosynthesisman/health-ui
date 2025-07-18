@@ -7,15 +7,7 @@
     <!-- 버튼 타입 -->
 
     <div class="select-option select-type">
-      <Select
-        modal-title="조회하기"
-        transparent="true"
-        model-value="3month"
-        :custom-opts="[
-          { value: '3month', label: '3개월' },
-          { value: '6month', label: '6개월' }
-        ]"
-      />
+      <Select modal-title="조회하기" :transparent="true" v-model="selectedPeriod" :custom-opts="selectOptions" />
     </div>
   </div>
 </template>
@@ -27,17 +19,35 @@ import Select from '~/components/publishing/input/Select.vue'
 const props = withDefaults(
   defineProps<{
     count?: number
+    selectOptions?: Array<{ value: string; label: string }>
+    selectedPeriod?: string
   }>(),
   {
-    count: 0
+    count: 0,
+    selectOptions: () => [
+      { value: '3month', label: '3개월' },
+      { value: '6month', label: '6개월' }
+    ],
+    selectedPeriod: ''
   }
 )
+
+const emit = defineEmits<{
+  'update:selectedPeriod': [value: string]
+}>()
+
+// v-model 양방향 바인딩
+const selectedPeriod = computed({
+  get: () => props.selectedPeriod,
+  set: value => emit('update:selectedPeriod', value)
+})
 </script>
 
 <style scoped lang="scss">
 .c-count-box {
   display: flex;
   flex-direction: row;
+  padding: 2rem 0;
   .select-option {
     display: flex;
     flex-direction: row;

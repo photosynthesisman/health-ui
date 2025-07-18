@@ -1,78 +1,128 @@
 <template>
   <div ref="graphContainer" class="day-steps-graph">
+    <div class="grap-tit">
+      <p>일일걸음수</p>
+      <span>걸음수/일</span>
+    </div>
     <div class="weeks-graph">
-      <div v-for="(item, index) in graphData" :key="index" class="graph-item">
+      <div v-for="(item, index) in processedGraphData" :key="index" class="graph-item">
         <div class="graph-bar">
-          <i class="graph-item" :style="{ height: isVisible ? item.height : '0%' }" :class="{ animate: isVisible }">
-            <span v-if="item.isMax" class="tooltip">최고</span>
+          <i
+            class="graph-bar-fill"
+            :style="{ height: isVisible ? item.height : '0%' }"
+            :class="{ animate: isVisible }"
+            @click="toggleItemTooltip(item)"
+          >
+            <div v-if="item.showTooltip" class="tooltip">
+              <p class="date">2025.06.{{ item.date }}({{ getDayOfWeek(item.date) }})</p>
+              <p class="steps">{{ item.steps.toLocaleString() }}</p>
+              <p class="plus-steps">2,300걸음</p>
+            </div>
           </i>
         </div>
         <span class="date" :class="item.dateClass">{{ item.date }}</span>
       </div>
+
+      <div v-if="standardLineHeight !== undefined" class="standard-line" :style="{ top: standardLineHeight }"></div>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref, onMounted, nextTick, computed } from 'vue'
 
+// 인터페이스 정의 (steps 속성 추가)
 interface GraphDataItem {
-  height: string
+  steps: number
   date: string
   dateClass: string
-  isMax?: boolean
+  height?: string
+  showTooltip?: boolean
 }
 
+// 반응형 변수 선언
 const graphContainer = ref<HTMLElement>()
 const isVisible = ref(false)
 
-// 원본 데이터 (200% 등 큰 값이 있을 수 있음)
+// 원본 데이터 (걸음 수로 입력)
 const rawGraphData: GraphDataItem[] = [
-  { height: '30%', date: '10', dateClass: 'saturday' },
-  { height: '100%', date: '11', dateClass: 'sunday' },
-  { height: '200%', date: '12', dateClass: '', isMax: true },
-  { height: '0', date: '13', dateClass: '' },
-  { height: '30%', date: '14', dateClass: '' },
-  { height: '30%', date: '15', dateClass: '' },
-  { height: '30%', date: '16', dateClass: '' }
+  { steps: 3000, date: '10', dateClass: 'saturday' },
+  { steps: 7000, date: '11', dateClass: 'sunday' },
+  { steps: 8000, date: '12', dateClass: '' },
+  { steps: 15000, date: '13', dateClass: '' },
+  { steps: 3000, date: '14', dateClass: '' },
+  { steps: 3000, date: '15', dateClass: '' },
+  { steps: 1200, date: '16', dateClass: '' }
 ]
 
-// 높이를 100%로 제한하는 computed
-const graphData = computed(() => {
-  return rawGraphData.map(item => {
-    const heightValue = parseInt(item.height)
-    const limitedHeight = Math.min(heightValue, 100) // 최대 100%로 제한
+// 최대 걸음 수 계산
+const maxSteps = computed(() => {
+  const stepValues = rawGraphData.map(item => item.steps)
+  return Math.max(...stepValues)
+})
+
+// 기준선 (10000 걸음) 높이 계산
+const standardLineHeight = computed(() => {
+  const targetSteps = 10000
+  const graphBarMaxHeightRem = 8
+  // targetSteps(10000) 이상 걸음에 해당하는 데이터가 있는지 확인
+  const hasStepsGreaterThanOrEqualToTarget = rawGraphData.some(item => item.steps >= targetSteps)
+
+  if (!hasStepsGreaterThanOrEqualToTarget || maxSteps.value === 0) {
+    return undefined
+  }
+
+  // 10000 걸음이 전체 maxSteps에서 차지하는 비율에 해당하는 높이
+  const heightRelativeToMax = (targetSteps / maxSteps.value) * graphBarMaxHeightRem
+
+  return `${graphBarMaxHeightRem - heightRelativeToMax}rem`
+})
+
+const processedGraphData = ref(
+  rawGraphData.map(item => {
+    // 최대 걸음수를 기준으로 퍼센트 계산
+    const calculatedHeight = (item.steps / maxSteps.value) * 100
+    // 높이는 최대 100%로 제한 (만약 최대 걸음수보다 큰 값이 올 경우를 대비)
+    const limitedHeight = Math.min(calculatedHeight, 100)
+
     return {
       ...item,
-      height: `${limitedHeight}%`
+      height: `${limitedHeight}%`, // 계산된 퍼센트 높이
+      showTooltip: false // 각 아이템의 툴팁 상태 초기화
     }
   })
-})
+)
 
-const maxHeightIndex = computed(() => {
-  let max = 0
-  let maxIdx = 0
-  rawGraphData.forEach((item, idx) => {
-    const height = parseInt(item.height)
-    if (height > max) {
-      max = height
-      maxIdx = idx
+// 툴팁 토글 메소드
+const toggleItemTooltip = (clickedItem: GraphDataItem) => {
+  processedGraphData.value.forEach(item => {
+    if (item !== clickedItem) {
+      item.showTooltip = false
     }
   })
-  return maxIdx
-})
+  clickedItem.showTooltip = !clickedItem.showTooltip
+}
 
+// 날짜에 따른 요일 반환 함수 (2025년 7월로 수정)
+const getDayOfWeek = (date: string) => {
+  const year = 2025
+  const month = 7
+  const fullDate = new Date(year, month - 1, parseInt(date))
+  const days = ['일', '월', '화', '수', '목', '금', '토']
+  return days[fullDate.getDay()]
+}
+
+// 그래프 애니메이션 옵저버
 const observeGraph = () => {
   if (!graphContainer.value) return
-
   const observer = new IntersectionObserver(
     entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // 약간의 딜레이 후 애니메이션
           setTimeout(() => {
             isVisible.value = true
           }, 100)
-          observer.unobserve(entry.target)
+          observer.unobserve(entry.target) // 한 번만 실행되도록
         }
       })
     },
@@ -93,140 +143,105 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .day-steps-graph {
-  border-radius: 1.2rem;
+  margin-top: -0.8rem;
   padding: 2rem 2.4rem;
-  .profile-photo {
-    width: 6.4rem;
-    height: 6.4rem;
-    border-radius: 50%;
-    overflow: hidden;
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-  .profile-info {
-    .name {
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-    .detail-info {
-      display: flex;
-      flex-direction: row;
-    }
-    .location {
-      font-size: 1.6rem;
-      font-weight: 500;
-      color: #555;
-      display: inline-flex;
-      flex-direction: row;
-      align-items: center;
-      &::after {
-        content: '';
-        width: 0.3rem;
-        height: 0.3rem;
-        margin: 0 0.6rem;
-        border-radius: 50%;
-        background: #959595;
-      }
-    }
-    .reward {
-      font-size: 1.6rem;
-      color: #2b2b2b;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      &::before {
-        content: '';
-        display: inline-block;
-        margin-right: 0.2rem;
-        position: relative;
-        top: -0.2rem;
-        width: 1.8rem;
-        height: 1.8rem;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: 1.8rem;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cg clip-path='url(%23clip0_7370_24223)'%3E%3Cpath d='M7.99651 0.996003C8.58268 0.52477 9.41774 0.52477 10.0039 0.996003L11.373 2.09665C11.6114 2.28826 11.8996 2.40765 12.2036 2.44069L13.95 2.63051C14.6977 2.71179 15.2881 3.30227 15.3694 4.04996L15.5592 5.79633C15.5923 6.10036 15.7117 6.38858 15.9033 6.62693L17.0039 7.99602C17.4752 8.58219 17.4752 9.41725 17.0039 10.0034L15.9033 11.3725C15.7117 11.6109 15.5923 11.8991 15.5592 12.2031L15.3694 13.9495C15.2881 14.6972 14.6977 15.2877 13.95 15.3689L12.2036 15.5588C11.8996 15.5918 11.6114 15.7112 11.373 15.9028L10.0039 17.0034C9.41774 17.4747 8.58268 17.4747 7.99651 17.0034L6.62742 15.9028C6.38907 15.7112 6.10085 15.5918 5.79682 15.5588L4.05045 15.3689C3.30275 15.2877 2.71227 14.6972 2.631 13.9495L2.44118 12.2031C2.40813 11.8991 2.28875 11.6109 2.09714 11.3725L0.996491 10.0034C0.525258 9.41725 0.525258 8.58219 0.996492 7.99602L2.09714 6.62693C2.28875 6.38858 2.40813 6.10036 2.44118 5.79633L2.631 4.04996C2.71227 3.30227 3.30275 2.71179 4.05045 2.63051L5.79682 2.44069C6.10085 2.40765 6.38907 2.28826 6.62742 2.09665L7.99651 0.996003Z' fill='%23C4D6FF'/%3E%3Ccircle cx='9.11457' cy='8.99933' r='5.60675' fill='%234C7FF7'/%3E%3Cpath d='M11.5724 8.63841L10.143 7.85665L9.36124 6.42722C9.28961 6.29463 9.15094 6.21387 9.00007 6.21387C8.8492 6.21387 8.71205 6.29616 8.6389 6.42722L7.85713 7.85665L6.4277 8.63841C6.29512 8.71004 6.21436 8.84871 6.21436 8.99958C6.21436 9.15045 6.29665 9.2876 6.4277 9.36075L7.85713 10.1425L8.6389 11.5719C8.71053 11.7045 8.8492 11.7853 9.00007 11.7853C9.15094 11.7853 9.28809 11.703 9.36124 11.5719L10.143 10.1425L11.5724 9.36075C11.705 9.28912 11.7858 9.15045 11.7858 8.99958C11.7858 8.84871 11.705 8.71004 11.5724 8.63841Z' fill='%23C4D6FF'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_7370_24223'%3E%3Crect width='18' height='18' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
-      }
-    }
-  }
-  .btn-expert {
-    border: 0.1rem solid #e2e2e2;
-    background: vars.$white;
-    color: #555;
-    font-size: 1.2rem;
-    font-weight: 500;
-    border-radius: 2rem;
-    padding: 0.7rem 1.2rem;
-    display: inline-flex;
-    align-items: center;
-    flex: 0 0 auto;
-    margin-left: auto;
-    gap: 0 0.2rem;
-    .icon {
-      width: 1.8rem;
-      display: inline-block;
-      height: 1.8rem;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: contain;
-    }
-  }
-
-  .graph-title {
+  background: #f9f9f9;
+  border-radius: 1.2rem;
+  .grap-tit {
     display: flex;
-    flex-direction: row;
-    .tit {
-      color: #2b2b2b;
+    justify-content: space-between;
+    align-items: center;
+    p {
       font-size: 1.4rem;
       font-weight: 600;
+      line-height: 2rem;
     }
-    .unit {
-      margin-left: auto;
+    span {
       font-size: 1.1rem;
+      font-style: normal;
+      line-height: 1.5rem;
       color: #959595;
     }
   }
+
   .weeks-graph {
+    position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    gap: 0.4rem 0;
+    justify-content: center;
+    gap: 0.4rem 2.8rem;
     margin-top: 2rem;
+    @media (max-width: 375px) {
+      gap: 0.4rem 0;
+      justify-content: space-between;
+    }
     .graph-item {
       display: flex;
       flex-direction: column;
-      align-content: center;
+      align-items: center;
       .graph-bar {
         height: 8rem;
         width: 1.2rem;
         border-radius: 1rem;
         position: relative;
         background: #ececec;
-        overflow: hidden;
-        .graph-item {
+        .graph-bar-fill {
           position: absolute;
+          left: 0;
           bottom: 0;
-          background: vars.$blue-primary;
+          background: var(--blue-primary);
           width: 100%;
           max-height: 100%;
           border-radius: 1rem;
           height: 0;
           transition: height 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        .tooltip {
-          position: absolute;
-          top: -1.8rem;
-          left: 50%;
-          transform: translateX(-50%);
-          background: #2b2b2b;
-          color: #fff;
-          font-size: 1rem;
-          padding: 0.2rem 0.6rem;
-          border-radius: 0.4rem;
-          white-space: nowrap;
+          cursor: pointer;
+          .tooltip {
+            position: absolute;
+            bottom: calc(100% + 0.8rem);
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1.2rem;
+            background: #4f5561;
+            border-radius: 0.8rem;
+            font-size: 1.1rem;
+            line-height: 1.5rem;
+            white-space: nowrap;
+            text-align: right;
+            color: #fff;
+            z-index: 10;
+            .date {
+              margin-top: 0;
+              color: #fff;
+            }
+            .steps {
+              font-weight: 600;
+            }
+            .plus-steps {
+              display: flex;
+              align-items: center;
+              justify-content: flex-end;
+              &::before {
+                content: '';
+                display: inline-block;
+                width: 1.2rem;
+                height: 1.2rem;
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='13' viewBox='0 0 12 13' fill='none'%3E%3Cg clip-path='url(%23clip0_5098_36696)'%3E%3Cpath d='M5.71994 8.35323C5.73925 8.19987 5.62064 8.06422 5.46724 8.06422H2.39773C2.19475 8.06422 2.07331 7.83667 2.18521 7.66602L6.24609 1.47341C6.39474 1.24674 6.74526 1.37772 6.71131 1.64725L6.27951 5.0759C6.26019 5.22926 6.37880 5.36490 6.53221 5.36490H9.60171C9.80469 5.36490 9.92614 5.59246 9.81423 5.76311L5.75336 11.9557C5.60472 12.1824 5.25420 12.0514 5.28814 11.7819L5.71994 8.35323Z' fill='%23F9C41C'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_5098_36696'%3E%3Crect width='12' height='12' fill='white' transform='translate(0 0.5)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E")
+                  center / 1.2rem no-repeat;
+              }
+            }
+            &::before {
+              content: '';
+              position: absolute;
+              top: 100%;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 0.7rem;
+              height: 0.4rem;
+              background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' viewBox='0 0 7 4' fill='none'%3E%3Cpath d='M5.23242 3.00008C4.46256 4.33325 2.53832 4.33336 1.76855 3.00008L0.0361332 7.90261e-05L6.96484 7.96318e-05L5.23242 3.00008Z' fill='%234F5561'/%3E%3C/svg%3E")
+                center / 100% no-repeat;
+            }
+          }
         }
       }
       .date {
@@ -239,9 +254,16 @@ onMounted(() => {
           color: #f14960;
         }
         &.saturday {
-          color: vars.$blue-primary;
+          color: var(--blue-primary);
         }
       }
+    }
+    .standard-line {
+      position: absolute;
+      left: 0.6rem;
+      right: 0.6rem;
+      height: 0.1rem;
+      border: 0.1rem dashed #4c7ff7;
     }
   }
 }
