@@ -50,7 +50,7 @@ const customTableData = ref({
   body: [
     [
       { text: '91~100점' },
-      { text: '최상' }, // '최상' 텍스트는 특정 스타일이 적용된 div 안에 있을 가능성이 있습니다. 현재는 텍스트만.
+      { content: h('div', { class: 'level-badge highest' }, '최상')},
       { text: '에너지가 넘치고 신체 회복이 최적 상태입니다. 일상 활동과 집중력 유지에 매우 유리한 상태입니다.' }
     ],
     [

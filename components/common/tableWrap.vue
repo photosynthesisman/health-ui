@@ -24,7 +24,8 @@
           :rowspan="cell.rowspan || 1"
           :colspan="cell.colspan || 1"
         >
-          {{ cell.text }}
+           <component v-if="cell.content" :is="cell.content" />
+  <template v-else>{{ cell.text }}</template>
         </component>
       </tr>
     </tbody>
@@ -35,7 +36,8 @@
 import { defineProps } from 'vue'
 
 interface TableCell {
-  text: string
+  text?: string
+    content?: VNode
   rowspan?: number
   colspan?: number
   type?: string
@@ -54,7 +56,7 @@ const props = defineProps<{
 }>()
 </script>
 
-<style scoped>
+<style scoped  lang="scss">  
 table {
   position: relative;
   table-layout: fixed;
@@ -71,8 +73,7 @@ table {
   }
   th,
   td {
-    padding: 1.2rem;
-    text-align: left;
+    padding: 1.2rem;    
     color: #555;
     font-size: 1.4rem;
     line-height: 2rem;
@@ -88,4 +89,5 @@ table {
     font-weight: 600;
   }
 }
+
 </style>

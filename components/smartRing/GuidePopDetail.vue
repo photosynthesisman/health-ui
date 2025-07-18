@@ -52,10 +52,24 @@ const props = defineProps({
     font-weight: 400;
     line-height: 1.6rem;
     color: #555;
-  }
-  :deep(table td) {
+  }  
+  :deep(table td:last-child)  {
     text-align: left;
   }
+  :deep(.level-badge.highest) {
+  display: inline-block;
+  padding: .3rem .8rem;
+  border-radius: 11px;
+background: #E0E9FF;
+color: #002988;
+text-align: center;
+font-family: Pretendard;
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: 140%; /* 16.8px */
+letter-spacing: -0.24px;
+}
 }
 .guide-list {
   text-align: left;
