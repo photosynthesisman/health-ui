@@ -34,33 +34,21 @@
       <div class="wrap-attached-file">
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
       </div>
       <div class="wrap-attached-info">
@@ -365,8 +353,8 @@ const bottomModalProps = ref({
       height: 100%;
       object-fit: cover;
     }
-    .ico-delete {
-      display: block;
+    &::after {
+      content: '';
       width: 1.8rem;
       height: 1.8rem;
       position: absolute;
@@ -402,12 +390,14 @@ const bottomModalProps = ref({
   }
 }
 .wrap-payment-instructions-info {
-  margin: 5.3rem -2rem 0;
+  margin: 3.2rem -2rem 0;
   h2 {
-    padding: 0 2rem;
+    padding: 2rem;
+    font-size: 1.6rem;
+    line-height: 2.2rem;
+    border-bottom: 0.1rem solid #eee;
   }
   .wrap-spread {
-    margin-top: 1.6rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -440,8 +430,9 @@ const bottomModalProps = ref({
           align-items: center;
           gap: 0.6rem;
           .text {
-            font-size: 1.6rem;
-            font-weight: 700;
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 2rem;
             color: #2b2b2b;
           }
           .label {

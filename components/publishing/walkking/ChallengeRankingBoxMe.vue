@@ -29,8 +29,11 @@
     </div>
 
     <div class="steps-box">
-      <p class="total-steps">1,365,876</p>
-      <p class="use-item-steps">26,300 걸음</p>
+      <p :class="['total-steps', totalClass]">
+        {{ totalNumFormat }}
+        <span v-if="totalClass === 'cases'">건</span>
+      </p>
+      <p v-if="isShowSteps" class="use-item-steps">26,300 걸음</p>
     </div>
   </div>
 </template>
@@ -51,13 +54,28 @@ const props = withDefaults(
     changed?: 'up' | 'down' | ''
     changedRank?: string
     src?: string
+    totalSteps?: string
+    itemSteps?: string
+    isShowSteps?: boolean
+    totalClass?: string
+    totalNum?: string
   }>(),
   {
     src: 'img-profile.svg',
     changed: '',
-    changedRank: '-'
+    changedRank: '-',
+    totalSteps: '0',
+    itemSteps: '26,360',
+    isShowSteps: true,
+    totalClass: '',
+    totalNum: ''
   }
 )
+
+const totalNumFormat = computed(() => {
+  const num = Number(props.totalNum)
+  return isNaN(num) ? '0' : num.toLocaleString()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -68,6 +86,7 @@ const props = withDefaults(
   gap: 1.2rem;
   margin: -0.1rem -0.8rem 0;
   padding: 1.6rem;
+  padding-left: 0.8rem;
   border-radius: 1.2rem;
   border: 0.1rem solid #e2e2e2;
   background: #fff;
@@ -85,6 +104,7 @@ const props = withDefaults(
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 5.2rem;
   .rangking {
     width: 3.2rem;
     height: 3.2rem;
@@ -168,6 +188,7 @@ const props = withDefaults(
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+  text-align: left;
   .user-name {
     margin-bottom: 0.4rem;
     font-weight: 700;

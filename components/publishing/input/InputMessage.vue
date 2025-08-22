@@ -1,7 +1,7 @@
 <template>
   <div class="c-input">
     <div class="c-inpType">
-      <div class="c-inp-el">
+      <div class="c-inp-el" :class="{ lg: props.size === 'lg', sm: props.size === 'sm' }">
         <input
           :id="inputId"
           v-model="inputValue"
@@ -10,6 +10,7 @@
           class="c-inp"
           :placeholder="placeholder"
           @input="onInput"
+          @keydown="onKeyDown"
         />
         <!-- Clear button -->
         <button
@@ -32,12 +33,14 @@ interface Props {
   name?: string
   placeholder?: string
   modelValue?: string
+  size?: 'lg' | 'sm' | 'normal'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   name: '',
   placeholder: '메시지를 입력해주세요.',
-  modelValue: ''
+  modelValue: '',
+  size: 'normal'
 })
 
 // Emits 정의
@@ -55,6 +58,16 @@ const onInput = (event: Event) => {
   const target = event.target as HTMLInputElement
   inputValue.value = target.value
   emit('update:modelValue', target.value)
+}
+
+// 엔터 키 이벤트 핸들러
+const onKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault()
+    if (inputValue.value.trim()) {
+      emit('enter', inputValue.value)
+    }
+  }
 }
 
 // 입력값 청소
@@ -90,7 +103,14 @@ const hasValue = computed(() => {
     background-color: #f4f4f4;
     border-color: #f4f4f4;
     border-radius: 0.8rem;
+    &.lg {
+      height: 5.6rem;
+    }
+    &.sm {
+      height: 4rem;
+    }
     .c-inp {
+      width: 100%;
       flex: 1 1 auto;
       color: #2b2b2b;
       font-size: 1.6rem;

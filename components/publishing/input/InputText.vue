@@ -12,18 +12,18 @@
           {{ label }}
         </template>
       </label>
-      <div class="c-inp-el">
+      <div class="c-inp-el" :class="{ lg: props.size === 'lg', sm: props.size === 'sm' }">
         <span v-if="unitL" class="input-unit left">{{ unitL }}</span>
         <input
+          :id="inputId"
           :type="type"
           :inpType="inpType"
           :name="name"
-          :id="inputId"
           :placeholder="placeholder"
           :value="displayValue"
           :readonly="readonly"
           :disabled="disabled"
-          :class="['c-inp', $attrs.class, { 't-right': unitR }, { 'is-invalid': isValid }]"
+          :class="['c-inp', $attrs.class, { 't-right': unitR }, { 'is-invalid': isInvalid }]"
           @input="onInput"
         />
         <!-- Clear button for debugging -->
@@ -32,17 +32,24 @@
           class="clear-btn"
           type="button"
           aria-label="작성내용 삭제하기"
-          @click="clearInput"
           style="display: block"
+          @click="clearInput"
         ></button>
         <span v-if="unitR" class="input-unit right ml-8">{{ unitR }}</span>
         <button
           v-if="inpType === 'search'"
           class="icon ml-12 ico-magnifying-glass"
           type="button"
-          @click="onSearchClick"
           aria-label="검색"
+          @click="onSearchClick"
         ></button>
+        <Button
+          v-if="inpType === 'hasBtn'"
+          class="c-btn btn-primary xs check"
+          btn-type="button"
+          :disabled="inputValue.length === 0"
+          >{{ btnText }}</Button
+        >
       </div>
       <p v-if="isInvalid" class="feedback error">
         <span class="text">{{ validText }}</span>
@@ -52,6 +59,7 @@
 </template>
 
 <script setup lang="ts">
+import Button from '~/components/publishing/button/Button.vue'
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 interface OptionType {
   value: string
@@ -75,7 +83,9 @@ const props = defineProps({
   disabled: { type: Boolean, default: false },
   isInvalid: { type: Boolean, default: false },
   validText: { type: String, default: '인풋 유효성 에러 메시지' }, // 유효성 검사 메시지
-  customOpts: { type: Array as () => OptionType[], default: () => [] }
+  customOpts: { type: Array as () => OptionType[], default: () => [] },
+  size: { type: String, validator: (value: string) => ['lg', 'sm', 'normal'].includes(value), default: 'normal' },
+  btnText: { type: String, default: '중복확인' }
 })
 
 const emit = defineEmits(['update:modelValue', 'search'])
@@ -197,6 +207,7 @@ function onSearchClick() {
 <style lang="scss" scoped>
 .c-input {
   width: 100%;
+  min-width: 0;
   &.search-bar {
     .c-inp-el {
       background-color: #f4f4f4;
@@ -206,6 +217,15 @@ function onSearchClick() {
         background: #f6f9ff;
         border-color: transparent;
       }
+    }
+  }
+  &.optional {
+    .c-inpType .c-label::after {
+      content: '(선택)';
+      font-size: 1.2rem;
+      display: inline-block;
+      margin-left: 0.3rem;
+      color: #4c7ff7;
     }
   }
 }
@@ -238,6 +258,12 @@ function onSearchClick() {
     background: #fff;
     border-radius: 0.8rem;
     border: 1px solid #e2e2e2;
+    &.lg {
+      height: 5.6rem;
+    }
+    &.sm {
+      height: 4rem;
+    }
     &:hover,
     &:focus-within {
       background: #f6f9ff;
@@ -351,5 +377,13 @@ function onSearchClick() {
 .ico-magnifying-glass {
   width: 2.4rem;
   height: 2.4rem;
+  flex: 0 0 auto;
+}
+:deep(.c-btn) {
+  &.check {
+    width: auto;
+    margin-left: 0.8rem;
+    flex: 0 0 auto;
+  }
 }
 </style>

@@ -49,8 +49,8 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted, nextTick, computed } from 'vue'
 
-import DmProfileInfo from '~/components/publishing/Dm/DmProfileInfo.vue'
-import DmBody from '~/components/publishing/Dm/DmBody.vue'
+import DmProfileInfo from '~/components/publishing/DM/DmProfileInfo.vue'
+import DmBody from '~/components/publishing/DM/DmBody.vue'
 import InputMessage from '~/components/publishing/input/InputMessage.vue'
 import ButtonSend from '~/components/publishing/button/ButtonSend.vue'
 import InputText from '~/components/publishing/input/InputText.vue'

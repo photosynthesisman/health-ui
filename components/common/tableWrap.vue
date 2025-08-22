@@ -1,5 +1,5 @@
 <template>
-  <table>
+  <table :class="tableClass">
     <colgroup>
       <col v-for="(col, colIdx) in tableData.cols" :key="'col' + colIdx" :style="{ width: col.width }" />
     </colgroup>
@@ -10,6 +10,7 @@
           :key="'hc' + hcIdx"
           :rowspan="headerCell.rowspan || 1"
           :colspan="headerCell.colspan || 1"
+          :class="headerCell.class"
         >
           {{ headerCell.text }}
         </th>
@@ -23,9 +24,10 @@
           :key="'bc' + cIdx"
           :rowspan="cell.rowspan || 1"
           :colspan="cell.colspan || 1"
+          :class="cell.class"
         >
-           <component v-if="cell.content" :is="cell.content" />
-  <template v-else>{{ cell.text }}</template>
+          <component :is="cell.content" v-if="cell.content" />
+          <template v-else>{{ cell.text }}</template>
         </component>
       </tr>
     </tbody>
@@ -37,10 +39,11 @@ import { defineProps } from 'vue'
 
 interface TableCell {
   text?: string
-    content?: VNode
+  content?: VNode
   rowspan?: number
   colspan?: number
   type?: string
+  class?: string
 }
 interface TableCol {
   width?: string
@@ -53,15 +56,25 @@ interface TableData {
 
 const props = defineProps<{
   tableData: TableData
+  tableClass?: string
 }>()
 </script>
 
-<style scoped  lang="scss">  
+<style scoped lang="scss">
 table {
   position: relative;
   table-layout: fixed;
   border-collapse: collapse;
   width: 100%;
+  &.text-left {
+    th,
+    td {
+      text-align: left;
+    }
+    th {
+      vertical-align: top;
+    }
+  }
   &::before {
     content: '';
     position: absolute;
@@ -73,7 +86,7 @@ table {
   }
   th,
   td {
-    padding: 1.2rem;    
+    padding: 1.2rem;
     color: #555;
     font-size: 1.4rem;
     line-height: 2rem;
@@ -89,5 +102,4 @@ table {
     font-weight: 600;
   }
 }
-
 </style>

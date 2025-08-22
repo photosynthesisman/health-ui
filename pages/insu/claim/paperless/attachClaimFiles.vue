@@ -34,33 +34,21 @@
       <div class="wrap-attached-file">
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
         <button class="btn-delete-attached">
           <img class="img" src="/assets/images/insu/img-attached-file.png" alt="첨부파일" />
-          <!-- 첨부파일 삭제버튼 dom 요소로 변경 -->
-          <i class="ico-delete" title="첨부파일 삭제"></i>
         </button>
       </div>
     </FlexSection>
@@ -85,12 +73,12 @@
     @close="toggleBottomModal"
   >
     <template #content>
-      <div class="wrap-radio-btn">
+      <div class="wrap-radio-btn flex-col gap-8">
         <RadioImg
           id="rdo1"
           name="rdo1"
           checked
-          custom-style="button has-icon"
+          custom-style="button attached-file"
           text="카메라 촬영"
           :icon-src="iconCamera"
           icon-alt="아이콘:카메라 촬영"
@@ -98,10 +86,18 @@
         <RadioImg
           id="rdo2"
           name="rdo1"
-          custom-style="button has-icon"
+          custom-style="button attached-file"
           text="앨범에서 선택"
           :icon-src="iconAlbum"
           icon-alt="아이콘:앨범에서 선택"
+        />
+        <RadioImg
+          id="rdo3"
+          name="rdo1"
+          custom-style="button attached-file"
+          text="파일에서 선택"
+          :icon-src="iconFile"
+          icon-alt="아이콘:파일에서 선택"
         />
       </div>
     </template>
@@ -118,6 +114,7 @@ import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import RadioImg from '~/components/publishing/input/radioImg.vue'
 import iconCamera from '~/assets/images/insu/icon-camera.svg'
 import iconAlbum from '~/assets/images/insu/icon-album.svg'
+import iconFile from '~/assets/images/insu/icon-file.svg'
 
 const isShowBottomModal = ref(false)
 const toggleBottomModal = () => {
@@ -209,8 +206,8 @@ const bottomModalProps = ref({
       height: 100%;
       object-fit: cover;
     }
-    .ico-delete {
-      display: block;
+    &::after {
+      content: '';
       width: 1.8rem;
       height: 1.8rem;
       position: absolute;

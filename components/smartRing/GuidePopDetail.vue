@@ -44,7 +44,8 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
-  padding: 2rem 0 3.2rem;
+  padding: 0 0 3.2rem;
+
   :deep(table th),
   :deep(table td) {
     text-align: center;
@@ -52,24 +53,40 @@ const props = defineProps({
     font-weight: 400;
     line-height: 1.6rem;
     color: #555;
-  }  
-  :deep(table td:last-child)  {
+  }
+  :deep(table td:last-child) {
     text-align: left;
   }
-  :deep(.level-badge.highest) {
-  display: inline-block;
-  padding: .3rem .8rem;
-  border-radius: 11px;
-background: #E0E9FF;
-color: #002988;
-text-align: center;
-font-family: Pretendard;
-font-size: 12px;
-font-style: normal;
-font-weight: 500;
-line-height: 140%; /* 16.8px */
-letter-spacing: -0.24px;
-}
+  :deep(.level-badge) {
+    &.purple {
+      background-color: #dcd5ff;
+      color: #17009c;
+    }
+    &.blue {
+      background-color: #e0e9ff;
+      color: #002988;
+    }
+    &.yellow {
+      background-color: #faeaa9;
+      color: #5d4a00;
+    }
+    &.orange {
+      background-color: #ffdab7;
+      color: #b42800;
+    }
+    &.green {
+      background-color: #e2edbb;
+      color: #314a00;
+    }
+    &.red-deep {
+      background-color: #ffc6c6;
+      color: #850000;
+    }
+  }
+  :deep(.highlight-txt) {
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
 }
 .guide-list {
   text-align: left;

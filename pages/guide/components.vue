@@ -1,5 +1,11 @@
 <template>
-  <BaseBody logo-type="image" :has-notification="true" :has-reward="true" custom-title="건강의신">
+  <BaseBody
+    logo-type="image"
+    :has-notification="true"
+    :has-reward="true"
+    custom-title="건강의신"
+    class="flex flex-col gap-15"
+  >
     <p>Radio</p>
     <Radio id="rdo1" name="rdo1" />
     <Radio id="rdo2" name="rdo1" checked />
@@ -17,6 +23,25 @@
       <RadioImg id="rdo13" name="rdo5" custom-style="button has-icon" text="옵션 값" icon="ico-empty" />
       <RadioImg id="rdo14" name="rdo5" checked custom-style="button has-icon" text="옵션 값" icon="ico-empty" />
     </div>
+    <Radio
+      id="rdo15"
+      name="rdo8"
+      custom-style="button"
+      aria-label="체크박스 버튼 모양 라디오1"
+      icon="check"
+      icon-type="check"
+      class="w-full text-left"
+      :checked="true"
+    />
+    <Radio
+      id="rdo16"
+      name="rdo8"
+      custom-style="button"
+      aria-label="체크박스 버튼 모양 라디오2"
+      icon="check"
+      icon-type="check"
+      class="w-full text-left"
+    />
     <p>check</p>
     <Checkbox id="checkBox13" v-model="checkbox13" />
     <Checkbox id="checkBox14" v-model="checkbox14" />
@@ -31,6 +56,7 @@
     <Checkbox id="checkBox23" v-model="checkbox23" custom-style="button" aria-label="옵션 값" />
     <Checkbox id="checkBox24" v-model="checkbox24" custom-style="button" aria-label="옵션 값" />
     <Checkbox id="checkBox27" v-model="checkbox27" custom-style="button agree-all" aria-label="약관전체 동의" />
+
     <Checkbox id="checkBox25" v-model="checkbox25" custom-style="switch" aria-label="" />
     <Checkbox id="checkBox26" v-model="checkbox26" custom-style="switch tiny" aria-label="" />
     <hr style="margin: 40px 0" />
@@ -39,6 +65,8 @@
 
     <hr style="margin-top: 40px" />
     <div style="margin-top: 40px; margin-bottom: 40px">
+      <InputLabelText label="'라벨 텍스트'" />
+      <InputLabelText label="'라벨 텍스트'" :required="true" />
       <FieldSet />
       <FieldSet is-valid />
       <FieldSet disabled />
@@ -66,8 +94,8 @@
           { value: 'kakao.com', label: 'kakao.com' }
         ]"
       />
-      
-      <div class="resident-id-form-group">
+
+      <!-- <div class="resident-id-form-group">
         <label for="resident-id-front" class="resident-id-label">주민등록번호</label>
         <div class="resident-id-inputs">
           <input
@@ -92,8 +120,13 @@
             aria-label="주민등록번호 뒤 7자리"
           />
         </div>
-      </div>
+      </div> -->
+      <InputRRN />
+      <InputRRNGender />
+      <!-- 셀렉트박스 invalid feedback 추가 -->
       <Select
+        :is-invalid="!selectedValue"
+        valid-text="카테고리를 선택해주세요"
         :custom-opts="[
           { value: 'gmail.com', label: 'gmail.com' },
           { value: 'naver.com', label: 'naver.com' }
@@ -101,11 +134,31 @@
       />
       <DatePicker />
 
+      <!-- 시간 선택 -->
+      <InputClock />
+      <!-- 시간 선택(hour만 표기) -->
+      <InputClock :hour-only="true" />
+      <!-- 시간 선택 range -->
+      <InputClockFromTo />
+
       <InputCalendar />
 
       <InputCalendarFromTo />
+      <!-- 시간 설정까지 선택 가능 버전 -->
+      <InputCalendarFromTo
+        label="시/분 설정*"
+        placeholder="시작일시"
+        placeholder2="종료일시"
+        :show-time-picker="true"
+        :default-hour="9"
+        :default-minute="0"
+        :minute-step="5"
+        @time-change="handleTimeChange"
+      />
+      타이머
       <InputTimer />
       <InputText inp-type="search" />
+
       <Select
         inp-type="search"
         :custom-opts="[
@@ -174,11 +227,13 @@
     </div>
     <div style="margin-top: 20px">
       <p>Button outline</p>
-      <Button btn-type="line" element-type="button" aria-label="버튼명" />
-      <Button btn-type="line" element-type="button" aria-label="버튼명" disabled />
-      <Button btn-type="line" element-type="button" aria-label="버튼명" class="sm" />
-      <Button btn-type="line" element-type="button" aria-label="버튼명" class="sm" disabled />
-      <Button btn-type="line" element-type="button" aria-label="버튼명" class="xs" icon="ico-empty" :width="8.6" />
+      <Button btn-type="line" element-type="button" aria-label="버튼명 48" />
+      <Button btn-type="line" element-type="button" aria-label="버튼명 48" disabled />
+      <Button btn-type="line" element-type="button" aria-label="버튼명 40" class="sm" />
+      <Button btn-type="line" element-type="button" aria-label="버튼명 40" class="sm" disabled />
+      <Button btn-type="line" element-type="button" aria-label="버튼명 36" class="xs" />
+      <Button btn-type="line" element-type="button" aria-label="버튼명 28" class="xxs" />
+      <Button btn-type="line" element-type="button" aria-label="버튼명 36" class="xs" icon="ico-empty" :width="8.6" />
       <Button
         btn-type="line"
         element-type="button"
@@ -233,7 +288,7 @@
         <Button
           btn-type="text"
           element-type="button"
-          aria-label="텍스트버튼명"
+          aria-label="텍스트버튼명20-fz16"
           icon="ico-greater-than"
           icon-position="right"
           :icon-size="20"
@@ -246,7 +301,7 @@
         <Button
           btn-type="text"
           element-type="button"
-          aria-label="텍스트버튼명"
+          aria-label="텍스트버튼명16-fz14"
           icon="ico-greater-than"
           icon-position="right"
           class="xs"
@@ -260,7 +315,7 @@
         <Button
           btn-type="text"
           element-type="button"
-          aria-label="텍스트버튼명"
+          aria-label="텍스트버튼명16-fz12"
           icon="ico-greater-than"
           icon-position="right"
           class="xxs"
@@ -303,6 +358,10 @@
         <span class="text">첨부서류</span>
       </label>
     </div>
+    <div style="margin-top: 20px">
+      <p>Pagination</p>
+      <pagination v-model:current-page="page" :total-items="5" />
+    </div>
   </BaseBody>
 </template>
 
@@ -313,10 +372,16 @@ import Button from '~/components/publishing/button/Button.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
 import InputPhone from '~/components/publishing/input/InputPhone.vue'
 import InputMail from '~/components/publishing/input/InputMail.vue'
+import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
+import InputRRN from '~/components/publishing/input/inputRRN.vue'
+import InputRRNGender from '~/components/publishing/input/InputRRNGender.vue'
 
 import Select from '~/components/publishing/input/Select.vue'
 import InputCalendar from '~/components/publishing/input/InputCalendar.vue'
 import InputCalendarFromTo from '~/components/publishing/input/InputCalendarFromTo.vue'
+
+import InputClock from '~/components/publishing/input/InputClock.vue'
+import InputClockFromTo from '~/components/publishing/input/InputClockFromTo.vue'
 import InputTimer from '~/components/publishing/input/InputTimer.vue'
 import InputNum from '~/components/publishing/input/InputNum.vue'
 import InputSearch from '~/components/publishing/input/InputSearch.vue'
@@ -328,7 +393,10 @@ import RadioImg from '~/components/publishing/input/radioImg.vue'
 import InputAddress from '~/components/publishing/input/InputAddress.vue'
 
 import DatePicker from '~/components/publishing/input/DatePicker.vue'
+import pagination from '~/components/publishing/input/pagination.vue'
 
+// 페이지네이션 현재 페이지
+const page = ref(3)
 // 체크박스 상태 관리
 const checkbox13 = ref(false)
 const checkbox14 = ref(true)
@@ -381,7 +449,7 @@ const residentIdBack = ref('')
     position: relative;
     &.required {
       &::after {
-        content: "*";
+        content: '*';
         font-size: 1.2rem;
         display: inline-block;
         margin-left: 0.3rem;

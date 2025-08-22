@@ -9,16 +9,20 @@
                 showSearchBtn: 검색 버튼 표시 여부 
             -->
       <BaseHeader
-        v-if="showHeader"
+        v-if="headerOptions.showHeader"
         :title="headerTitle"
-        :show-back-button="showBackButton"
+        :show-back-button="headerOptions.showBackButton"
         :back-ground="headerOptions.backGround"
         :logo-type="headerOptions.logoType"
         :logo-type-with-back="headerOptions.logoTypeWithBack"
         :show-search="headerOptions.showSearch"
         :show-search-btn="headerOptions.showSearchBtn"
+        :search-with-select="headerOptions.searchWithSelect"
+        :search-select-options="headerOptions.searchSelectOptions"
+        :search-select-placeholder="headerOptions.searchSelectPlaceholder"
         :has-notification="headerOptions.hasNotification"
         :has-notification-dot="headerOptions.hasNotificationDot"
+        :has-cart="headerOptions.hasCart"
         :has-reward="headerOptions.hasReward"
         :has-reward-dot="headerOptions.hasRewardDot"
         :has-setting="headerOptions.hasSetting"
@@ -28,18 +32,30 @@
         :has-share="headerOptions.hasShare"
         :has-menu="headerOptions.hasMenu"
         :notification-count="headerOptions.notificationCount"
+        :cart-count="headerOptions.cartCount"
         :chat-count="headerOptions.chatCount"
         :is-center-title="headerOptions.isCenterTitle"
         :has-add-text="headerOptions.hasAddText"
         :add-text="headerOptions.addText"
+        :add-text-click-enabled="headerOptions.addTextClickEnabled"
         :has-add-text-left="headerOptions.hasAddTextLeft"
         :add-text-left="headerOptions.addTextLeft"
         :has-close-btn="headerOptions.hasCloseBtn"
         :is-transparent="headerOptions.isTransparent"
+        :white-logo="headerOptions.whiteLogo"
+        :has-insu="headerOptions.hasInsu"
+        :insu-status="headerOptions.insuStatus"
+        :has-my-info="headerOptions.hasMyInfo"
+        :has-edit-btn="headerOptions.hasEditBtn"
+        :has-tel-btn="headerOptions.hasTelBtn"
+        :has-write="headerOptions.hasWrite"
+        :has-profile="headerOptions.hasProfile"
         @go-back="handleGoBack"
         @close="handleClose"
         @toggle-sidebar="handleToggleSidebar"
         @add-text-click="handleAddTextClick"
+        @edit="handleEditEvent"
+        @search="handleSearchEvent"
       >
         <!-- 유틸 컴포넌트 자체를 넣을 수 있는 방법 -->
         <!-- <template #headerUtils> </template> -->
@@ -90,12 +106,16 @@ const headerOptions = ref({
   // 유틸 옵션
   showSearch: false,
   showSearchBtn: false,
+  searchWithSelect: false,
+  searchSelectOptions: [],
+  searchSelectPlaceholder: '전체',
 
   // 알림 옵션
   hasNotification: false,
   hasNotificationDot: false,
   hasReward: false,
   hasRewardDot: false,
+  hasCart: false,
 
   // 추가 기능 옵션
   hasSetting: false,
@@ -104,10 +124,12 @@ const headerOptions = ref({
   hasScrap: false, // 스크랩 버튼 표시 여부
   hasShare: false,
   hasMenu: false,
+  hasTelBtn: false,
 
   // 카운트 옵션
   notificationCount: 0,
   chatCount: 0,
+  cartCount: 0,
 
   // 레이아웃 옵션
   isCenterTitle: false,
@@ -115,6 +137,7 @@ const headerOptions = ref({
   // 추가 텍스트 옵션
   hasAddText: false,
   addText: '',
+  addTextClickEnabled: false,
   hasAddTextLeft: false,
   addTextLeft: '',
 
@@ -122,45 +145,52 @@ const headerOptions = ref({
   hasCloseBtn: false,
 
   // 투명 배경 옵션
-  isTransparent: false
+  isTransparent: false,
+
+  // 화이트 로고 옵션
+  whiteLogo: false,
+
+  // 청구의신 my 병원
+  hasInsu: false,
+  insuStatus: 'unregistered',
+
+  // 커뮤니티 마이프로필
+  hasMyInfo: false,
+
+  // 청구의 신 수정 버튼
+  hasEditBtn: false,
+
+  // 글쓰기 버튼
+  hasWrite: false,
+
+  // 프로필 버튼
+  hasProfile: false
 })
 
 // 페이지에서 사용할 수 있도록 provide
 provide('setHeaderOptions', (options: Partial<typeof headerOptions.value>) => {
-  console.log('\n=== setHeaderOptions called in default.vue ===')
-  console.log('Before update - headerOptions.value:', headerOptions.value)
-  console.log('Received options:', options)
-
-  // showBackButton 상세 로그
-  if (options.showBackButton !== undefined) {
-    console.log('🔴 Setting showBackButton to:', options.showBackButton, '(type:', typeof options.showBackButton, ')')
-  }
-  if (options.pageTitle) {
-    console.log('🟢 Setting pageTitle to:', options.pageTitle)
-  }
-  if (options.logoType) {
-    console.log('🟢 Setting logoType to:', options.logoType)
-  }
-
   // 즉시 업데이트
   Object.assign(headerOptions.value, options)
 
   // nextTick을 사용해 다음 프레임에서 한 번 더 업데이트 (안전장치)
   nextTick(() => {
     Object.assign(headerOptions.value, options)
-    console.log('After nextTick update - headerOptions.value:', headerOptions.value)
   })
 
-  console.log('After immediate update - headerOptions.value:', headerOptions.value)
-  console.log('=== end setHeaderOptions ===')
+  // 디버깅용 로그 간소화
+  if (options.hasInsu || options.insuStatus) {
+    console.log('Header options updated:', {
+      hasInsu: options.hasInsu,
+      insuStatus: options.insuStatus,
+      pageTitle: options.pageTitle
+    })
+  }
 })
 
 // 라우트 변경 감지하여 헤더 상태 리셋
 watch(
   () => route.path,
   newPath => {
-    console.log('Route changed to:', newPath)
-
     // 헤더 옵션 초기화 (기본값으로 리셋)
     headerOptions.value = {
       showHeader: true,
@@ -172,24 +202,39 @@ watch(
       pageType: '',
       showSearch: false,
       showSearchBtn: false,
+      searchWithSelect: false,
+      searchSelectOptions: [],
+      searchSelectPlaceholder: '전체',
       hasNotification: false,
       hasNotificationDot: false,
+      hasCart: false,
       hasReward: false,
       hasRewardDot: false,
       hasSetting: false,
       hasSearch: false,
       hasChat: false,
+      hasScrap: false,
       hasShare: false,
       hasMenu: false,
       notificationCount: 0,
+      cartCount: 0,
       chatCount: 0,
       isCenterTitle: false,
       hasAddText: false,
       addText: '',
+      addTextClickEnabled: false,
       hasAddTextLeft: false,
       addTextLeft: '',
       hasCloseBtn: false,
-      isTransparent: false
+      isTransparent: false,
+      whiteLogo: false,
+      hasInsu: false,
+      insuStatus: 'unregistered',
+      hasMyInfo: false,
+      hasEditBtn: false,
+      hasTelBtn: false,
+      hasWrite: false,
+      hasProfile: false
     }
   },
   { immediate: false }
@@ -199,7 +244,6 @@ watch(
 const headerTitle = computed(() => {
   // 페이지에서 사용자 정의 제목이 있으면 우선 사용
   if (headerOptions.value.pageTitle) {
-    console.log('headerTitle from pageTitle:', headerOptions.value.pageTitle)
     return headerOptions.value.pageTitle
   }
 
@@ -214,7 +258,7 @@ const headerTitle = computed(() => {
       case '/common/home':
         routeTitle = '건강의신'
         break
-      case '/walkingKing':
+      case '/walkingKing/subHome':
         routeTitle = '걷기왕'
         break
       case '/community':
@@ -240,8 +284,12 @@ const showTabbar = computed(() => {
   // BaseTabbar가 표시될 페이지 경로들
   const tabbarPages = [
     '/common/home',
+    '/walkingKing/subHome',
     '/walkingKing/individualChallengeHomeType1',
+    '/walkingKing/privateGameHome',
     '/community',
+    '/community/diary',
+    '/community/familycare',
     '/insu',
     '/common/wholeMenu'
   ]
@@ -275,11 +323,24 @@ const handleGoBack = () => {
   router.go(-1) // 브라우저 기본 뒤로가기
 }
 
+// 페이지에서 close 핸들러를 등록할 수 있도록 provide
+let pageCloseHandler: (() => void) | null = null
+
+provide('setCloseHandler', (handler: () => void) => {
+  console.log('default.vue: setCloseHandler called with handler:', handler)
+  pageCloseHandler = handler
+})
+
 const handleClose = () => {
-  // 전체화면 모달 닫기 로직
-  // 기본적으로 뒤로가기와 동일하게 처리
-  console.log('전체화면 모달 닫기')
-  router.go(-1)
+  // 페이지에서 등록한 close 핸들러가 있으면 실행
+  if (pageCloseHandler) {
+    console.log('Calling page close handler')
+    pageCloseHandler()
+  } else {
+    // 기본적으로 뒤로가기와 동일하게 처리
+    console.log('전체화면 모달 닫기 - 기본 동작')
+    router.go(-1)
+  }
 }
 
 const handleToggleSidebar = () => {
@@ -289,6 +350,8 @@ const handleToggleSidebar = () => {
 
 // 런타임에서 설정된 addTextClick 핸들러
 let pageAddTextClickHandler: (() => void) | null = null
+// 런타임에서 설정된 search 핸들러
+let pageSearchHandler: ((query?: string) => void) | null = null
 
 // addTextClick 상태 관리
 const isAddTextClickEnabled = ref(false)
@@ -299,6 +362,13 @@ provide('setAddTextClickHandler', (handler: () => void) => {
   pageAddTextClickHandler = handler
   isAddTextClickEnabled.value = true
   console.log('pageAddTextClickHandler updated to:', pageAddTextClickHandler)
+})
+
+// 페이지에서 search 핸들러를 등록할 수 있도록 provide
+provide('setSearchHandler', (handler: (query?: string) => void) => {
+  console.log('default.vue: setSearchHandler called with handler:', handler)
+  pageSearchHandler = handler
+  console.log('pageSearchHandler updated to:', pageSearchHandler)
 })
 
 // addTextClick 상태를 provide
@@ -315,10 +385,31 @@ const handleAddTextClick = () => {
   }
 }
 
+// search 이벤트 핸들러
+const handleSearchEvent = searchData => {
+  console.log('default.vue: handleSearchEvent called with:', searchData)
+  console.log('pageSearchHandler:', pageSearchHandler)
+  if (pageSearchHandler) {
+    console.log('Calling pageSearchHandler')
+    // 객체 또는 문자열 모두 처리
+    if (typeof searchData === 'object') {
+      pageSearchHandler(searchData.query, searchData.type)
+    } else {
+      pageSearchHandler(searchData)
+    }
+  } else {
+    console.log('No search handler registered')
+  }
+}
+const modalTriggerSignal = ref(0)
+const handleEditEvent = () => {
+  modalTriggerSignal.value++
+}
+
 const tabs = [
   { path: '/common/home', icon: 'c-home', label: '홈' },
   {
-    path: '/walkingKing',
+    path: '/walkingKing/subHome',
     icon: 'c-walkiing-king',
     label: '걷기왕'
   },

@@ -1,24 +1,30 @@
 <template>
   <BaseBody
     :show-back-button="true"
-    page-title="서류없이 청구"
+    page-title="사진찍어 청구"
     logo-type="text"
     :has-notification="true"
     :has-reward="false"
     :has-add-text-left="true"
     class="pb-36"
   >
-    <div class="flex flex-col gap-10 mt-40">
+    <div class="flex flex-col mt-24">
       <h1 class="c-tit">
-        <span class="text">
-          다녀온 병원을<br/>검색해 주세요
-        </span>
-        <Button btn-type="line" element-type="button" aria-label="약제비 청구" class="xs" icon="ico-plus" :width="12.5" @click="clickBottomModal" />
+        <span class="text"> 다녀온 병원을<br />검색해 주세요 </span>
+        <Button
+          btn-type="line"
+          element-type="button"
+          aria-label="약제비 청구"
+          class="xs"
+          icon="ico-plus"
+          :width="12.5"
+          @click="clickBottomModal"
+        />
       </h1>
-      <div class="c-tit-sub">서류 없이도 청구 가능한 병원인지 알 수 있어요.</div>
+      <!-- <div class="c-tit-sub">서류 없이도 청구 가능한 병원인지 알 수 있어요.</div> -->
       <InputText class="search-hospital" inp-type="search" placeholder="병원 이름을 입력해 주세요." />
     </div>
-    
+
     <FlexSection>
       <div class="wrap-recent-searches">
         <div class="text">최근 검색</div>
@@ -107,8 +113,23 @@
   >
     <template #content>
       <div class="wrap-radio-btn">
-        <RadioImg id="rdo1" name="rdo1" checked custom-style="button has-icon" text="본인 방문" :icon-src="iconId" icon-alt="아이콘:본인" />
-        <RadioImg id="rdo2" name="rdo1" custom-style="button has-icon" text="가족 방문" :icon-src="iconFamily" icon-alt="아이콘:가족" />
+        <RadioImg
+          id="rdo1"
+          name="rdo1"
+          checked
+          custom-style="button has-icon"
+          text="본인 방문"
+          :icon-src="iconId"
+          icon-alt="아이콘:본인"
+        />
+        <RadioImg
+          id="rdo2"
+          name="rdo1"
+          custom-style="button has-icon"
+          text="가족 방문"
+          :icon-src="iconFamily"
+          icon-alt="아이콘:가족"
+        />
       </div>
       <div class="wrap-claim-info">
         <div class="claim-info-text">약제비 청구를 하시려면 미리 준비해주세요.</div>
@@ -125,7 +146,7 @@
       </div>
     </template>
   </BottomModal>
-  
+
   <ConfirmModal
     :is-visible="isShowConfirmModal"
     title="안내"
@@ -179,7 +200,7 @@ const clickConfirmModal = async () => {
         </button>
       </div>
     </div>`
-  
+
   isShowConfirmModal.value = true
 }
 
@@ -202,9 +223,12 @@ const bottomModalProps = ref({
 .c-tit {
   display: flex;
   justify-content: space-between;
+  &:deep(.icon) {
+    margin-bottom: 0;
+  }
 }
 .search-hospital {
-  margin-top: 4rem;
+  margin-top: 3.2rem;
 }
 .wrap-recent-searches,
 .wrap-claim-type {
@@ -216,7 +240,7 @@ const bottomModalProps = ref({
     font-size: 1.6rem;
     font-weight: 700;
     line-height: 140%;
-    color: #2B2B2B;
+    color: #2b2b2b;
   }
 }
 .wrap-claim-type {
@@ -224,17 +248,17 @@ const bottomModalProps = ref({
   gap: 1.2rem;
 }
 .wrap-hospitals {
-  border-top: 0.1rem solid #EEEEEE;
+  border-top: 0.1rem solid #eeeeee;
   margin: 0 -2rem;
   padding: 0 2rem;
   .item {
-    padding: 2rem 0; 
+    padding: 2rem 0;
     display: flex;
     align-items: center;
     gap: 1.6rem;
     width: 100%;
     &:not(:first-child) {
-      border-top: 0.1rem solid #EEEEEE;
+      border-top: 0.1rem solid #eeeeee;
     }
     .hospital-logo {
       width: 4.8rem;
@@ -254,7 +278,7 @@ const bottomModalProps = ref({
           font-size: 1.6rem;
           font-weight: 700;
           line-height: 1.4;
-          color: #2B2B2B;
+          color: #2b2b2b;
           width: 100%;
           @include mixin.ellipsis;
           overflow: hidden;
@@ -281,17 +305,17 @@ const bottomModalProps = ref({
         .h-label {
           padding: 0.3rem 0.6rem;
           border-radius: 0.4rem;
-          background-color: #EEEEEE;
+          background-color: #eeeeee;
           font-size: 1.2rem;
           font-weight: 500;
           line-height: 1.3;
           color: #555555;
           &.no-doc {
-            background-color: #E5EDFF;
-            color: #4C7FF7;
+            background-color: #e5edff;
+            color: #4c7ff7;
           }
           &.my {
-            background-color: #4C7FF7;
+            background-color: #4c7ff7;
             color: #fff;
           }
         }
@@ -340,11 +364,19 @@ const bottomModalProps = ref({
   display: flex;
   justify-content: center;
   gap: 1.6rem;
+  // 본인 방문 & 가족방문 레이아웃 수정
+  :deep(.c-radiotype.button) {
+    flex: 1 1 100%;
+    .c-label {
+      width: 100%;
+      height: auto;
+    }
+  }
 }
 .wrap-claim-info {
   margin-top: 2.4rem;
   padding: 2rem;
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
   border-radius: 1.2rem;
   .claim-info-text {
     font-weight: 700;
