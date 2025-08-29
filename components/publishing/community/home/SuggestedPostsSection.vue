@@ -76,7 +76,8 @@ const commList = [
     viewNum: 234,
     replyNum: 5,
     dateNum: '3시간',
-    length: 3
+    length: 3,
+    score: 4.0
   },
   {
     id: 2,

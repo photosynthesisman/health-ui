@@ -9,6 +9,10 @@
         :is-label-title="false"
         :show-status="true"
         :is-share-date="true"
+        @status-click="handleStatusClick"
+        @history-click="handleHistoryClick"
+        @share-click="handleShareClick"
+        @cd-click="handleCdClick"
       />
     </div>
   </div>
@@ -42,6 +46,25 @@ interface MedicalHistory {
 }
 
 const props = defineProps<{ medicalInfos: MedicalHistory[] }>()
+
+const emit = defineEmits<{
+  'history-click': [hospital: MedicalHistory]
+  'status-click': [hospital: MedicalHistory]
+  'share-click': [hospital: MedicalHistory]
+  'cd-click': [hospital: MedicalHistory]
+}>()
+const handleStatusClick = (hospital: MedicalHistory) => {
+  emit('status-click', hospital)
+}
+const handleHistoryClick = (hospital: MedicalHistory) => {
+  emit('history-click', hospital)
+}
+const handleShareClick = (hospital: MedicalHistory) => {
+  emit('share-click', hospital)
+}
+const handleCdClick = (hospital: MedicalHistory) => {
+  emit('cd-click', hospital)
+}
 </script>
 <style lang="scss" scoped>
 .c-count-box {

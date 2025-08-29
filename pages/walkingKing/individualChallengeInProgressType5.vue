@@ -39,7 +39,9 @@
     <!-- TOP30 / MY랭킹 / 친구 탭 -->
     <RoundTabs :tabs="roundTabs" :active-key="activeRoundTab" @tab-change="onRoundTabChange" />
     <!-- 친구 없는 경우 -->
-    <HasNoFriends />
+    <FlexColDiv class="justify-center" style="height: 30rem">
+      <HasNoFriends />
+    </FlexColDiv>
     <!-- 매일 부스터 미션 / 부스터 온  -->
     <EverydayBoosterMission @show-modal="handleShowModal" @hide-modal="handleHideModal" />
   </BaseBody>

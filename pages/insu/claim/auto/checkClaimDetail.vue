@@ -20,6 +20,7 @@
       element-type="button"
       aria-label="자동청구 신청하기"
       class="lg w-full medium btn-sticky"
+      @click="clickNext()"
     />
   </ButtonGroup>
 </template>
@@ -59,4 +60,8 @@ const details: ClaimDetailItem[] = [
   { type: 'text', title: '직업', desc: '직장인' },
   { type: 'text', title: '이메일', desc: 'abcde@naver.com' }
 ]
+
+const clickNext = () => {
+  return navigateTo('/insu/claim/auto/completeClaim')
+}
 </script>

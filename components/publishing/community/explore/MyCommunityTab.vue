@@ -1,10 +1,21 @@
 <template>
   <section :class="['my-community-tab', { 'no-community': allCommunities.length === 0 }]">
     <template v-if="allCommunities.length > 0">
-      <TitleBox title="내가 가입한 커뮤니티" class="mb-0" />
+      <FlexRowDiv class="space-between align-center">
+        <TitleBox title="내가 가입한 커뮤니티" class="mb-0" />
+        <Button
+          btn-type="line"
+          element-type="button"
+          aria-label="커뮤니티 탈퇴하기"
+          class="xxs"
+          :width="11.4"
+          :border-radius="14"
+          @click="toggleEditMode"
+        />
+      </FlexRowDiv>
       <div class="community-list">
         <CommunityLink
-          v-for="community in displayedCommunities"
+          v-for="(community, index) in displayedCommunities"
           :key="community.id"
           :url="community.url"
           :member="true"
@@ -13,6 +24,8 @@
           :community-title="community.communityTitle"
           :community-text="community.communityText"
           :community-member="community.communityMember"
+          :is-editing="isEditing"
+          @remove-community="removeCommunity(community, index)"
         />
 
         <!-- 로딩 스피너 -->
@@ -38,12 +51,42 @@
       </div>
     </div>
   </section>
+  <AlertModal
+    :is-visible="isShowAlertModal"
+    :content="alertModalContent"
+    confirm-button-text="확인"
+    @close="toggleAlertModal"
+    @confirm="toggleAlertModal"
+  />
+  <ConfirmModal
+    :is-visible="showConfirmModal"
+    :is-show-close-button="false"
+    :html="ConfirmModalContent"
+    confirm-button-text="탈퇴하기"
+    cancel-button-text="취소하기"
+    @confirm="handleRemoveConfirm"
+    @cancel="closeConfirmModal"
+    @close="closeConfirmModal"
+  />
 </template>
 
 <script setup lang="ts">
+import ConfirmModal from '~/components/common/modal/ConfirmModal.vue'
 import TitleBox from '~/components/common/TitleBox.vue'
 import CommunityLink from '~/components/publishing/community/home/CommunityLink.vue'
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
+import Button from '~/components/publishing/button/Button.vue'
+import AlertModal from '~/components/common/modal/AlertModal.vue'
 
+interface CommunityType {
+  id: number
+  url: string
+  communityImg: string
+  communityTitle: string
+  communityText: string
+  communityMember: number
+  hasNewPosts: boolean
+}
 // 더미 데이터 (실제로는 API에서 가져옴)
 const dummyData = [
   {
@@ -166,7 +209,12 @@ const hasMoreData = ref(true)
 const currentPage = ref(0)
 const itemsPerPage = 10
 const scrollTrigger = ref(null)
+const isEditing = ref(false)
 
+//  '탈퇴하기' 버튼 클릭 시 호출
+const toggleEditMode = () => {
+  isEditing.value = !isEditing.value
+}
 // 초기 데이터 로드
 onMounted(() => {
   loadInitialCommunities()
@@ -240,9 +288,53 @@ const setupInfiniteScroll = () => {
     observer.disconnect()
   })
 }
+const indexToRemove = ref(-1)
+const communityToRemove = ref<CommunityType | null>(null)
 
-// 빈 상태 테스트용 (필요시 주석 해제)
-// const allCommunities = ref([])
+// AlertModal 상태 관리
+const isShowAlertModal = ref(false)
+const alertModalContent = ref('')
+const toggleAlertModal = () => {
+  isShowAlertModal.value = !isShowAlertModal.value
+}
+
+// confirmModal 상태관리
+const showConfirmModal = ref(false)
+const handleRemoveConfirm = () => {
+  if (indexToRemove.value !== -1 && communityToRemove.value) {
+    alertModalContent.value = `${communityToRemove.value.communityTitle}에서 탈퇴 처리가 완료되었습니다.`
+    displayedCommunities.value.splice(indexToRemove.value, 1)
+    const allIndex = allCommunities.value.findIndex(c => c.id === communityToRemove.value?.id)
+    if (allIndex !== -1) {
+      allCommunities.value.splice(allIndex, 1)
+    }
+  }
+  closeConfirmModal()
+  indexToRemove.value = -1
+  communityToRemove.value = null
+
+  toggleAlertModal()
+}
+const ConfirmModalContent = ref('')
+const openExpertMemberModal = () => {
+  if (communityToRemove.value) {
+    ConfirmModalContent.value = `
+      탈퇴 후에는 해당 커뮤니티 활동이 불가합니다.<br/>정말 ${communityToRemove.value.communityTitle}에서 탈퇴하시겠습니까?
+    `
+    showConfirmModal.value = true
+  }
+}
+
+const closeConfirmModal = () => {
+  showConfirmModal.value = false
+}
+
+// 커뮤니티 항목 제거 함수
+const removeCommunity = (community: CommunityType, index: number) => {
+  indexToRemove.value = index
+  communityToRemove.value = community
+  openExpertMemberModal()
+}
 </script>
 <style lang="scss" scoped>
 .my-community-tab {

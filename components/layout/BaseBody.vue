@@ -6,10 +6,10 @@
 
 <script setup lang="ts">
 import { watchEffect, onMounted, nextTick, onUnmounted, inject, computed, ref } from 'vue'
-import { useHeader } from '~/composables/useHeader'
 
 // Props 정의 - 간단한 버전
 interface Props {
+  noHeader?: boolean // 헤더 렌더링 여부 (기본값: false)
   showBackButton?: boolean
   pageTitle?: string
   backgroundType?: string
@@ -27,6 +27,7 @@ interface Props {
   hasChat?: boolean
   hasScrap?: boolean
   hasShare?: boolean
+  hasShareType2?: boolean
   hasMenu?: boolean
   hasCart?: boolean
   notificationCount?: number
@@ -55,8 +56,8 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// 헤더 설정
-const { setHeaderConfig } = useHeader()
+// setHeaderOptions를 inject로 받아오기
+const setHeaderOptions = inject<(options: any) => void>('setHeaderOptions')
 
 // close 이벤트 emit
 const emit = defineEmits<{
@@ -78,6 +79,12 @@ const finalAddTextClickEnabled = computed(() => {
 const updateHeader = async () => {
   const headerConfig: any = {}
 
+  // noHeader가 true일 경우 헤더를 숨김
+  if (props.noHeader === true) {
+    headerConfig.showHeader = false
+    console.log('BaseBody - noHeader is true, hiding header')
+  }
+
   if (props.showBackButton !== undefined) headerConfig.showBackButton = props.showBackButton
   if (props.pageTitle) headerConfig.pageTitle = props.pageTitle
   if (props.backgroundType) headerConfig.backGround = props.backgroundType
@@ -96,6 +103,7 @@ const updateHeader = async () => {
   if (props.hasChat !== undefined) headerConfig.hasChat = props.hasChat
   if (props.hasScrap !== undefined) headerConfig.hasScrap = props.hasScrap
   if (props.hasShare !== undefined) headerConfig.hasShare = props.hasShare
+  if (props.hasShareType2 !== undefined) headerConfig.hasShareType2 = props.hasShareType2
   if (props.hasMenu !== undefined) headerConfig.hasMenu = props.hasMenu
   if (props.notificationCount !== undefined) headerConfig.notificationCount = props.notificationCount
   if (props.cartCount !== undefined) headerConfig.cartCount = props.cartCount
@@ -121,8 +129,11 @@ const updateHeader = async () => {
   if (props.hasWrite !== undefined) headerConfig.hasWrite = props.hasWrite
   if (props.hasProfile !== undefined) headerConfig.hasProfile = props.hasProfile
 
-  if (Object.keys(headerConfig).length > 0) {
-    await setHeaderConfig(headerConfig)
+  if (Object.keys(headerConfig).length > 0 && setHeaderOptions) {
+    console.log('BaseBody - Calling setHeaderOptions with:', headerConfig)
+    setHeaderOptions(headerConfig)
+  } else if (Object.keys(headerConfig).length > 0 && !setHeaderOptions) {
+    console.error('BaseBody - setHeaderOptions is not available!')
   }
 
   // 디버깅용 로그 간소화

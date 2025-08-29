@@ -49,7 +49,7 @@
       <div class="total">총 <strong>2</strong>건</div>
       <div class="sort-insurance">
         <button class="item">전체</button>
-        <button class="item">최근 7일<i class="icon-arrow-down"></i></button>
+        <button class="item" @click="clickSort">최근 7일<i class="icon-arrow-down"></i></button>
       </div>
     </div>
 
@@ -119,14 +119,58 @@
         <Button btn-type="primary" element-type="button" aria-label="추가 서류 접수하기" class="sm mt-24" />
       </div>
     </div>
+    <BottomModal
+      :is-visible="isShowSortModal"
+      title="조회 조건 설정"
+      :is-show-cancel-button="false"
+      confirm-button-text="조회하기"
+      @close="isShowSortModal = false"
+    >
+      <template #content>
+        <NoticeBox :text="'청구내역은 최대 3년전까지 가능해요'" />
+        <FlexSection class="gap-12 mt-16">
+          <FlexColDiv class="gap-6">
+            <InputLabelText label="조회기간" />
+            <SegmentedTabs
+              :tabs="segmentedTabs1"
+              :active-key="activeSegmentedTab1"
+              @tab-change="onSegmentedTabChange1"
+            />
+          </FlexColDiv>
+          <FlexColDiv class="gap-6">
+            <InputLabelText label="조회기간" />
+            <SegmentedTabs
+              :tabs="segmentedTabs2"
+              :active-key="activeSegmentedTab2"
+              @tab-change="onSegmentedTabChange2"
+            />
+          </FlexColDiv>
+          <FlexColDiv class="gap-6">
+            <InputLabelText label="정렬순서" />
+            <SegmentedTabsStyle
+              :tabs="segmentedTabsSort"
+              :active-index="segmentedActiveIndex"
+              @tab-click="handleSegmentedTabClick"
+            />
+          </FlexColDiv>
+        </FlexSection>
+      </template>
+    </BottomModal>
   </BaseBody>
 </template>
 
 <script setup lang="ts">
+import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import Button from '~/components/publishing/button/Button.vue'
 import InputSearch from '~/components/publishing/input/InputSearch.vue'
+import type { BaseModalProps } from '~/types/common/modal.type'
+import SegmentedTabs from '~/components/tabbar/SegmentedTabs.vue'
+import SegmentedTabsStyle from '~/components/common/tab/SegmentedTabs.vue'
+import NoticeBox from '~/components/insu/NoticeBox.vue'
+import FlexSection from '~/components/page/FlexSection.vue'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
 const agentList = ref([
   { id: 'all', label: '전체', value: 'all' },
   { id: '1', label: '설계사1', value: 1 },
@@ -172,6 +216,65 @@ const postSearchOptions = [
   { value: 'content', label: '설계사2' },
   { value: 'author', label: '설계사3' }
 ]
+
+interface DateRangeModalProps extends BaseModalProps {
+  initialStartDate?: Date | null
+  initialEndDate?: Date | null
+  initialPeriodType1?: string
+  initialPeriodType2?: string
+}
+const props = withDefaults(defineProps<DateRangeModalProps>(), {
+  title: '기간 선택',
+  isVisible: false,
+  isShowCloseButton: true,
+  isShowCancelButton: true,
+  isShowConfirmButton: true,
+  confirmButtonText: '확인',
+  cancelButtonText: '취소',
+  disabledCancelButton: false,
+  disabledConfirmButton: false,
+  autoClose: true,
+  initialStartDate: null,
+  initialEndDate: null,
+  initialPeriodType1: 'segment1',
+  initialPeriodType2: 'segment5'
+})
+const isShowSortModal = ref(false)
+const clickSort = () => {
+  isShowSortModal.value = !isShowSortModal.value
+}
+// SegmentedTabs 설정
+const segmentedTabs1 = ref([
+  { title: '전체', key: 'segment1' },
+  { title: '통원', key: 'segment2' },
+  { title: '입원', key: 'segment3' },
+  { title: '자동청구', key: 'segment4' }
+])
+const segmentedTabs2 = ref([
+  { title: '6개월', key: 'segment5' },
+  { title: '1년', key: 'segment6' },
+  { title: '2년', key: 'segment7' },
+  { title: '3년', key: 'segment8' }
+])
+const segmentedTabsSort = [
+  { name: '최신순', code: 'latest' },
+  { name: '과거순', code: 'past' }
+]
+const segmentedActiveIndex = ref(0)
+const handleSegmentedTabClick = (index: number) => {
+  segmentedActiveIndex.value = index
+  console.log('Segmented 탭 클릭:', segmentedTabsSort[index])
+}
+//SegmentedTabs 이벤트 핸들러
+const onSegmentedTabChange1 = (key: string) => {
+  activeSegmentedTab1.value = key
+}
+const onSegmentedTabChange2 = (key: string) => {
+  activeSegmentedTab2.value = key
+}
+// 반응형 상태
+const activeSegmentedTab1 = ref(props.initialPeriodType1 || 'segment1')
+const activeSegmentedTab2 = ref(props.initialPeriodType2 || 'segment5')
 </script>
 <style scoped lang="scss">
 // 청구내역

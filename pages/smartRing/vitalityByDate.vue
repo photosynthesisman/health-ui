@@ -134,12 +134,13 @@ const fullModalProps = ref({
   disabledCancelButton: false,
   disabledConfirmButton: false
 })
+// 2025-08-28 상태 메시지 수정
 const LegendDefinitions: LegendDefinition[] = [
-  { status: 'excellent', text: '적당한', range: '91~100점' },
-  { status: 'good', text: '활력 점수가 좋았던 날', range: '81~90점' },
+  // { status: 'excellent', text: '적당한', range: '91~100점' },
+  { status: 'good', text: '활력 점수가 좋았던 날', range: '81점 이상' },
   { status: 'normal', text: '활력 점수가 보통인 날', range: '71~80점' },
-  { status: 'dislike', text: '활력 점수가 좋지 않은 날', range: '61~70점' },
-  { status: 'bad', text: '활력 점수가 매우 좋지 않은 날', range: '0~60점' }
+  { status: 'bad', text: '활력 점수가 좋지 않은 날', range: '70점 이하' }
+  // { status: 'bad', text: '활력 점수가 매우 좋지 않은 날', range: '0~60점' }
 ]
 // 선택된 날짜 상태 관리 (활력 데이터가 있는 7월로 초기화)
 const selectedDate = ref(new Date(2025, 6, 1)) // 2025년 7월 1일

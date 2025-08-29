@@ -23,6 +23,8 @@
           </span>
         </div>
         <!-- 본문 내용 -->
+        <!-- 2025-08-27 스코어 추가 -->
+        <StarRatingInCommItem v-if="item.score" :score="item.score ?? 0" />
         <FlexRowDiv class="info-box">
           <FlexColDiv class="info">
             <strong class="tit">{{ item.tit }}</strong>
@@ -33,6 +35,7 @@
             <img :src="imageUrl" alt="게시글 이미지" @error="handleImageError" />
           </div>
         </FlexRowDiv>
+
         <div class="detail-info" :class="typeFormat">
           <template v-if="typeFormat === 'type1'">
             <span class="like-num">{{ item.likeNum ?? 0 }}</span>
@@ -90,6 +93,7 @@
 import { ref, computed } from 'vue'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
+import StarRatingInCommItem from '~/components/publishing/community/common/StarRatingInCommItem.vue'
 
 interface LabelItem {
   label: string
@@ -125,6 +129,7 @@ interface CommItem {
   nickname?: string
   profileImageUrl?: string
   rating?: number
+  score?: number
   comments?: Comment[]
 }
 

@@ -30,15 +30,15 @@
           <button type="button" class="c-btn c-icon back" aria-label="검색창 닫기" @click="handleSearchClose">
             <i class="icon back" aria-hidden="true"></i>
           </button>
-          <InputText inp-type="search" />
+          <InputText inp-type="search" @focus="handleSearchFocus" @blur="handleSearchBlur" />
         </div>
       </div>
       <div class="c-modal-body">
         <DmBody />
       </div>
-      <div class="c-modal-footer">
+      <div class="c-modal-footer" :class="{ 'is-keyboard-open': isKeyboardOpen || isSearchInputFocused }">
         <div class="dm-footer-input">
-          <InputMessage />
+          <InputMessage @keyboard-open="handleKeyboardOpen" @keyboard-close="handleKeyboardClose" />
           <ButtonSend />
         </div>
       </div>
@@ -57,18 +57,36 @@ import InputText from '~/components/publishing/input/InputText.vue'
 
 import type { BaseModalProps, ModalEmitEvent } from '~/types/common/modal.type'
 
-const props = withDefaults(defineProps<BaseModalProps>(), {
-  isVisible: false,
-  isShowCloseButton: true,
-  isShowCancelButton: true
-})
+const props = withDefaults(
+  defineProps<{
+    isVisible?: boolean
+    isShowCloseButton?: boolean
+    isShowCancelButton?: boolean
+    disabledConfirmButton?: boolean
+    disabledCancelButton?: boolean
+  }>(),
+  {
+    isVisible: false,
+    isShowCloseButton: true,
+    isShowCancelButton: true,
+    disabledConfirmButton: false,
+    disabledCancelButton: false
+  }
+)
 
-const emit = defineEmits<{ (e: ModalEmitEvent): void }>()
+const emit = defineEmits<{
+  (e: 'close' | 'confirm' | ModalEmitEvent): void
+}>()
 
 const isEntering = ref(false)
 const isLeaving = ref(false)
 // 검색 창 표시 상태 추가
 const isSearchVisible = ref(false)
+// 검색 입력창 포커스 상태
+const isSearchInputFocused = ref(false)
+// 가상 키보드 상태
+const isKeyboardOpen = ref(false)
+const keyboardHeight = ref(0)
 
 // 검색 버튼 클릭 핸들러 추가
 const handleSearchToggle = () => {
@@ -78,6 +96,35 @@ const handleSearchToggle = () => {
 // 검색 창 닫기 핸들러 추가
 const handleSearchClose = () => {
   isSearchVisible.value = false
+  isSearchInputFocused.value = false
+}
+
+// 검색 입력창 포커스 핸들러
+const handleSearchFocus = () => {
+  isSearchInputFocused.value = true
+}
+
+// 검색 입력창 블러 핸들러
+const handleSearchBlur = () => {
+  isSearchInputFocused.value = false
+}
+
+// 가상 키보드 열림 핸들러
+const handleKeyboardOpen = (height: number) => {
+  isKeyboardOpen.value = true
+  keyboardHeight.value = height
+
+  // 키보드가 열리면 body를 스크롤하여 입력창이 보이도록 조정
+  const modalFooter = document.querySelector('.c-modal-footer') as HTMLElement
+  if (modalFooter) {
+    modalFooter.scrollIntoView({ block: 'end' })
+  }
+}
+
+// 가상 키보드 닫힘 핸들러
+const handleKeyboardClose = () => {
+  isKeyboardOpen.value = false
+  keyboardHeight.value = 0
 }
 
 // 모달 표시 상태 변경 감지
@@ -206,6 +253,21 @@ onUnmounted(() => {
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+// 모바일 키보드 대응 스타일
+.c-modal-footer {
+  position: sticky;
+  bottom: 0;
+  background: vars.$white;
+  z-index: 100;
+
+  &.is-keyboard-open {
+    .dm-footer-input {
+      align-items: center;
+      align-content: center;
+    }
   }
 }
 </style>

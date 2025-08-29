@@ -352,7 +352,7 @@ const toggleAttendFreeModal = () => {
 const onAttendFreeConfirm = () => {
   showToast.value = true
   isShowAttendFreeModal.value = false
-  buttonAriaLabel.value = '123번째 참가신청 완료'
+  buttonAriaLabel.value = '참가신청 완료'
   isButtonDisabled.value = true
 }
 
@@ -377,7 +377,7 @@ const toggleAttendPaidModal = () => {
 const onAttendPaidConfirm = () => {
   showToast.value = true
   isShowAttendPaidModal.value = false
-  buttonAriaLabel.value = '123번째 참가신청 완료'
+  buttonAriaLabel.value = '참가신청 완료'
   isButtonDisabled.value = true
 }
 </script>

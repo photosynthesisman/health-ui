@@ -253,6 +253,7 @@ const basicIcons = [
   { class: 'icon ico-gift', name: '선물' },
   { class: 'icon ico-message', name: '메시지' },
   { class: 'icon ico-group', name: '그룹' },
+  { class: 'icon ico-point', name: '포인트 아이콘' },
   { class: 'icon ico-cheer', name: '응원' },
   { class: 'icon ico-congrats', name: '축하' },
   { class: 'icon ico-thanks', name: '감사' },
@@ -261,7 +262,7 @@ const basicIcons = [
   { class: 'icon ico-coffee', name: '커피' },
   { class: 'icon ico-team', name: '팀' },
   { class: 'icon ico-tel', name: '전화' },
-  { class: 'icon ico-rating', name: '평점' },
+  { class: 'icon icon-rating', name: '평점' },
   { class: 'icon ico-heart-beep', name: '하트 비프' },
   { class: 'icon ico-oxygen', name: '산소' },
   { class: 'icon ico-stress', name: '스트레스' },
@@ -527,7 +528,7 @@ const emojiIcons = [
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  background: #f8f9fa;
+  background: #ccc;
   border-radius: 8px;
 }
 

@@ -345,7 +345,7 @@ const toggleCancelAttendModal = () => {
 const onCancelAttendConfirm = () => {
   // showToast.value = true
   isShowCancelAttendModal.value = false
-  // buttonAriaLabel.value = '123번째 참가신청 완료'
+  // buttonAriaLabel.value = '참가신청 완료'
   // isButtonDisabled.value = true
 }
 
@@ -370,7 +370,7 @@ const toggleLackOfPointModal = () => {
 const onLackOfPointConfirm = () => {
   // showToast.value = true
   isShowLackOfPointModal.value = false
-  // buttonAriaLabel.value = '123번째 참가신청 완료'
+  // buttonAriaLabel.value = '참가신청 완료'
   // isButtonDisabled.value = true
 }
 </script>

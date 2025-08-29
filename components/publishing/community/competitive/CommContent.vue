@@ -1,31 +1,29 @@
 <template>
   <div class="community-content">
-    <StickyTabsContainer>
+    <div class="sticky-boxed-wrap">
       <BoxedTabs
         :tabs="boxTabs"
         :active-key="activeBoxTab"
         variant="fill-type"
         @tab-change="onBoxTabChange"
-        class="pt-20 mb-20"
+        class="pt-20 pb-20"
       />
-    </StickyTabsContainer>
-    <StarRating />
+    </div>
+    <StarRating data-anchor="target-section" />
     <TotalCountSelectType
       :count="6"
       class="pt-20 pb-20"
       v-model:selected-period="selectedPeriod"
       :select-options="periodOptions"
     />
-
     <!-- 게시글 없음 상태 -->
     <CommNoItem v-if="commList.length === 0" />
     <!-- 게시글 있음 상태 -->
     <div v-else class="content-wrapper">
-      <ScrollableContents>
-        <FlexSection class="flex flex-col pl-20 pr-20 community-list">
-          <CommItem v-for="item in commList" :key="item.id" :item="item" :type="item.type" />
-        </FlexSection>
-      </ScrollableContents>
+      <FlexSection class="flex flex-col community-list">
+        <CommItem v-for="item in commList" :key="item.id" :item="item" :type="item.type" />
+      </FlexSection>
+
       <CommNoPermission v-if="!hasPermission" />
     </div>
   </div>
@@ -33,12 +31,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import TotalCountSelectType from '~/components/publishing/common/temp/TotalCountSelectType.vue'
-import StickyTabsContainer from '~/components/common/StickyTabsContainer.vue'
-
 import BoxedTabs, { type BoxTab } from '~/components/tabbar/BoxedTabs.vue'
 import FlexSection from '~/components/page/FlexSection.vue'
-import ScrollableContents from '~/components/common/ScrollableContents.vue'
-
 import StarRating from '~/components/publishing/community/competitive/StarRating.vue'
 import CommItem from '~/components/publishing/community/common/CommItem.vue'
 import CommNoPermission from '~/components/publishing/community/common/CommNoPermission.vue'
@@ -122,5 +116,11 @@ const commList = [
 }
 .community-list {
   border-top: 1px solid #eee;
+}
+.sticky-boxed-wrap {
+  position: sticky;
+  top: 10.3rem;
+  z-index: 90;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 </style>

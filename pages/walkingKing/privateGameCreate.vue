@@ -25,6 +25,15 @@
         @time-change="handleTimeChange"
       />
       <FlexColDiv class="gap-12">
+        <InputLabelText label="휴식 시간" :required="true" />
+        <FlexRowDiv class="gap-28">
+          <Radio id="rdo3" v-model="selectedRestMode" name="rdo2" value="setRest" aria-label="휴식시간 설정하기" />
+          <Radio id="rdo4" v-model="selectedRestMode" name="rdo2" value="noRest" aria-label="휴식시간 없이 게임하기" />
+        </FlexRowDiv>
+      </FlexColDiv>
+
+      <InputClockFromTo :hour-only="true" :disabled="selectedRestMode === 'noRest'" />
+      <FlexColDiv class="gap-12">
         <InputLabelText label="게임 방식" :required="true" />
         <FlexRowDiv class="gap-28">
           <Radio id="rdo1" v-model="selectedGameMode" name="rdo1" value="reachGoal" aria-label="먼저 목표 도달하기" />
@@ -64,6 +73,7 @@
 </template>
 
 <script setup lang="ts">
+import InputClockFromTo from '~/components/publishing/input/InputClockFromTo.vue'
 import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import InputCalendarFromTo from '~/components/publishing/input/InputCalendarFromTo.vue'
@@ -84,6 +94,7 @@ import { ref } from 'vue'
 
 // 먼저 목표도달하기 선택시
 const selectedGameMode = ref('reachGoal')
+const selectedRestMode = ref('noRest')
 // 참가자 목록 데이터
 const participants = [
   { name: '김친구', wating: true, src: 'walkingking/img-participant-profile.png' },

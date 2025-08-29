@@ -33,6 +33,16 @@
       </div>
 
       <div class="chart-item center-chart">
+        <div
+          v-if="
+            (props.currentStatus === 'vitality-status' && !props.isSmartRingConnect) ||
+            (props.currentStatus === 'walking-status' && !props.isProfileSet)
+          "
+          class="allow-access"
+          @click="handleAllowAccessClick"
+        >
+          권한 허용하기
+        </div>
         <div class="radial-chart" ref="chart2">
           <svg viewBox="0 0 86 86" class="circular-chart">
             <!-- 배경 호 (7/8 원) -->
@@ -197,6 +207,10 @@ const calculateDashOffset = (index: number, percentage: number) => {
 // center-chart 값 표시 로직
 const getCenterChartValue = () => {
   // health-status이고 profile이 설정되지 않은 경우 '?' 표시
+  if (props.currentStatus === 'walking-status' && !props.isProfileSet) {
+    return '?'
+  }
+  // health-status이고 profile이 설정되지 않은 경우 '?' 표시
   if (props.currentStatus === 'health-status' && !props.isProfileSet) {
     return '?'
   }
@@ -333,6 +347,11 @@ watch(
   },
   { immediate: false }
 )
+// emits 옵션 정의
+const emits = defineEmits(['allow-access-click'])
+const handleAllowAccessClick = () => {
+  emits('allow-access-click')
+}
 </script>
 
 <style scoped lang="scss">
@@ -443,6 +462,7 @@ watch(
 }
 
 .center-chart {
+  position: relative;
   opacity: 1;
   .percentage {
     font-size: 2.2rem;
@@ -470,7 +490,40 @@ watch(
     line-height: 1.4;
   }
 }
-
+.allow-access {
+  position: absolute;
+  z-index: 1;
+  top: -1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem 0.6rem 0.8rem;
+  border-radius: 8px;
+  background: var(--blue-primary);
+  white-space: pre;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.6rem;
+  cursor: pointer;
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 1.6rem;
+    height: 1.6rem;
+    background-image: url("data:image/svg+xml,%0A%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.7934 7.42472H5.64552V5.5993C5.64552 4.38313 6.68224 3.37317 7.97877 3.36145C9.28279 3.34974 10.347 4.33392 10.3595 5.55477V5.57118V5.72115C10.3595 6.09608 10.6842 6.4007 11.0839 6.4007C11.4836 6.4007 11.8084 6.09608 11.8084 5.72115V5.57118C11.8084 3.59813 10.1047 2 8.00125 2C5.89783 2 4.1941 3.59813 4.1941 5.57118V7.42472C3.5321 7.43175 3.0025 7.9379 3 8.55888V12.8658C3 13.4915 3.54209 14 4.20909 14H11.7909C12.4579 14 13 13.4915 13 12.8658V8.55888C13 7.93087 12.4604 7.42472 11.7934 7.42472ZM8.47589 10.7545V11.6286C8.47589 11.8746 8.26355 12.0738 8.00125 12.0738C7.73895 12.0738 7.5266 11.8746 7.5266 11.6286V10.7545C7.08194 10.5085 6.93455 9.97188 7.19685 9.55477C7.45916 9.13767 8.03123 8.99941 8.47589 9.24546C8.92056 9.49151 9.06795 10.0281 8.80565 10.4452C8.72571 10.5718 8.61079 10.6796 8.47589 10.7545Z' fill='white'/%3E%3C/svg%3E%0A");
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -0.4rem;
+    transform: translateX(-50%);
+    width: 1.4rem;
+    height: 1.2rem;
+    background-image: url("data:image/svg+xml,%0A%3Csvg width='14' height='12' viewBox='0 0 14 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.26757 11C6.03737 12.3333 7.96187 12.3333 8.73167 11L13.0618 3.5C13.8316 2.16666 12.8693 0.499999 11.3297 0.499999H2.66948C1.12988 0.499999 0.167637 2.16667 0.937437 3.5L5.26757 11Z' fill='%234C7FF7'/%3E%3C/svg%3E%0A");
+  }
+}
 // 반응형 디자인
 
 @media (max-width: 375px) {

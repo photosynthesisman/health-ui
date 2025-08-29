@@ -1,12 +1,13 @@
 <template>
   <div class="card-info-wrap">
+    <!-- 2025-08-29 분류명 뱃지 제거 -->
     <CardCommInfo
-      badge="분류명"
       title="관리자에서 설정된 커뮤니티명이 들어갑니다."
       text="커뮤니티 한 줄 설명이 들어갑니다"
       :member-num="5678"
       :active-card="activeCard"
       type-format="competitive"
+      src="community/ico-ring.svg"
       @click="selectCard('A')"
     />
 
@@ -133,7 +134,7 @@ const myRank = 2357
   border-radius: 2.4rem;
   padding: 3.2rem 2.4rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
+  height: 29.8rem;
   &:not(.active) {
     padding: 1.6rem 2.4rem;
     display: flex;
@@ -144,16 +145,6 @@ const myRank = 2357
   &.active {
     z-index: 2;
   }
-  &:after {
-    display: block;
-    content: '';
-    position: absolute;
-    bottom: 1.6rem;
-    right: 2rem;
-    width: 12rem;
-    height: 12rem;
-  }
-
   &.card-a {
     color: #fff;
     background: #d49152;
@@ -163,7 +154,7 @@ const myRank = 2357
 
     &.active {
       &:after {
-        background: url('~/assets/images/community/ico-ring.svg') no-repeat center;
+        // background: url('~/assets/images/community/ico-ring.svg') no-repeat center;
       }
     }
 
@@ -202,9 +193,6 @@ const myRank = 2357
     margin-top: -4.8rem;
     &:not(.active) {
       justify-content: flex-end;
-    }
-
-    &.active {
     }
 
     .tit {

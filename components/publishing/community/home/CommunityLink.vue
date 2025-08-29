@@ -9,11 +9,15 @@
         <p class="txt">{{ communityText }}</p>
         <span v-if="member" class="member"> 멤버 {{ (communityMember || 0).toLocaleString() }} </span>
       </div>
+      <div v-if="isEditing" class="icon-cancel" @click.stop="$emit('remove-community')">
+        <img src="/assets/images/insu/icon-cancel.svg" alt="취소" />
+      </div>
     </NuxtLink>
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, defineProps, defineEmits } from 'vue'
+const emit = defineEmits(['remove-community'])
 const props = withDefaults(
   defineProps<{
     url?: string
@@ -23,6 +27,7 @@ const props = withDefaults(
     communityTitle?: string
     communityText?: string
     communityMember?: number
+    isEditing?: boolean
   }>(),
   {
     url: '#',
@@ -31,7 +36,8 @@ const props = withDefaults(
     communityImg: '',
     communityTitle: '',
     communityText: '',
-    communityMember: 0
+    communityMember: 0,
+    isEditing: false
   }
 )
 

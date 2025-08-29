@@ -23,7 +23,9 @@
         <div v-for="(rank, index) in rankData" :key="`rank-${index}`" class="rank-box">
           <i class="badge" :class="rank.iconClass" aria-label="hidden"></i>
           <div class="box-txt">
-            <span class="tit">{{ rank.title }}</span>
+            <span class="tit"
+              >{{ rank.title }} <i v-if="rank.hasArrow" aria-label="hidden" class="icon-arrow-right"></i
+            ></span>
             <strong class="txt">{{ rank.value }}</strong>
           </div>
         </div>
@@ -41,6 +43,7 @@ interface RankData {
   title: string
   value: string
   iconClass: string
+  hasArrow?: boolean
 }
 
 // Props 정의
@@ -52,8 +55,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   rightMargin: 40,
   ranks: () => [
+    { id: 2, title: '올해 랭킹', value: '134위', iconClass: 'total-trophy', hasArrow: true },
     { id: 1, title: '총상금', value: '480,000P', iconClass: 'total-prize' },
-    { id: 2, title: '올해 상금 랭킹', value: '134위', iconClass: 'total-trophy' },
     { id: 3, title: '챌린지 참가', value: '10회', iconClass: 'total-challenge' },
     { id: 4, title: '최고순위', value: '84위', iconClass: 'total-rank' },
     { id: 5, title: '총걸음', value: '264,203걸음', iconClass: 'total-steps' },
@@ -313,7 +316,7 @@ defineExpose({
       .rank-box {
         padding: 1.4rem 1.2rem 1.2rem 1.4rem;
         flex: 0 0 auto;
-        min-width: 11.4rem;
+        min-width: 14rem;
         border-radius: 1.2rem;
         background: rgba(0, 0, 0, 0.3);
         display: flex;
@@ -355,9 +358,17 @@ defineExpose({
           gap: 0.4rem 0;
 
           .tit {
+            display: flex;
+            align-items: center;
             font-size: 1.4rem;
             font-weight: 400;
             line-height: 1.2;
+            .icon-arrow-right {
+              width: 1.6rem;
+              height: 1.6rem;
+              margin-left: 0.2rem;
+              background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M5.99967 4.6665L9.33301 7.99984L5.99967 11.3332' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            }
           }
 
           .txt {

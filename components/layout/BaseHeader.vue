@@ -99,6 +99,7 @@
           hasChat ||
           hasAddText ||
           hasShare ||
+          hasShareType2 ||
           hasMenu ||
           hasEditBtn ||
           hasScrap ||
@@ -153,6 +154,13 @@
         <div v-if="hasShare" class="c-header-share">
           <button type="button" class="c-btn c-icon" aria-label="공유하기">
             <i class="icon ico-share" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <!-- 공유 버튼 type2 -->
+        <div v-if="hasShareType2" class="c-header-share">
+          <button type="button" class="c-btn c-icon" aria-label="공유하기">
+            <i class="icon ico-share-type2" aria-hidden="true"></i>
           </button>
         </div>
 
@@ -332,6 +340,7 @@ const props = defineProps({
   hasChat: { type: Boolean, default: false }, // 채팅 버튼 표시 여부
   chatCount: { type: Number, default: 0 }, // 채팅 갯수
   hasShare: { type: Boolean, default: false }, // 공유 버튼 표시 여부
+  hasShareType2: { type: Boolean, default: false }, // 공유 타입2 버튼 표시 여부
   hasMenu: { type: Boolean, default: false }, // 메뉴 버튼 표시 여부
   hasEditBtn: { type: Boolean, default: false }, // 메뉴 버튼 표시 여부
   hasTelBtn: { type: Boolean, default: false }, // 전화 버튼 표시 여부
@@ -573,6 +582,12 @@ onUnmounted(() => {
     font-weight: vars.$bold;
     letter-spacing: -0.036rem;
     gap: 0.8rem; // 타이틀과 추가 텍스트 사이 간격
+    min-width: 0;
+    margin-right: 0.8rem;
+    strong {
+      display: block;
+      @include mixin.ellipsis;
+    }
 
     // 타이틀 옆 추가 텍스트 스타일
     .title-addon-text {

@@ -10,12 +10,7 @@
     class="pb-36"
   >
     <InputText inp-type="search" placeholder="병원 이름을 입력해주세요." />
-    <!-- ToDo: 저장된 보험사 없을때 활성화 -->
-    <!-- <div class="wrap-empty">
-      <img src="/assets/images/insu/icon-alert.svg" alt="병원 없음" class="img" />
-      <div class="tit">검색 결과가 없어요.</div>
-      <div class="sut-tit">병원 이름을 잘못 입력해거나<br />아직 제휴 전인 병원이에요.</div>
-    </div> -->
+
     <div class="wrap-insurance-list">
       <button
         v-for="(insurance, index) in insuranceList"

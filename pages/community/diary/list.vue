@@ -13,10 +13,9 @@
         :show-calendar="showCalendar"
         @diary-click="handleDiaryClick"
         @date-change="handleDateChange"
-        class="mt-20"
       />
     </StickyTabsContainer>
-    <section>
+    <section class="flex-1 mb-n20">
       <!-- 달력 섹션 컴포넌트 -->
 
       <!-- 달력 모드에서 선택된 날짜의 다이어리만 표시 -->

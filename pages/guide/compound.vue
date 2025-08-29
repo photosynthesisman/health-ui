@@ -1,6 +1,8 @@
 <template>
   <BaseBody logo-type="text" :has-notification="true" :has-reward="true" custom-title="퍼블가이드">
-    <FlexColDiv class="gap-20 mt-20"> <TotalCountTextType /> <TotalCountSelectType /> </FlexColDiv>
+    <FlexColDiv class="gap-20 mt-20">
+      <TotalCountTextType /> <TotalCountSelectType /> <TotalCountSelectInsuType />
+    </FlexColDiv>
   </BaseBody>
 </template>
 
@@ -10,6 +12,7 @@ import BaseBody from '~/components/layout/BaseBody.vue'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import TotalCountTextType from '~/components/publishing/common/temp/TotalCountTextType.vue'
 import TotalCountSelectType from '~/components/publishing/common/temp/TotalCountSelectType.vue'
+import TotalCountSelectInsuType from '~/components/publishing/common/temp/TotalCountSelectInsuType.vue'
 </script>
 
 <style lang="scss" scoped>

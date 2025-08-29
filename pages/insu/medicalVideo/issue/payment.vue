@@ -10,7 +10,7 @@
     </section>
     <ButtonGroup class="is-fixed half">
       <Button aria-label="취소" btn-type="secondary" class="lg" />
-      <Button aria-label="결제하기" btn-type="primary" class="lg" />
+      <Button aria-label="결제하기" btn-type="primary" class="lg" @click="clickNext()" />
     </ButtonGroup>
   </BaseBody>
 </template>
@@ -35,51 +35,56 @@ const totalPrice = computed(() => {
 })
 
 // 단일 의료영상 공유내역 데이터
-const medicalHistory = ref({
-  hospitalName: '충북대학교병원',
-  logo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
-  departments: [
-    {
-      id: 1,
-      department: '영상의학과',
-      examinations: [
-        {
-          id: 1,
-          name: 'CT 검사',
-          date: '2025.05.24'
-        },
-        {
-          id: 2,
-          name: 'MRI 검사',
-          date: '2025.05.24'
-        }
-      ]
-    },
-    {
-      id: 2,
-      department: '가정의학과',
-      examinations: [
-        {
-          id: 3,
-          name: 'X-Ray 검사',
-          date: '2025.05.24'
-        }
-      ]
-    },
-    {
-      id: 3,
-      department: '내과',
-      examinations: [
-        {
-          id: 4,
-          name: '초음파 검사',
-          date: '2025.05.24'
-        }
-      ]
-    }
-  ]
-})
-
+const medicalHistory = ref([
+  {
+    id: 1,
+    hospitalName: '충북대학교병원',
+    logo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
+    departments: [
+      {
+        id: 1,
+        department: '영상의학과',
+        examinations: [
+          {
+            id: 1,
+            name: 'CT 검사',
+            date: '2025.05.24'
+          },
+          {
+            id: 2,
+            name: 'MRI 검사',
+            date: '2025.05.24'
+          }
+        ]
+      },
+      {
+        id: 2,
+        department: '가정의학과',
+        examinations: [
+          {
+            id: 3,
+            name: 'X-Ray 검사',
+            date: '2025.05.24'
+          }
+        ]
+      },
+      {
+        id: 3,
+        department: '내과',
+        examinations: [
+          {
+            id: 4,
+            name: '초음파 검사',
+            date: '2025.05.24'
+          }
+        ]
+      }
+    ]
+  }
+])
+const clickNext = () => {
+  return navigateTo('/insu/medicalVideo/issue/complete')
+}
 // 아코디언 제목
 const labelTitle = ref('의료영상 공유내역')
 </script>

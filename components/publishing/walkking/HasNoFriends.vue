@@ -2,7 +2,7 @@
   <div class="hasno-friends-wrap">
     <div class="img-box"></div>
     <p>아직 참가중인 친구가 없습니다.</p>
-    <Button btn-type="secondary" element-type="button" aria-label="친구에게 알리기" class="xs" :width="11.9" />
+    <Button btn-type="secondary" element-type="button" aria-label="친구에게 알리기" class="xs" :width="12.4" />
   </div>
 </template>
 <script setup lang="ts">
@@ -19,7 +19,7 @@ import Button from '~/components/publishing/button/Button.vue'
   .img-box {
     width: 5.8rem;
     height: 4.4rem;
-    margin: 2.4rem 0 1.2rem;
+    margin-bottom: 1.2rem;
     background: url(~/assets/images/walkingking/img-no-friends.svg) center / 100% no-repeat;
   }
   p {

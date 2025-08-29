@@ -30,14 +30,15 @@ import { ref, onMounted, nextTick, computed } from 'vue'
 .challenge-statistics {
   .steps-dashboard {
     display: flex;
-    flex-wrap: wrap;
     gap: 1.2rem;
     .box {
-      width: calc(33.333% - 1.2rem);
+      width: 100%;
       background: #f9f9f9;
       border-radius: 0.8rem;
       padding: 1.2rem 1.6rem;
       .box-tit {
+        display: block;
+        text-align: left;
         font-size: 1.2rem;
         font-weight: 500;
         color: #555;

@@ -1,5 +1,5 @@
 <template>
-  <div class="diary-list-wrap">
+  <div v-if="groupedDiaryList.length" class="diary-list-wrap">
     <div v-for="dateGroup in groupedDiaryList" :key="dateGroup.date" class="date-group">
       <div class="date-header" :class="{ today: isToday(dateGroup.date) }">
         {{ formatDateWithToday(dateGroup.date) }}
@@ -16,6 +16,12 @@
         />
       </div>
     </div>
+  </div>
+  <div v-else class="diary-list-wrap no-diary">
+    <div class="no-diary-icon">
+      <img src="~/assets/images/diary/ico-diary-empty.svg" alt="일기 없음" />
+    </div>
+    <p>작성된 일기가 없습니다.</p>
   </div>
 </template>
 
@@ -157,6 +163,30 @@ function formatDateWithToday(dateStr: string): string {
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
+  }
+}
+.no-diary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: -2rem;
+  gap: 1.6rem;
+  height: 100%;
+  min-height: 32rem;
+  padding: 8rem 0;
+  .no-diary-content {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  p {
+    font-size: 1.8rem;
+    color: #555;
+    line-height: 2.5rem;
   }
 }
 </style>

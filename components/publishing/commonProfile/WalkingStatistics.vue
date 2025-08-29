@@ -61,6 +61,8 @@ import { ref, onMounted, nextTick, computed } from 'vue'
       border-radius: 0.8rem;
       padding: 1.2rem 1.6rem;
       .box-tit {
+        display: block;
+        text-align: left;
         font-size: 1.2rem;
         font-weight: 500;
         color: #555;

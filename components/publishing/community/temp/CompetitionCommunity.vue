@@ -7,10 +7,11 @@
     <Button aria-label="커뮤니티 가입하고 100P 받기" />
   </FlexColDiv>
   <hr class="hr-section ml-n20 mr-n20 mb-10" />
-
-  <LineTabs :tabs="lineTabs" :active-key="activeLineTab" @tab-change="onLineTabChange" />
-
+  <StickyTabsContainer>
+    <LineTabs :tabs="lineTabs" :active-key="activeLineTab" @tab-change="onLineTabChange" />
+  </StickyTabsContainer>
   <!-- 소통하기 탭 컨텐츠 -->
+
   <div v-if="activeLineTab === 'comm'">
     <CommContent />
   </div>
@@ -30,7 +31,7 @@ import LineTabs, { type Tab } from '~/components/tabbar/LineTabs.vue'
 import NoticeItem from '~/components/publishing/community/common/LinkItemBadge.vue'
 import CommContent from '~/components/publishing/community/competitive/CommContent.vue'
 import LookContent from '~/components/publishing/community/competitive/LookContent.vue'
-
+import StickyTabsContainer from '~/components/common/StickyTabsContainer.vue'
 const activeLineTab = ref('comm')
 
 const lineTabs = ref<Tab[]>([

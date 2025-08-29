@@ -5,11 +5,12 @@
         <Checkbox :id="`foodItem${food.id || index}`" v-model="food.selected" :aria-label="food.name" />
         <span class="amount">{{ food.calories }}kcal, {{ food.serving }} / {{ food.weight }}</span>
       </div>
+      <!-- 2025-08-28 개 > 인분으로 단위 변경 -->
       <InputNum
         v-model="food.quantity"
         :no-line="true"
         placeholder="0"
-        :unit-r="food.unit || '개'"
+        :unit-r="food.unit || '인분'"
         @update:modelValue="onQuantityChange(index, $event)"
       />
     </div>
@@ -89,14 +90,14 @@ function onQuantityChange(index: number, newQuantity: string) {
   }
   .c-input {
     flex: 0 0 auto;
-    width: 12rem;
+    width: 13.6rem;
   }
 }
 
 @media (max-width: 400px) {
   .food-item {
     .c-input {
-      width: 10.4rem;
+      width: 11.6rem;
     }
   }
 }

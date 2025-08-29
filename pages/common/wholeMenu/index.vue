@@ -23,8 +23,9 @@
             <span class="reward medium">12</span>
           </div>
           <div class="fz-16 medium flex flex-row gap-24">
-            <div class="flowing-txt">팔로잉 <strong>152</strong></div>
+            <!-- 2025-08-28 순서 변경 -->
             <div class="flowing-txt">팔로워 <strong>10</strong></div>
+            <div class="flowing-txt">팔로잉 <strong>152</strong></div>
           </div>
         </div>
         <div class="profile-photo ml-auto">
@@ -33,7 +34,8 @@
       </section>
       <section class="flex flex-row gap-12 profile-info pb-12">
         <div class="box-info flex flex-col">
-          <span class="tit">바우처</span>
+          <!-- 2025-08-28 바우처 > 리워드 문구 변경 -->
+          <span class="tit">리워드</span>
           <div class="text">3개</div>
         </div>
         <div class="box-info flex flex-col">

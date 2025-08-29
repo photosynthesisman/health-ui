@@ -1,11 +1,16 @@
 <template>
   <div class="add-family-before">
-    <div class="add-group-tit">
+    <!-- 2025-08-25 디자인 변경 -->
+    <FlexRowDiv class="gap-8 mb-16">
+      <InputText placeholder="그룹 이름을 입력해 주세요." />
+      <Button btn-type="primary" element-type="button" aria-label="확인" :width="8" class="flex-00" />
+    </FlexRowDiv>
+    <!-- <div class="add-group-tit">
       <div class="tit"><strong>그룹</strong>을 추가해 주세요</div>
       <button type="button" class="btn-add-group" title="그룹 추가" @click="clickBottomModal">
         <i class="icon ico-plus"></i>
       </button>
-    </div>
+    </div> -->
     <div class="group-title">
       <div class="title-txt">
         <p>
@@ -42,7 +47,8 @@
 import { ref } from 'vue'
 import BottomModal from '~/components/common/modal/BottomModal.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
-
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
+import Button from '~/components/publishing/button/Button.vue'
 const isShowBottomModal = ref(false)
 const clickBottomModal = () => {
   toggleBottomModal()

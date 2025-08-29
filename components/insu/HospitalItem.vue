@@ -1,5 +1,5 @@
 <template>
-  <div class="item">
+  <div class="item" :class="['border-type', hasBorder]">
     <NuxtLink :to="hospital.href" class="item-link">
       <img class="logo" :src="getImageUrl(hospital.logo)" :alt="hospital.name" />
       <div class="text-wrap">
@@ -18,12 +18,13 @@ interface Hospital {
   href: string
   logo: string
   name: string
-  address: string
+  address?: string
 }
 
 interface Props {
   hospital: Hospital
   modelValue: boolean
+  hasBorder?: boolean
 }
 
 const props = defineProps<Props>()
@@ -37,6 +38,26 @@ const getImageUrl = (logo: string) => {
 <style scoped lang="scss">
 .item {
   position: relative;
+  &.border-type {
+    & + .item {
+      border-top: none;
+      margin-top: 1.2rem;
+    }
+    .item-link {
+      gap: 1.2rem;
+      padding: 1.2rem 2rem;
+      border-radius: 12px;
+      border: 1px solid var(--Semantic-Border-BRD-01, #e2e2e2);
+      background: var(--semantic-background-bg-03-white, #fff);
+      &::after {
+        right: 2rem;
+      }
+      .logo {
+        width: 4.8rem;
+        height: 4.8rem;
+      }
+    }
+  }
   & + .item {
     border-top: 1px solid #eee;
   }

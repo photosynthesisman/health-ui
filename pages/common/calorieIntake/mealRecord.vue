@@ -61,7 +61,6 @@ const foodList = ref([
     calories: 130,
     serving: '1인분',
     weight: '200g',
-    unit: '개',
     selected: true,
     quantity: '0'
   },
@@ -71,7 +70,6 @@ const foodList = ref([
     calories: 240,
     serving: '1인분',
     weight: '88g',
-    unit: '개',
     selected: false,
     quantity: '0'
   },
@@ -81,7 +79,6 @@ const foodList = ref([
     calories: 64,
     serving: '1인분',
     weight: '30g',
-    unit: '개',
     selected: true,
     quantity: '0'
   },
@@ -91,7 +88,6 @@ const foodList = ref([
     calories: 898,
     serving: '1인분',
     weight: '340g',
-    unit: '개',
     selected: false,
     quantity: '0'
   }

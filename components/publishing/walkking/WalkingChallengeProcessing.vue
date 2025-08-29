@@ -2,7 +2,7 @@
   <div class="walking-challenge-item">
     <div class="challenge-date-limit">
       <strong class="limit-date">D-8</strong>
-      <span>대기중</span>
+      <span>참가예정</span>
     </div>
     <div class="flex flex-row gap-4">
       <CommonBadge color="blue">개인전</CommonBadge>
@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, defineProps } from 'vue'
 const props = defineProps({
-  haveRank: { type: Boolean, default: true }
+  haveRank: { type: Boolean, default: false }
 })
 // 프로그레스 바 애니메이션을 위한 반응형 데이터
 const progressWidth = ref(0)

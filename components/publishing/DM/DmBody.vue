@@ -5,8 +5,8 @@
       <p class="date-text">2024년 12월 12일 월요일</p>
     </div>
 
-    <!-- 본인 : mine 클래스 추가 -->
-    <article class="chat-message mine">
+    <!-- 발신자 : sender 클래스 추가 -->
+    <article class="chat-message sender">
       <div class="message-content">
         <div class="sender-wrap">
           <span class="profile-img"><img src="~/assets/images/img-community-01.png" alt="" /></span>
@@ -25,8 +25,8 @@
       </div>
     </article>
 
-    <!-- 발송인  -->
-    <article class="chat-message">
+    <!-- 본인 :  mine -->
+    <article class="chat-message mine">
       <!-- 메세지 박스 -->
       <div class="message-content">
         <!-- 메세지 그룹 -->

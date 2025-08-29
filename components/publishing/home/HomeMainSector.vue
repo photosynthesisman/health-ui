@@ -4,6 +4,7 @@
       :current-status="currentStatus"
       :is-profile-set="healthCondition !== 'noProfileSet'"
       :is-smart-ring-connect="vitalityCondition !== 'noSmartRingConnect'"
+      @allow-access-click="handleAllowAccessClick"
     />
     <section
       class="main-section"
@@ -222,7 +223,7 @@ const isTransitioning = ref(false) // 전환 중 상태
 // 조건부 상태 전역 상태 관리
 // health 상태: 'good', 'careful', 'warning', 'noProfileSet'
 // vitality 상태: 'good', 'careful', 'warning', 'noSmartRingConnect'
-const vitalityCondition = ref('good') // 기본값을 noSmartRingConnect로 설정
+const vitalityCondition = ref('noSmartRingConnect') // 기본값을 noSmartRingConnect로 설정
 const healthCondition = ref('noProfileSet') // 기본값을 noProfileSet로 설정
 
 // 터치 이벤트 핸들러
@@ -401,7 +402,9 @@ onMounted(() => {
     }
   }
 })
-
+const handleAllowAccessClick = () => {
+  console.log()
+}
 onUnmounted(() => {
   // 정리 시 스타일 복원
   document.body.style.overscrollBehaviorX = ''

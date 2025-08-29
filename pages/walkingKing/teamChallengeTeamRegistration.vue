@@ -1,5 +1,5 @@
 <template>
-  <BaseBody page-title="챌린지 참가하기" :show-back-button="true">
+  <BaseBody page-title="챌린지 참가하기" :show-back-button="true" class="pb-60">
     <FlexColDiv class="gap-12">
       <InputText v-model="challengeName" label="챌린지명*" :disabled="true" />
       <InputText v-model="challengeType" label="참가방식*" :disabled="true" />
@@ -146,7 +146,7 @@ const toggleAttendFreeModal = () => {
 const onAttendFreeConfirm = () => {
   showToast.value = true
   isShowAttendFreeModal.value = false
-  buttonAriaLabel.value = '123번째 참가신청 완료'
+  buttonAriaLabel.value = '참가신청 완료'
   isButtonDisabled.value = true
 }
 
@@ -171,7 +171,7 @@ const toggleAttendPaidModal = () => {
 const onAttendPaidConfirm = () => {
   showToast.value = true
   isShowAttendPaidModal.value = false
-  buttonAriaLabel.value = '123번째 참가신청 완료'
+  buttonAriaLabel.value = '참가신청 완료'
   isButtonDisabled.value = true
 }
 </script>

@@ -31,6 +31,7 @@
               :icon="hospital.arrowType ? 'arrow-type' : ''"
               icon-position="right"
               :disabled="!hospital.arrowType"
+              @click="emit('status-click', hospital)"
             />
           </div>
           <div v-if="showCheckbox" class="item-checkbox">
@@ -45,14 +46,22 @@
         </div>
 
         <div class="item-header-bottom">
-          <div v-if="isIssueDate" class="item-date">
+          <div v-if="hospital.accessDate" class="item-date">
             <strong>발급 일자</strong>
             <strong>{{ hospital.accessDate }}</strong>
           </div>
-          <div v-if="isShareDate" class="item-date">
+          <div v-if="hospital.shareFrom || hospital.shareTo" class="item-date">
             <strong>공유 기간</strong>
             <strong v-if="!(hospital.shareFrom && hospital.shareTo)" class="expire">공유기간 만료</strong>
             <strong v-else class="date">{{ hospital.shareFrom }} ~ {{ hospital.shareTo }}</strong>
+          </div>
+          <div v-if="hospital.isRefund" class="item-date">
+            <strong>환불 상태</strong>
+            <strong>{{ hospital.isRefund }}</strong>
+          </div>
+          <div v-if="hospital.refundDate" class="item-date">
+            <strong>환불 일자</strong>
+            <strong>{{ hospital.refundDate }}</strong>
           </div>
 
           <ButtonGroup
@@ -66,6 +75,7 @@
               :btn-type="btn.type"
               class="sm"
               :aria-label="btn.label"
+              @click="handleButtonClick(btn.key, hospital)"
             />
           </ButtonGroup>
         </div>
@@ -119,6 +129,8 @@ interface MedicalHistory {
   arrowType?: boolean
   accessDate?: string
   shareFrom?: string
+  isRefund?: string
+  refundDate?: string
   shareTo?: string
   buttonCount?: 0 | 1 | 2 | 3
   buttonKeys?: ('share' | 'cd' | 'history')[]
@@ -148,6 +160,10 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
   change: [value: boolean]
+  'status-click': [hospital: MedicalHistory]
+  'history-click': [hospital: MedicalHistory]
+  'share-click': [hospital: MedicalHistory]
+  'cd-click': [hospital: MedicalHistory]
 }>()
 
 const allButtons = [
@@ -196,6 +212,16 @@ const getVideoCount = (hospital: MedicalHistory) => {
   return hospital.departments.reduce((total, department) => {
     return total + department.examinations.length
   }, 0)
+}
+const handleButtonClick = (key: string, hospital: MedicalHistory) => {
+  // 'history' 버튼이 클릭되었을 때만 history-click 이벤트 발생
+  if (key === 'history') {
+    emit('history-click', hospital)
+  } else if (key === 'share') {
+    emit('share-click', hospital)
+  } else if (key === 'cd') {
+    emit('cd-click', hospital)
+  }
 }
 </script>
 
@@ -366,7 +392,7 @@ const getVideoCount = (hospital: MedicalHistory) => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-
+      font-size: 1.4rem;
       .department-item-tit-text {
         font-size: 1.4rem;
         font-weight: 400;

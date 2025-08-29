@@ -9,7 +9,8 @@
     <div class="landing-container flex flex-col">
       <div class="landing-top mt-60">
         <h1 class="landing-logo health-god-icon">건강의신</h1>
-        <p class="landing-subtitle mt-16">건강한 오늘이 더 건강한 내일이 됩니다.</p>
+        <!-- 2025-08-28 슬로건 변경 -->
+        <p class="landing-subtitle mt-16">걷기, 건강과 이득을 더하다.</p>
       </div>
 
       <div class="landing-btn-group">

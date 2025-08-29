@@ -29,6 +29,7 @@ interface HeaderOptions {
   hasSearch?: boolean
   hasChat?: boolean
   hasShare?: boolean
+  hasShareType2?: boolean
   hasMenu?: boolean
   hasInsu?: boolean
   insuStatus?: 'unregistered' | 'needUpdate' | 'registered'

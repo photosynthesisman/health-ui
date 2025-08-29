@@ -146,8 +146,9 @@
   </BottomModal>
 
   <!-- 조회 조건 검색 모달 -->
+  <!-- 2025-08-26 title 변경 -->
   <BottomModal
-    title="조회조건을 설정해 주세요"
+    title="조회조건 설정"
     :is-visible="isShowFilterModal"
     :is-show-cancel-button="false"
     @close="isShowFilterModal = false"
@@ -160,43 +161,22 @@
           :active-index="segmentedActiveIndex"
           @tab-click="handleSegmentedTabClick"
         />
-        <div class="tit">보험사 선택</div>
+        <!-- 2025-08-26 전체 선택 체크박스 추가 -->
+        <FlexRowDiv class="mt-20 mb-6 align-end space-between">
+          <div class="tit mg-0">보험사 선택</div>
+          <Checkbox id="checkBox2" v-model="isAllInsurancesSelected" aria-label="전체 선택" />
+        </FlexRowDiv>
+        <!-- 2025-08-26 list for문으로 변경 -->
         <div class="wrap-insurance-list">
-          <button class="item active">
+          <button
+            v-for="(insurance, index) in insuranceList"
+            :key="index"
+            class="item"
+            :class="{ active: insurance.isActive }"
+            @click="clickInsurance(index, $event)"
+          >
             <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
+            <div class="name-insurance">{{ insurance.name }}</div>
           </button>
         </div>
       </div>
@@ -349,7 +329,7 @@ import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import FullModal from '~/components/common/modal/FullModal.vue'
 import SegmentedTabsStyle, { type SegmentTab } from '~/components/common/tab/SegmentedTabs.vue'
 import Checkbox from '~/components/publishing/input/check.vue'
-
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 // 레이아웃에서 addTextClick 핸들러 등록 기능 가져오기
 const setAddTextClickHandler = inject<(handler: () => void) => void>('setAddTextClickHandler')
 // 컴포넌트 마운트 시 addTextClick 핸들러 등록
@@ -382,6 +362,38 @@ const toggleAllSelection = () => {
 const updateAllSelection = () => {
   // 개별 체크박스 변경 시에는 전체 선택 상태가 자동으로 계산됨
   // computed 속성 isAllSelected가 자동으로 업데이트됨
+}
+// 2025-08-26 보험사 더미 데이터 및 전체 및 개별 선택 추가
+// 보험사 목록 데이터
+const insuranceList = ref([
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false }
+])
+// 전체 선택 체크박스 상태
+const isAllInsurancesSelected = computed({
+  get: () => insuranceList.value.every(item => item.isActive),
+  set: newValue => {
+    insuranceList.value.forEach(item => {
+      item.isActive = newValue
+    })
+  }
+})
+
+// 개별 보험사 클릭 핸들러
+const clickInsurance = (index: number, event: MouseEvent) => {
+  insuranceList.value[index].isActive = !insuranceList.value[index].isActive
+
+  const target = event.currentTarget as HTMLElement
+  if (target) {
+    target.blur()
+  }
 }
 
 // SegmentedTabs 데이터

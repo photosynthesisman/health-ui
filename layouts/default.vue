@@ -30,6 +30,7 @@
         :has-chat="headerOptions.hasChat"
         :has-scrap="headerOptions.hasScrap"
         :has-share="headerOptions.hasShare"
+        :has-share-type2="headerOptions.hasShareType2"
         :has-menu="headerOptions.hasMenu"
         :notification-count="headerOptions.notificationCount"
         :cart-count="headerOptions.cartCount"
@@ -62,7 +63,10 @@
       </BaseHeader>
 
       <!-- Page -->
-      <BasePage :class="{ 'pb-68': showTabbar }" :page-type="headerOptions.pageType">
+      <BasePage
+        :class="{ 'pb-68': showTabbar, 'pb-0 pt-0': !headerOptions.showHeader }"
+        :page-type="headerOptions.pageType"
+      >
         <slot></slot>
       </BasePage>
 
@@ -70,7 +74,7 @@
       <BaseTabbar v-if="showTabbar" position="bottom">
         <BaseTabbarItem v-for="tab in tabs" :key="tab.path" :path="tab.path" :icon="tab.icon" :label="tab.label" />
       </BaseTabbar>
-
+      <FloatingBtnWrap :has-write-btn="hasWriteBtn" :anchor-selector="scrollAnchor" />
       <!-- Sidebar -->
     </BaseLayout>
   </div>
@@ -84,7 +88,7 @@ import BasePage from '@/components/page/BasePage.vue'
 import BaseHeader from '@/components/layout/BaseHeader.vue' // 업데이트된 BaseHeader 사용
 import BaseTabbar from '~/components/tabbar/BaseTabbar.vue'
 import BaseTabbarItem from '~/components/tabbar/BaseTabbarItem.vue'
-
+import FloatingBtnWrap from '~/components/common/FloatingBtnWrap.vue'
 const route = useRoute()
 const router = useRouter()
 
@@ -123,6 +127,7 @@ const headerOptions = ref({
   hasChat: false,
   hasScrap: false, // 스크랩 버튼 표시 여부
   hasShare: false,
+  hasShareType2: false,
   hasMenu: false,
   hasTelBtn: false,
 
@@ -215,6 +220,7 @@ watch(
       hasChat: false,
       hasScrap: false,
       hasShare: false,
+      hasShareType2: false,
       hasMenu: false,
       notificationCount: 0,
       cartCount: 0,
@@ -316,6 +322,27 @@ const showBackButton = computed(() => {
 // 헤더 표시 여부
 const showHeader = computed(() => {
   return headerOptions.value.showHeader
+})
+
+// 'has-write-btn' props를 위한 computed 속성
+const hasWriteBtn = computed(() => {
+  const writeBtnPages = [
+    '/community/[community]/type/competition',
+    '/community/[community]/type/hospital',
+    '/community/[community]/type/insu'
+  ]
+  return writeBtnPages.includes(route.path)
+})
+
+// 'anchor' props를 위한 computed 속성
+const scrollAnchor = computed(() => {
+  // 앵커가 필요한 페이지 경로와 해당 앵커 ID를 매핑
+  switch (route.path) {
+    case '/community/[community]/type/competition':
+      return 'target-section'
+    default:
+      return undefined
+  }
 })
 
 // 이벤트 핸들러

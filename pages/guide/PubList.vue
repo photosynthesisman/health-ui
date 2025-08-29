@@ -1245,6 +1245,14 @@ const pageListData: PageItemData[] = [
     section: 'insu',
     status: ''
   },
+  {
+    title: '자동청구 신청 완료',
+    description: '자동청구 신청 완료',
+    path: '/insu/claim/auto/completeClaim',
+    category: '진료비 선택 및 확인',
+    section: 'insu',
+    status: ''
+  },
 
   // 청구내역 조회
   {
@@ -1346,12 +1354,84 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
-    title: '의료영상공유',
+    title: '의료영상공유 - 제휴병원 환자정보 조회',
     description: '제휴병원 환자정보 조회',
-    path: '/insu/medicalVideo/issue',
+    path: '/insu/medicalVideo/issue/search',
     category: '의료영상 발급',
     section: 'insu',
-    status: 'ing'
+    status: ''
+  },
+  {
+    title: '의료영상공유 - 제휴병원 찾기',
+    description: '제휴병원 찾기',
+    path: '/insu/medicalVideo/issue/hospital',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상공유 - 발급받을 병원 선택',
+    description: '발급받을 병원 선택',
+    path: '/insu/medicalVideo/issue/selectedHospitals',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상공유 - 진료과 및 검사종류 선택',
+    description: '진료과 및 검사종류 선택',
+    path: '/insu/medicalVideo/issue/category',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상공유 - 의료영상 결제확인',
+    description: '의료영상 결제확인',
+    path: '/insu/medicalVideo/issue/payment',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상공유 - 의료영상 발급완료',
+    description: '의료영상 발급완료',
+    path: '/insu/medicalVideo/issue/complete',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상 내역 - 영상보관함',
+    description: '의료영상 내역 - 영상보관함',
+    path: '/insu/medicalVideo/history',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상 내역 - 의료영상 발급안내',
+    description: '의료영상 내역 - 의료영상 발급안내',
+    path: '/insu/medicalVideo/history/EmptySharedHospital',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상 내역 - 전송할 병원선택',
+    description: '의료영상 내역 - 전송할 병원선택',
+    path: '/insu/medicalVideo/history/ShareHospitalSelection',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상 내역 - 배송 주소 입력',
+    description: '의료영상 내역 - 배송 주소 입력',
+    path: '/insu/medicalVideo/history/DeliveryAddressForm',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
   },
   {
     title: '의료영상 내역 - 배송내역 결제',
@@ -1359,7 +1439,7 @@ const pageListData: PageItemData[] = [
     path: '/insu/medicalVideo/history/deliveryPaymentDetails',
     category: '의료영상 발급',
     section: 'insu',
-    status: 'ing'
+    status: ''
   },
   {
     title: '의료영상 내역 - 공유 정보 확인',
@@ -1367,7 +1447,7 @@ const pageListData: PageItemData[] = [
     path: '/insu/medicalVideo/history/confirmSharedData',
     category: '의료영상 발급',
     section: 'insu',
-    status: 'ing'
+    status: ''
   },
   {
     title: '의료영상 내역 - 배송 신청 완료',
@@ -1375,7 +1455,7 @@ const pageListData: PageItemData[] = [
     path: '/insu/medicalVideo/history/deliveryRegistrationComplete',
     category: '의료영상 발급',
     section: 'insu',
-    status: 'ing'
+    status: ''
   },
   {
     title: '의료영상 내역 - 이메일 정보 확인',
@@ -1383,7 +1463,7 @@ const pageListData: PageItemData[] = [
     path: '/insu/medicalVideo/history/checkEmailInfo',
     category: '의료영상 발급',
     section: 'insu',
-    status: 'ing'
+    status: ''
   },
   {
     title: '의료영상 내역 - 이메일 발송 완료',
@@ -1391,7 +1471,7 @@ const pageListData: PageItemData[] = [
     path: '/insu/medicalVideo/history/completeEmailSent',
     category: '의료영상 발급',
     section: 'insu',
-    status: 'ing'
+    status: ''
   },
   {
     title: '의료영상 내역 - 제휴병원 찾기 진행 및 결과 확인',
@@ -1399,7 +1479,7 @@ const pageListData: PageItemData[] = [
     path: '/insu/medicalVideo/history/resultFindPartnerHospital',
     category: '의료영상 발급',
     section: 'insu',
-    status: 'ing'
+    status: ''
   },
   {
     title: '의료영상 내역 - 조회된 제휴병원 없음',
@@ -1407,7 +1487,7 @@ const pageListData: PageItemData[] = [
     path: '/insu/medicalVideo/history/resultEmptyPartnerHospital',
     category: '의료영상 발급',
     section: 'insu',
-    status: 'ing'
+    status: ''
   },
   // 걷기왕 섹션
   {
@@ -1467,9 +1547,33 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
+    title: '걷기왕챌린지_휴식시간 설정',
+    description: '휴식시간 설정',
+    path: '/walkingKing/RestTimeSetting',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
     title: '챌린지 자세히보기 - 개인',
     description: '챌린지 자세히보기',
     path: '/walkingKing/individualChallengeDetail',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕챌린지 진행중 구간미션A',
+    description: '챌린지 구간미션',
+    path: '/walkingKing/individualChallengeInProgressSegmentMissionAType1',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '챌린지 전체 - 개인',
+    description: '챌린지 전체 화면',
+    path: '/walkingKing/individualChallengeHomeType1',
     category: '건강관리',
     section: 'walkingKing',
     status: ''
@@ -1616,6 +1720,70 @@ const pageListData: PageItemData[] = [
     title: '걷기왕 프라이빗 게임-게임 만들기',
     description: '걷기왕 프라이빗 걷기게임-게임 만들기',
     path: '/walkingKing/privateGameCreate',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕 프라이빗 게임-시작전',
+    description: '걷기왕 프라이빗 게임-시작전',
+    path: '/walkingKing/privateGameBeforeStart',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕 프라이빗 게임-시작전(초대완료시-방장화면)',
+    description: '걷기왕 프라이빗 게임-시작전(초대완료시-방장화면)',
+    path: '/walkingKing/privateGameBeforeStartRoomHost',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕 프라이빗 게임-시작전(초대랜딩-참여자)',
+    description: '걷기왕 프라이빗 게임-시작전(초대랜딩-참여자)',
+    path: '/walkingKing/privateGameBeforeStartParticipant',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕 프라이빗 게임-진행중',
+    description: '걷기왕 프라이빗 게임-진행중',
+    path: '/walkingKing/privateGameInProgress',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕 프라이빗 게임-참가자프로필',
+    description: '걷기왕 프라이빗 게임-참가자프로필',
+    path: '/walkingKing/privateGameParticipantProfile',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕 프라이빗 게임-종료1',
+    description: '걷기왕 프라이빗 게임-종료1',
+    path: '/walkingKing/privateGameEnded',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕 프라이빗 게임-종료(먼저목표도달하기)',
+    description: '걷기왕 프라이빗 게임-종료(먼저목표도달하기)',
+    path: '/walkingKing/privateGameEndedResultType1',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '걷기왕 프라이빗 게임-종료(무조건많이걷기)',
+    description: '걷기왕 프라이빗 게임-종료(무조건많이걷기)',
+    path: '/walkingKing/privateGameEndedResultType2',
     category: '건강관리',
     section: 'walkingKing',
     status: ''
@@ -2444,6 +2612,14 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   // 건강부채
+  {
+    title: '건강지수 서브메인',
+    description: '레몬건강지수-메인',
+    path: '/healthDebt/',
+    category: '건강부채',
+    section: 'healthDebt',
+    status: ''
+  },
   {
     title: '자세히 보기',
     description: '레몬건강지수-자세히 보기',

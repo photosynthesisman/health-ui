@@ -25,7 +25,7 @@
     <hr class="hr-section ml-n20 mr-n20" />
 
     <!-- 패밀리 숙제 -->
-    <FamilyHomeWork />
+    <FamilyHomeWork badge-text="" title-text="" />
 
     <hr class="hr-section ml-n20 mr-n20" />
 

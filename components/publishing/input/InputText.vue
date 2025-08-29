@@ -236,6 +236,7 @@ function onSearchClick() {
   font-weight: vars.$regular; // 400과 동일
   line-height: 1.6rem;
   color: #555;
+  margin-bottom: 0.6rem;
   & + .c-inp-el {
     margin-left: 0;
   }
@@ -249,6 +250,8 @@ function onSearchClick() {
 }
 
 .c-inpType {
+  display: flex;
+  flex-direction: column;
   .c-inp-el {
     position: relative;
     display: flex;

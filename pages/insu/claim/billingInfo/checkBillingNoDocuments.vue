@@ -9,19 +9,17 @@
     class="pb-36"
   >
     <h1 class="c-tit mt-24 mb-24">
-      <span class="text">
-        보험금 청구 내역을<br />확인할 수 있어요
-      </span>
+      <span class="text"> 보험금 청구 내역을<br />확인할 수 있어요 </span>
     </h1>
     <Button btn-type="line" element-type="button" aria-label="처방전 조회" />
-    <hr class="hr-section ml-n20 mr-n20" />
+    <hr class="hr-section ml-n20 mr-n20 mb-8" />
     <LineTabsStyle :tabs="lineTabs" :active-index="lineActiveIndex" @tab-click="handleLineTabClick" class="" />
     <div class="total-claim">
       <div class="total">총 <strong>3</strong>건</div>
       <div class="sort-insurance">
         <button class="item">전체</button>
         <button class="item">6개월</button>
-        <button class="item">최신순<i class="icon-arrow-down"></i></button>
+        <button class="item" @click="clickSort">최신순<i class="icon-arrow-down"></i></button>
       </div>
     </div>
 
@@ -159,15 +157,58 @@
         </div>
       </div>
     </div>
+    <BottomModal
+      :is-visible="isShowSortModal"
+      title="조회 조건 설정"
+      :is-show-cancel-button="false"
+      confirm-button-text="조회하기"
+      @close="isShowSortModal = false"
+    >
+      <template #content>
+        <NoticeBox :text="'청구내역은 최대 3년전까지 가능해요'" />
+        <FlexSection class="gap-12 mt-16">
+          <FlexColDiv class="gap-6">
+            <InputLabelText label="조회기간" />
+            <SegmentedTabs
+              :tabs="segmentedTabs1"
+              :active-key="activeSegmentedTab1"
+              @tab-change="onSegmentedTabChange1"
+            />
+          </FlexColDiv>
+          <FlexColDiv class="gap-6">
+            <InputLabelText label="조회기간" />
+            <SegmentedTabs
+              :tabs="segmentedTabs2"
+              :active-key="activeSegmentedTab2"
+              @tab-change="onSegmentedTabChange2"
+            />
+          </FlexColDiv>
+          <FlexColDiv class="gap-6">
+            <InputLabelText label="정렬순서" />
+            <SegmentedTabsStyle
+              :tabs="segmentedTabsSort"
+              :active-index="segmentedActiveIndex"
+              @tab-click="handleSegmentedTabClick"
+            />
+          </FlexColDiv>
+        </FlexSection>
+      </template>
+    </BottomModal>
   </BaseBody>
 </template>
 
 <script setup lang="ts">
+import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
+import SegmentedTabs from '~/components/tabbar/SegmentedTabs.vue'
+import SegmentedTabsStyle from '~/components/common/tab/SegmentedTabs.vue'
+import NoticeBox from '~/components/insu/NoticeBox.vue'
+import FlexSection from '~/components/page/FlexSection.vue'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import Button from '~/components/publishing/button/Button.vue'
 import LineTabsStyle, { type Tab } from '~/components/common/tab/LineTabs.vue'
-
+import type { BaseModalProps } from '~/types/common/modal.type'
 // LineTabs 데이터
 const lineTabs: Tab[] = [
   { name: '서류없이 청구', code: 'no-docs' },
@@ -196,7 +237,7 @@ const selectOptions = ref([
   { value: '설계사2', label: '설계사2' },
   { value: '설계사3', label: '설계사3' },
   { value: '설계사4', label: '설계사4' },
-  { value: '설계사5', label: '설계사5' },
+  { value: '설계사5', label: '설계사5' }
 ])
 
 const selectedAgent = ref<any>(agentList.value[0])
@@ -219,13 +260,71 @@ const selectCustomOption = (option: any) => {
   selectedAgent.value = option
   closeCustomSelect()
 }
+interface DateRangeModalProps extends BaseModalProps {
+  initialStartDate?: Date | null
+  initialEndDate?: Date | null
+  initialPeriodType1?: string
+  initialPeriodType2?: string
+}
+const props = withDefaults(defineProps<DateRangeModalProps>(), {
+  title: '기간 선택',
+  isVisible: false,
+  isShowCloseButton: true,
+  isShowCancelButton: true,
+  isShowConfirmButton: true,
+  confirmButtonText: '확인',
+  cancelButtonText: '취소',
+  disabledCancelButton: false,
+  disabledConfirmButton: false,
+  autoClose: true,
+  initialStartDate: null,
+  initialEndDate: null,
+  initialPeriodType1: 'segment1',
+  initialPeriodType2: 'segment5'
+})
+const isShowSortModal = ref(false)
+const clickSort = () => {
+  isShowSortModal.value = !isShowSortModal.value
+}
+// SegmentedTabs 설정
+const segmentedTabs1 = ref([
+  { title: '전체', key: 'segment1' },
+  { title: '통원', key: 'segment2' },
+  { title: '입원', key: 'segment3' },
+  { title: '자동청구', key: 'segment4' }
+])
+const segmentedTabs2 = ref([
+  { title: '6개월', key: 'segment5' },
+  { title: '1년', key: 'segment6' },
+  { title: '2년', key: 'segment7' },
+  { title: '3년', key: 'segment8' }
+])
+const segmentedTabsSort = [
+  { name: '최신순', code: 'latest' },
+  { name: '과거순', code: 'past' }
+]
+const segmentedActiveIndex = ref(0)
+const handleSegmentedTabClick = (index: number) => {
+  segmentedActiveIndex.value = index
+  console.log('Segmented 탭 클릭:', segmentedTabsSort[index])
+}
+//SegmentedTabs 이벤트 핸들러
+const onSegmentedTabChange1 = (key: string) => {
+  activeSegmentedTab1.value = key
+}
+const onSegmentedTabChange2 = (key: string) => {
+  activeSegmentedTab2.value = key
+}
+// 반응형 상태
+const activeSegmentedTab1 = ref(props.initialPeriodType1 || 'segment1')
+const activeSegmentedTab2 = ref(props.initialPeriodType2 || 'segment5')
 </script>
 <style scoped lang="scss">
 // 청구내역
 .wrap-claim-list {
   margin: 0 -2rem;
   padding: 2rem;
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
   .item {
     padding: 2rem;
     background-color: #fff;
@@ -247,10 +346,10 @@ const selectCustomOption = (option: any) => {
           font-weight: 500;
           line-height: 130%;
           color: #555555;
-          background-color: #EEEEEE;
+          background-color: #eeeeee;
           // 동의대기
           &.ready {
-            background-color: #BD9600;
+            background-color: #bd9600;
             color: #fff;
           }
           // 청구완료
@@ -260,22 +359,22 @@ const selectCustomOption = (option: any) => {
           }
           // 통원
           &.out {
-            background-color: #FEF4CC;
-            color: #8D7000;
+            background-color: #fef4cc;
+            color: #8d7000;
           }
           // 입원
           &.in {
-            background-color: #EAF2CC;
-            color: #506A1D;
+            background-color: #eaf2cc;
+            color: #506a1d;
           }
           // 실패
           &.fail {
-            background-color: #C82626;
+            background-color: #c82626;
             color: #fff;
           }
           // 가능
           &.able {
-            background-color: #C36F00;
+            background-color: #c36f00;
             color: #fff;
           }
         }
@@ -333,7 +432,7 @@ const selectCustomOption = (option: any) => {
       margin-top: 1.2rem;
       padding: 1.6rem 2rem;
       border-radius: 1.2rem;
-      background-color: #F4F4F4;
+      background-color: #f4f4f4;
       .detail-item {
         @include mixin.flex-container(justify-between items-center);
         &:not(:first-child) {
@@ -352,7 +451,6 @@ const selectCustomOption = (option: any) => {
   }
 }
 
-
 // .custom-select-options {
 //   margin: 0 -2rem;
 //   .custom-option-item {
@@ -362,26 +460,26 @@ const selectCustomOption = (option: any) => {
 //     padding: 1.6rem 2rem;
 //     cursor: pointer;
 //     transition: background-color 0.2s ease;
-    
+
 //     &:hover {
 //       background-color: #f6f9ff;
 //     }
-    
+
 //     &.selected {
 //       background-color: #f6f9ff;
-      
+
 //       .option-label {
 //         color: #4c7ff7;
 //         font-weight: 700;
 //       }
 //     }
-    
+
 //     .option-label {
 //       font-size: 1.6rem;
 //       font-weight: 500;
 //       color: #555555;
 //     }
-    
+
 //     .check-icon {
 //       color: #4c7ff7;
 //       font-weight: bold;
@@ -399,7 +497,7 @@ const selectCustomOption = (option: any) => {
     font-size: 1.6rem;
     font-weight: 500;
     line-height: 140%;
-    color: #2B2B2B;
+    color: #2b2b2b;
     strong {
       font-weight: 700;
     }
@@ -419,7 +517,7 @@ const selectCustomOption = (option: any) => {
         background-size: 100%;
         transition: transform 0.3s ease;
         transform-origin: center center;
-        
+
         &.rotated {
           transform: rotate(180deg);
         }
@@ -433,7 +531,7 @@ const selectCustomOption = (option: any) => {
           top: 50%;
           left: 0;
           transform: translateY(-50%);
-          background-color: #E2E2E2;
+          background-color: #e2e2e2;
         }
       }
       &:last-child {

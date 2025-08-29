@@ -2,7 +2,6 @@
   <FlexColDiv class="gap-16">
     <CardCommInfo
       card-custom-class="card-hospital"
-      badge="분류명"
       title="세브란스병원 커뮤니티"
       text="세브란스 환자, 보호자들의<br/>의료, 건강 정보교환 목적으로<br/> 활동되고 있어요"
       :member-num="5678"

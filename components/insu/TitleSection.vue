@@ -1,18 +1,30 @@
 <template>
   <div class="header-section">
     <h2 class="title" v-html="title"></h2>
-    <p class="description" v-if="description" v-html="description"></p>
-    <slot name="content"> </slot>
+    <p v-if="description" class="description tooltip-tit">
+      <span v-html="description"></span>
+      <TooltipIcon v-if="tooltip" :tooltip-text="tooltip" />
+    </p>
+    <slot name="content"></slot>
   </div>
 </template>
 <script setup lang="ts">
+import TooltipIcon from '~/components/common/TooltipIcon.vue'
 defineProps<{
   title: string
-  description: string
+  description?: string
+  tooltip?: string
 }>()
 </script>
 
 <style lang="scss" scoped>
+:deep(.tooltip-tit .tooltip) {
+  top: 100%;
+}
+:deep(.tooltip-icon-wrapper) {
+  display: inline-block;
+  margin-left: 0.4rem;
+}
 .header-section {
   display: flex;
   flex-direction: column;

@@ -240,7 +240,7 @@ onMounted(() => {
 
 const showToast = ref(true) // 토스트 표시 상태
 const isShowBottomModal = ref(false) // 챌린지 참가 모달 표시 상태
-const buttonAriaLabel = ref('123번째 참가신청 완료') // 버튼 aria-label
+const buttonAriaLabel = ref('참가신청 완료') // 버튼 aria-label
 const isButtonDisabled = ref(true)
 
 // 유료 참가 버튼 클릭 시
@@ -347,7 +347,7 @@ const toggleAttendFreeModal = () => {
 const onAttendFreeConfirm = () => {
   showToast.value = true
   isShowAttendFreeModal.value = false
-  buttonAriaLabel.value = '123번째 참가신청 완료'
+  buttonAriaLabel.value = '참가신청 완료'
   isButtonDisabled.value = true
 }
 
@@ -372,7 +372,7 @@ const toggleAttendPaidModal = () => {
 const onAttendPaidConfirm = () => {
   showToast.value = true
   isShowAttendPaidModal.value = false
-  buttonAriaLabel.value = '123번째 참가신청 완료'
+  buttonAriaLabel.value = '참가신청 완료'
   isButtonDisabled.value = true
 }
 </script>

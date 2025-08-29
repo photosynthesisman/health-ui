@@ -1,8 +1,7 @@
 <template>
   <div class="walking-challenge-item">
-    <div class="challenge-date-limit">
-      <strong class="limit-date">34일</strong>
-      <span>남음</span>
+    <div class="challenge-date-limit" :class="{ inactivity: isInactivity, openSoon: isOpenSoon }">
+      <span v-html="flagTit"></span>
     </div>
     <div class="flex flex-row gap-4">
       <CommonBadge color="blue">개인전</CommonBadge>
@@ -46,7 +45,10 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, defineProps } from 'vue'
 const props = defineProps({
-  haveRank: { type: Boolean, default: true }
+  isInactivity: { type: Boolean, default: false },
+  haveRank: { type: Boolean, default: false },
+  flagTit: { type: String, default: '챌린지 진행중' },
+  isOpenSoon: { type: Boolean, default: false }
 })
 // 프로그레스 바 애니메이션을 위한 반응형 데이터
 const progressWidth = ref(0)
@@ -193,6 +195,21 @@ function startCountingAnimation() {
   justify-content: center;
   text-align: center;
   background: #fddd66;
+  &.openSoon {
+    background-color: #eee;
+    &:after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='18' viewBox='0 0 48 18' fill='none'%3E%3Cpath d='M25.5606 17.6276C24.6288 18.1241 23.3711 18.1241 22.4394 17.6276L1.07785e-06 5.67085L1.2619e-06 3.5656C1.37995e-06 2.21521 1.41123 -2.58222e-07 3.99894 -3.19979e-08L44.6679 3.5234e-06C47.2556 3.74962e-06 47.3333 1.72297 47.9988 3.5656L48 5.67085L25.5606 17.6276Z' fill='%23EEEEEE'/%3E%3C/svg%3E");
+    }
+  }
+  &.inactivity {
+    background: var(--blue-primary);
+    &:after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='18' viewBox='0 0 48 18' fill='none'%3E%3Cpath d='M25.5606 17.6276C24.6288 18.1241 23.3711 18.1241 22.4394 17.6276L1.07785e-06 5.67085L1.2619e-06 3.5656C1.37995e-06 2.21521 1.41123 -2.58222e-07 3.99894 -3.19979e-08L44.6679 3.5234e-06C47.2556 3.74962e-06 47.3333 1.72297 47.9988 3.5656L48 5.67085L25.5606 17.6276Z' fill='%234C7FF7'/%3E%3C/svg%3E");
+    }
+    span {
+      color: #fff;
+    }
+  }
   .limit-date {
     font-size: 1.3rem;
     font-weight: 700;

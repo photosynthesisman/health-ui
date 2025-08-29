@@ -11,9 +11,7 @@
     <!-- ToDo: 편집 버튼 다른 곳에 넣으시고 삭제 -->
     <div @click="clickFullModal">피보험자 편집(버튼)</div>
     <h1 class="c-tit mt-24">
-      <span class="text">
-        청구할 피보험자를 선택해 주세요
-      </span>
+      <span class="text"> 청구할 피보험자를 선택해 주세요 </span>
     </h1>
     <!-- ToDo: 고객정보가 없을때 -->
     <!-- <div class="wrap-empty">
@@ -23,71 +21,109 @@
         <i class="icon ico-plus"></i>
         나의 가족 / 제 3자 추가</button>
     </div> -->
-    
+
     <div class="total-claim">
       <div class="total">총 <strong>3</strong>명</div>
       <div class="sort-insurance">
         <button class="item">전체</button>
-        <button class="item"  @click="isShowFilterModal = true">DB손해 <i class="icon-arrow-down"></i></button>
+        <button class="item" @click="isShowFilterModal = true">DB손해 <i class="icon-arrow-down"></i></button>
       </div>
     </div>
     <div class="wrap-customer-list">
       <div class="item">
         <div class="item-header">
           <div class="customer-info">
-            <div class="name">
-              김레몬</div>
+            <div class="name">김레몬</div>
             <div class="phone">010****5555</div>
           </div>
-          <Button btn-type="primary" element-type="button" aria-label="청구하기" class="xs" icon="save-line" :width="6.8"  @click="clickClaim" />
+          <Button
+            btn-type="primary"
+            element-type="button"
+            aria-label="청구하기"
+            class="xs"
+            icon="save-line"
+            :width="6.8"
+            @click="clickClaim"
+          />
         </div>
         <div class="wrap-label">
           <label class="label-name" for="KB손해보험">KB손해보험</label>
           <label class="label-name" for="삼성화재">삼성화재</label>
         </div>
         <div class="memo">
-          <span class="text">메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다.</span>
+          <span class="text"
+            >메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모
+            영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모
+            영역입니다.</span
+          >
         </div>
       </div>
       <div class="item">
         <div class="item-header">
           <div class="customer-info">
             <div class="name">
-              <img class="icon-nagative" src="/assets/images/insu/subrogation/icon-nagative.png" alt="선택금지">
-              김레몬</div>
+              <img class="icon-nagative" src="/assets/images/insu/subrogation/icon-nagative.png" alt="선택금지" />
+              김레몬
+            </div>
             <div class="phone">010****5555</div>
           </div>
-          <Button btn-type="secondary" element-type="button" aria-label="서명요청" class="xs" icon="save-line" :width="6.8" @click="requestSign" />
+          <Button
+            btn-type="secondary"
+            element-type="button"
+            aria-label="서명요청"
+            class="xs"
+            icon="save-line"
+            :width="6.8"
+            @click="requestSign"
+          />
         </div>
         <div class="wrap-label">
           <label class="label-name" for="KB손해보험">KB손해보험</label>
           <label class="label-name" for="삼성화재">삼성화재</label>
         </div>
         <div class="memo">
-          <span class="text">메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다.</span>
+          <span class="text"
+            >메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모
+            영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모
+            영역입니다.</span
+          >
         </div>
       </div>
       <div class="item">
         <div class="item-header">
           <div class="customer-info">
             <div class="name">
-              <img class="icon-nagative" src="/assets/images/insu/subrogation/icon-nagative.png" alt="선택금지">
-              김레몬</div>
+              <img class="icon-nagative" src="/assets/images/insu/subrogation/icon-nagative.png" alt="선택금지" />
+              김레몬
+            </div>
             <div class="phone">010****5555</div>
           </div>
-          <Button btn-type="primary" element-type="button" aria-label="서명대기" class="xs" icon="save-line" :width="6.8" disabled />
+          <Button
+            btn-type="primary"
+            element-type="button"
+            aria-label="서명대기"
+            class="xs"
+            icon="save-line"
+            :width="6.8"
+            disabled
+          />
         </div>
         <div class="wrap-label">
           <label class="label-name" for="KB손해보험">KB손해보험</label>
           <label class="label-name" for="삼성화재">삼성화재</label>
         </div>
         <div class="memo">
-          <span class="text">메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다.</span>
+          <span class="text"
+            >메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모
+            영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다. 메모
+            영역입니다.</span
+          >
         </div>
       </div>
       <button class="add-item" @click="movePage">
         <i class="icon ico-plus"></i>
-        {{ selectedTab === 'customer' ? '고객 추가' : '나의 가족/제3자 추가' }}</button>
+        {{ selectedTab === 'customer' ? '고객 추가' : '나의 가족/제3자 추가' }}
+      </button>
     </div>
   </BaseBody>
 
@@ -109,8 +145,9 @@
   </BottomModal>
 
   <!-- 조회 조건 검색 모달 -->
+  <!-- 2025-08-26 title 변경 -->
   <BottomModal
-    title="조회조건을 설정해 주세요"
+    title="조회조건 설정"
     :is-visible="isShowFilterModal"
     :is-show-cancel-button="false"
     @close="isShowFilterModal = false"
@@ -123,43 +160,22 @@
           :active-index="segmentedActiveIndex"
           @tab-click="handleSegmentedTabClick"
         />
-        <div class="tit">보험사 선택</div>
+        <!-- 2025-08-26 전체 선택 체크박스 추가 -->
+        <FlexRowDiv class="mt-20 mb-6 align-end space-between">
+          <div class="tit mg-0">보험사 선택</div>
+          <Checkbox id="checkBox2" v-model="isAllInsurancesSelected" aria-label="전체 선택" />
+        </FlexRowDiv>
+        <!-- 2025-08-26 list for문으로 변경 -->
         <div class="wrap-insurance-list">
-          <button class="item active">
+          <button
+            v-for="(insurance, index) in insuranceList"
+            :key="index"
+            class="item"
+            :class="{ active: insurance.isActive }"
+            @click="clickInsurance(index, $event)"
+          >
             <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
-          </button>
-          <button class="item">
-            <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-            <div class="name-insurance" @click="clickInsurance">DB손해</div>
+            <div class="name-insurance">{{ insurance.name }}</div>
           </button>
         </div>
       </div>
@@ -200,9 +216,9 @@
     <template #content>
       <div class="wrap-edit">
         <div class="wrap-check">
-          <Checkbox 
-            id="checkBox1" 
-            aria-label="전체 선택" 
+          <Checkbox
+            id="checkBox1"
+            aria-label="전체 선택"
             :model-value="isAllSelected"
             @update:model-value="toggleAllSelection"
           />
@@ -211,11 +227,11 @@
           <div class="item">
             <div class="item-header">
               <label for="check1" class="c-checktype-btn">
-                <input 
-                  id="check1" 
-                  name="check1" 
-                  type="checkbox" 
-                  class="c-checktype-check" 
+                <input
+                  id="check1"
+                  name="check1"
+                  type="checkbox"
+                  class="c-checktype-check"
                   v-model="insuredPersonSelections[0]"
                   @change="updateAllSelection"
                 />
@@ -232,17 +248,20 @@
               <div class="label">삼성화재</div>
             </div>
             <div class="wrap-memo">
-              <div class="text">메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다.</div>
+              <div class="text">
+                메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모
+                영역입니다.
+              </div>
             </div>
           </div>
           <div class="item">
             <div class="item-header">
               <label for="check2" class="c-checktype-btn">
-                <input 
-                  id="check2" 
-                  name="check2" 
-                  type="checkbox" 
-                  class="c-checktype-check" 
+                <input
+                  id="check2"
+                  name="check2"
+                  type="checkbox"
+                  class="c-checktype-check"
                   v-model="insuredPersonSelections[1]"
                   @change="updateAllSelection"
                 />
@@ -259,17 +278,20 @@
               <div class="label">삼성화재</div>
             </div>
             <div class="wrap-memo">
-              <div class="text">메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다.</div>
+              <div class="text">
+                메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모
+                영역입니다.
+              </div>
             </div>
           </div>
           <div class="item">
             <div class="item-header">
               <label for="check3" class="c-checktype-btn">
-                <input 
-                  id="check3" 
-                  name="check3" 
-                  type="checkbox" 
-                  class="c-checktype-check" 
+                <input
+                  id="check3"
+                  name="check3"
+                  type="checkbox"
+                  class="c-checktype-check"
                   v-model="insuredPersonSelections[2]"
                   @change="updateAllSelection"
                 />
@@ -286,7 +308,10 @@
               <div class="label">삼성화재</div>
             </div>
             <div class="wrap-memo">
-              <div class="text">메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모 영역입니다.</div>
+              <div class="text">
+                메모 영역입니다. 메모가 없으면 숨기고, 많으면 2줄까지 표시됩니다. 메모 영역입니다. 메모 영역입니다. 메모
+                영역입니다.
+              </div>
             </div>
           </div>
         </div>
@@ -304,7 +329,7 @@
     @close="isShowConfirmModal = false"
     @cancel="isShowConfirmModal = false"
     @confirm="handleDeleteConfirm"
-    style="z-index: 9999;"
+    style="z-index: 9999"
   />
 </template>
 
@@ -318,6 +343,7 @@ import SegmentedTabsStyle, { type SegmentTab } from '~/components/common/tab/Seg
 import Checkbox from '~/components/publishing/input/check.vue'
 import ConfirmModal from '~/components/common/modal/ConfirmModal.vue'
 import warnIcon from '~/assets/images/insu/subrogation/icon-warn.png'
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 
 const isShowConfirmModal = ref(false)
 const confirmModalContent = ref('')
@@ -329,7 +355,7 @@ const clickConfirmModal = async () => {
       <div style="font-weight: 700;font-size: var(--num-18);text-align: left;;margin-top:0.6rem;">선택한 피보험자 ${selectedCount.value}명을 삭제하시겠어요?</div>
       <div style="font-size: var(--num-14);text-align: center;color: #555555;margin-top:0.8rem;">삭제하시면 복구가 불가능해요.</div>
     </div>`
-  
+
   // 확인 모달 표시
   isShowConfirmModal.value = true
 }
@@ -337,13 +363,13 @@ const clickConfirmModal = async () => {
 const handleDeleteConfirm = () => {
   // 선택된 항목들 삭제 로직 실행
   console.log('선택한 피보험자들 삭제:', selectedCount.value, '명')
-  
+
   // 선택된 항목들을 실제로 삭제하는 로직을 여기에 구현
   // 예: API 호출, 상태 업데이트 등
-  
+
   // 삭제 후 선택 상태 초기화
   insuredPersonSelections.value = insuredPersonSelections.value.map(() => false)
-  
+
   // 모달들 닫기
   isShowConfirmModal.value = false
   isShowEditFullModal.value = false
@@ -377,6 +403,38 @@ const toggleAllSelection = () => {
 const updateAllSelection = () => {
   // 개별 체크박스 변경 시에는 전체 선택 상태가 자동으로 계산됨
   // computed 속성 isAllSelected가 자동으로 업데이트됨
+}
+// 2025-08-26 보험사 더미 데이터 및 전체 및 개별 선택 추가
+// 보험사 목록 데이터
+const insuranceList = ref([
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false },
+  { name: 'DB손해', isActive: false }
+])
+// 전체 선택 체크박스 상태
+const isAllInsurancesSelected = computed({
+  get: () => insuranceList.value.every(item => item.isActive),
+  set: newValue => {
+    insuranceList.value.forEach(item => {
+      item.isActive = newValue
+    })
+  }
+})
+
+// 개별 보험사 클릭 핸들러
+const clickInsurance = (index: number, event: MouseEvent) => {
+  insuranceList.value[index].isActive = !insuranceList.value[index].isActive
+
+  const target = event.currentTarget as HTMLElement
+  if (target) {
+    target.blur()
+  }
 }
 
 // SegmentedTabs 데이터
@@ -417,7 +475,7 @@ const selectOptions = ref([
   { value: '설계사2', label: '설계사2' },
   { value: '설계사3', label: '설계사3' },
   { value: '설계사4', label: '설계사4' },
-  { value: '설계사5', label: '설계사5' },
+  { value: '설계사5', label: '설계사5' }
 ])
 
 // const selectedTab = ref<'customer' | 'etc'>('customer')
@@ -483,12 +541,6 @@ const requestSign = () => {
 const editInsuredData = () => {
   navigateTo('/insu/claim/subrogation/serviceInUse/EditInsuredData')
 }
-
-const clickInsurance = () => {
-  // 보험사 클릭 처리
-  console.log('보험사 클릭')
-}
-
 const sendNoti = () => {
   // 알림톡 발송 처리
   console.log('알림톡 발송')
@@ -521,7 +573,7 @@ const sendNoti = () => {
     font-size: 1.4rem;
     color: #555555;
     border-radius: 0.4rem;
-    border: 0.1rem solid #E2E2E2;
+    border: 0.1rem solid #e2e2e2;
 
     i.icon {
       margin-right: 0.4rem;
@@ -543,7 +595,7 @@ const sendNoti = () => {
     font-size: 1.6rem;
     font-weight: 500;
     line-height: 140%;
-    color: #2B2B2B;
+    color: #2b2b2b;
     strong {
       font-weight: 700;
     }
@@ -563,7 +615,7 @@ const sendNoti = () => {
         background-size: 100%;
         transition: transform 0.3s ease;
         transform-origin: center center;
-        
+
         &.rotated {
           transform: rotate(180deg);
         }
@@ -577,7 +629,7 @@ const sendNoti = () => {
           top: 50%;
           left: 0;
           transform: translateY(-50%);
-          background-color: #E2E2E2;
+          background-color: #e2e2e2;
         }
       }
       &:last-child {
@@ -590,7 +642,7 @@ const sendNoti = () => {
   position: relative;
   margin: 0 -2rem;
   padding: 2rem 2rem 4.8rem;
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
   .item {
     padding: 2.4rem 2rem;
     background-color: #fff;
@@ -626,7 +678,7 @@ const sendNoti = () => {
       .label-name {
         padding: 0.3rem 0.6rem;
         border-radius: 0.4rem;
-        background-color: #EEEEEE;
+        background-color: #eeeeee;
         font-size: 1.2rem;
         font-weight: 500;
         color: #555555;
@@ -635,8 +687,8 @@ const sendNoti = () => {
     .memo {
       margin-top: 1.2rem;
       padding: 1.2rem;
-      border: 0.1rem solid #E2E2E2;
-      background-color: #F9F8F7;
+      border: 0.1rem solid #e2e2e2;
+      background-color: #f9f8f7;
       border-radius: 0.8rem;
       .text {
         font-size: 1.4rem;
@@ -652,7 +704,7 @@ const sendNoti = () => {
     font-weight: 500;
     text-align: center;
     background-color: #fff;
-    border: 0.1rem solid #E2E2E2;
+    border: 0.1rem solid #e2e2e2;
     display: flex;
     align-items: center;
     gap: 0.2rem;
@@ -678,7 +730,7 @@ const sendNoti = () => {
     margin-top: 1.6rem;
     padding: 1.3rem 1.6rem;
     border-radius: 0.8rem;
-    border: 0.1rem solid #E2E2E2;
+    border: 0.1rem solid #e2e2e2;
     .name,
     .phone {
       font-weight: 500;
@@ -690,7 +742,7 @@ const sendNoti = () => {
   .text-warn {
     margin-top: 0.6rem;
     font-size: 1.3rem;
-    color: #F14960;
+    color: #f14960;
   }
 }
 
@@ -708,7 +760,6 @@ const sendNoti = () => {
   }
 }
 .wrap-insurance-list {
-  margin-top: 1.2rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-columns: auto;
@@ -720,8 +771,8 @@ const sendNoti = () => {
     gap: 0.4rem;
     align-items: center;
     border-radius: 0.8rem;
-    background-color: #F9F9F9;
-    border: 0.1rem solid #F9F9F9;
+    background-color: #f9f9f9;
+    border: 0.1rem solid #f9f9f9;
     &:focus,
     &.hover,
     &.active {
@@ -734,7 +785,7 @@ const sendNoti = () => {
     .name-insurance {
       font-size: 1.4rem;
       font-weight: 500;
-      color: #2B2B2B;
+      color: #2b2b2b;
     }
   }
 }
@@ -742,13 +793,13 @@ const sendNoti = () => {
   margin: 0 -2rem;
   padding: 0 2rem 2rem;
   display: flex;
-  border-bottom: 0.1rem solid #EEEEEE;
+  border-bottom: 0.1rem solid #eeeeee;
 }
 .wrap-insured-list {
   .item {
     padding: 2.2rem 0;
     &:not(:first-child) {
-      border-top: 0.1rem solid #EEEEEE;
+      border-top: 0.1rem solid #eeeeee;
     }
     .item-header {
       display: flex;
@@ -796,7 +847,6 @@ const sendNoti = () => {
             font-size: 1.4rem;
             color: #555555;
           }
-
         }
       }
       .btn-edit {
@@ -813,7 +863,7 @@ const sendNoti = () => {
       .label {
         padding: 0.3rem 0.6rem;
         border-radius: 0.4rem;
-        background-color: #EEEEEE;
+        background-color: #eeeeee;
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 130%;
@@ -824,8 +874,8 @@ const sendNoti = () => {
       margin-top: 1.2rem;
       margin-left: 3.6rem;
       padding: 1.2rem;
-      border: 0.1rem solid #E2E2E2;
-      background-color: #F9F8F7;
+      border: 0.1rem solid #e2e2e2;
+      background-color: #f9f8f7;
       border-radius: 0.8rem;
       .text {
         text-align: left;
@@ -837,5 +887,4 @@ const sendNoti = () => {
     }
   }
 }
-
 </style>

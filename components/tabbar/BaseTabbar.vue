@@ -115,6 +115,9 @@ withDefaults(defineProps<BaseTabbarProps>(), {
     bottom: 0;
     left: 0;
     z-index: 100;
+    & + .floating-btn-wrap {
+      bottom: 8.4rem;
+    }
   }
 }
 

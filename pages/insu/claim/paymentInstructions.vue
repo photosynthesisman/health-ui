@@ -81,7 +81,7 @@
               alt="진단서 발급 방법1"
             />
             <div class="wrap-desc">
-              <div class="text">청구에신에서 발급하기</div>
+              <div class="text">청구의신에서 발급하기</div>
               <div class="label">가능</div>
             </div>
             <i class="icon-arrow-down" :class="{ rotated: expandedItems[0] }"></i>

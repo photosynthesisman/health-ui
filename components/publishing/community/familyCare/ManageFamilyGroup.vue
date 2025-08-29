@@ -1,9 +1,13 @@
 <template>
   <div class="family-group">
-    <div class="add-group-tit">
+    <!-- <div class="add-group-tit">
       <button type="button" class="btn-add-group" @click="clickBottomModal">그룹추가 하기</button>
-    </div>
-
+    </div> -->
+    <!-- 2025-08-25 디자인 변경 -->
+    <FlexRowDiv class="gap-8 mb-16">
+      <InputText placeholder="그룹 이름을 입력해 주세요." />
+      <Button btn-type="primary" element-type="button" aria-label="확인" :width="8" class="flex-00" />
+    </FlexRowDiv>
     <div class="group-list" ref="groupList">
       <TransitionGroup name="list-move">
         <div
@@ -56,19 +60,23 @@
     <Teleport to="body">
       <BottomModal
         :is-visible="isShowBottomModal"
-        title="그룹명"
+        title="그룹 이름 수정하기"
         :is-show-close-button="true"
-        :is-show-cancel-button="false"
-        :is-show-confirm-button="false"
+        confirm-button-text="수정하기"
+        cancel-button-text="취소하기"
         @close="toggleBottomModal"
       >
         <template #content>
-          <div class="pb-32 mb-24">
-            <InputText />
-            <div class="regist-wrap">
+          <FlexSection class="text-left gap-20 pb-16">
+            <InputText label="기존 그룹 이름" :disabled="true" />
+            <FlexColDiv class="gap-6">
+              <InputLabelText label="수정할 그룹 이름" />
+              <InputText :disabled="true" />
+            </FlexColDiv>
+            <!-- <div class="regist-wrap">
               <button type="button" class="btn-regist">등록하기</button>
-            </div>
-          </div>
+            </div> -->
+          </FlexSection>
         </template>
       </BottomModal>
     </Teleport>
@@ -76,11 +84,15 @@
 </template>
 
 <script setup lang="ts">
+import FlexSection from '~/components/page/FlexSection.vue'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import { ref, computed, nextTick } from 'vue'
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 import { ConfirmModal } from '@lemonhc/fo-ui/components/modal'
 import BottomModal from '~/components/common/modal/BottomModal.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
-
+import Button from '~/components/publishing/button/Button.vue'
+import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
 const clickConfirmModal = async (index: number) => {
   try {
     const modalContent = `
@@ -747,5 +759,8 @@ const deleteGroup = async (index: number) => {
     overflow: hidden;
     @include mixin.rippleEffectPrimary;
   }
+}
+:deep(.input-tit) {
+  color: var(--blue-primary);
 }
 </style>

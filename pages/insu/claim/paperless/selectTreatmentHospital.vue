@@ -12,23 +12,9 @@
       <h1 class="c-tit">
         <span class="text"> 다녀온 병원을 선택해주세요. </span>
       </h1>
-      <div class="c-tit-sub">
+      <div class="c-tit-sub tooltip-tit">
         <span class="text">최근 3년간 MY병원 진료내역이에요.</span>
-        <div class="icon" @click="toggleTooltip">
-          <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M10 10.5V6.75M10 13.2795V13.3125M17.5 10.5C17.5 14.6421 14.1421 18 10 18C5.85786 18 2.5 14.6421 2.5 10.5C2.5 6.35786 5.85786 3 10 3C14.1421 3 17.5 6.35786 17.5 10.5Z"
-              stroke="#555555"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          <div class="tooltip" v-show="isTooltipOpen">
-            <button type="button" class="c-tooltip-close-btn" aria-label="닫기" @click.stop="closeTooltip"></button>
-            <div class="text">MY병원을 연결해 최근 진료 내역을 업데이트할 수 있어요.</div>
-          </div>
-        </div>
+        <TooltipIcon tooltip-text="MY병원을 연결해 최근 진료 내역을 업데이트할 수 있어요." />
       </div>
       <Button btn-type="line" element-type="button" aria-label="MY병원 연결하기" class="mt-16" />
     </div>
@@ -150,6 +136,7 @@ import Button from '~/components/publishing/button/Button.vue'
 import LineTabs, { type Tab } from '~/components/tabbar/LineTabs.vue'
 import { ConfirmModal, BottomModal } from '@lemonhc/fo-ui/components/modal'
 import RadioImg from '~/components/publishing/input/radioImg.vue'
+import TooltipIcon from '~/components/common/TooltipIcon.vue'
 import iconId from '~/assets/images/insu/icon-id.svg'
 import iconFamily from '~/assets/images/insu/icon-family.svg'
 
@@ -167,7 +154,6 @@ const tabs = ref<Tab[]>([
   { title: '통원', to: '/insu/claim/paperless/selectTreatmentHospital' },
   { title: '입원', to: '/insu/claim/paperless/selectHospitalization' }
 ])
-const isTooltipOpen = ref(false)
 
 // 병원 데이터
 const hospitals = ref([
@@ -207,14 +193,6 @@ const hospitals = ref([
 
 // 각 병원의 내역 표시 상태를 개별적으로 관리
 const billVisibleStates = ref(hospitals.value.map(() => false))
-
-const toggleTooltip = () => {
-  isTooltipOpen.value = !isTooltipOpen.value
-}
-
-const closeTooltip = () => {
-  isTooltipOpen.value = false
-}
 
 const toggleBill = (index: number) => {
   billVisibleStates.value[index] = !billVisibleStates.value[index]

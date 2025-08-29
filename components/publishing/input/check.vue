@@ -136,7 +136,7 @@ function onChange(e: Event) {
       &:checked {
         ~ .c-label {
           .c-switch-rail {
-            background-color: var(--cchk-switch-rail-color-active);
+            background-color: var(--blue-primary);
           }
           .c-switch-button {
             left: calc(100% - var(--cchk-switch-button-width) - var(--cchk-switch-offset));

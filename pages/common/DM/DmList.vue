@@ -1,30 +1,33 @@
 <template>
   <BaseBody :show-back-button="true" page-title="Direct Message" logo-type="text">
     <DmListWrap>
-      <DmItem @click="openDmModal" />
-      <DmItem @click="openDmModal" />
-      <DmItem @click="openDmModal" />
-      <DmItem @click="openDmModal" />
-      <DmItem @click="openDmModal" />
-      <DmItem @click="openDmModal" />
-      <DmItem @click="openDmModal" />
-      <DmItem @click="openDmModal" />
+      <DmItem @click="moveToDMChat" />
+      <DmItem @click="moveToDMChat" />
+      <DmItem @click="moveToDMChat" />
+      <DmItem @click="moveToDMChat" />
+      <DmItem @click="moveToDMChat" />
+      <DmItem @click="moveToDMChat" />
+      <DmItem @click="moveToDMChat" />
+      <DmItem @click="moveToDMChat" />
     </DmListWrap>
-
-    <DmModal 
-      :is-visible="showDmModal" 
-      :is-show-cancel-button="true"
-      :is-show-confirm-button="true"
-      cancel-button-text="취소"
-      confirm-button-text="전송"
-      @close="closeDmModal" 
-      @confirm="handleConfirm"
-    />
+    <!-- 모달이 아닌 페이지 형태로 변경 -->
+    <!-- <Teleport to="body">
+      <DmModal
+        :is-visible="showDmModal"
+        :is-show-cancel-button="true"
+        :is-show-confirm-button="true"
+        cancel-button-text="취소"
+        confirm-button-text="전송"
+        @close="closeDmModal"
+        @confirm="handleConfirm"
+      />
+    </Teleport> -->
   </BaseBody>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import BaseBody from '~/components/layout/BaseBody.vue'
 
 import DmListWrap from '~/components/publishing/DM/DmListWrap.vue'
@@ -32,10 +35,16 @@ import DmItem from '~/components/publishing/DM/DmItem.vue'
 
 import DmModal from '~/components/publishing/DM/DmModal.vue'
 
+const router = useRouter()
+
 // DM 모달 상태 관리
 const showDmModal = ref(false)
 
-// DM 모달 열기
+// DM 채팅 페이지로 이동
+const moveToDMChat = () => {
+  router.push('/common/DM/DmChatPage')
+}
+
 const openDmModal = () => {
   showDmModal.value = true
 }

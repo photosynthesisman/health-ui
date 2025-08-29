@@ -26,14 +26,17 @@
       <ChallengeHistoryWrap>
         <ChallengeHistoryItem date="25.07">
           <WalkingChallengeProcessing />
-          <WalkingChallenge :have-rank="false" />
+          <WalkingChallenge :have-rank="true" />
         </ChallengeHistoryItem>
         <ChallengeHistoryItem date="25.06">
-          <WalkingChallengeOngoing />
-          <WalkingChallenge :have-rank="false" />
+          <WalkingChallengeOngoing :have-rank="false" />
+          <WalkingChallenge :have-rank="false" :is-inactivity="true" />
         </ChallengeHistoryItem>
         <ChallengeHistoryItem date="25.05">
           <WalkingChallengeDisabled :have-rank="false" />
+        </ChallengeHistoryItem>
+        <ChallengeHistoryItem date="25.04">
+          <WalkingChallenge :have-rank="false" :flag-tit="'모집<br/>예정'" is-open-soon />
         </ChallengeHistoryItem>
       </ChallengeHistoryWrap>
     </div>

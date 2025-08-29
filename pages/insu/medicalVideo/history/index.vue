@@ -16,7 +16,15 @@
         <!-- 알림 노출 -->
         <StatusNotification v-if="medicalInfos.length > 0" :count="medicalInfos.length" />
         <!-- v-if="list.length > 0" -->
-        <IssueHistory v-if="medicalInfos.length > 0" :medical-infos="medicalInfos" class="mb-n32" />
+        <IssueHistory
+          v-if="medicalInfos.length > 0"
+          :medical-infos="medicalInfos"
+          class="mb-n32"
+          @history-click="handleMedicalHistoryClick"
+          @status-click="handleIssueHistoryClick"
+          @share-click="handleMedicalShareClick"
+          @cd-click="handleShipCdClick"
+        />
         <InsuEmpty v-else title="발급 내역이 없어요." sub-title="발급 내역을 확인할 수 있어요." />
 
         <ButtonGroup class="is-fixed">
@@ -31,22 +39,38 @@
         <InsuEmpty v-else title="배송 내역이 없어요." sub-title="배송 신청 후 내역을 확인할 수 있어요." />
       </div>
     </StickyTabsContainer>
+
+    <FullModal
+      :is-visible="isShowFullModal"
+      v-bind="fullModalProps"
+      :confirm-button-text="'확인'"
+      @close="toggleFullModal"
+      @confirm="toggleFullModal"
+    >
+      <template #content>
+        <component :is="modalContentComponent" :data="selectedHospitalData" />
+      </template>
+    </FullModal>
   </BaseBody>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
+
 import BaseBody from '~/components/layout/BaseBody.vue'
 import TitleSection from '~/components/insu/TitleSection.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import Button from '~/components/publishing/button/Button.vue'
+import FullModal from '~/components/common/modal/FullModal.vue'
 import StickyTabsContainer from '~/components/common/StickyTabsContainer.vue'
 import LineTabs, { type Tab } from '~/components/tabbar/LineTabs.vue'
 import IssueHistory from '~/components/insu/IssueHistory.vue'
 import DeliveryHistory from '~/components/insu/DeliveryHistory.vue'
 import StatusNotification from '~/components/insu/StatusNotification.vue'
-
+import IssuanceInformationModal from '~/components/insu/IssuanceInformationModal.vue'
+import RefundInformationModal from '~/components/insu/RefundInformationModal.vue'
+import SharedHistoryModal from '~/components/insu/SharedHistoryModal.vue'
 import InsuEmpty from '~/components/insu/InsuEmpty.vue'
-
+import type { Component } from 'vue'
 const activeLineTab = ref('issue')
 
 const lineTabs = ref<Tab[]>([
@@ -56,6 +80,24 @@ const lineTabs = ref<Tab[]>([
 
 const onLineTabChange = (key: string) => {
   activeLineTab.value = key
+}
+
+// 모달 상태 관련 데이터
+const isShowFullModal = ref(false)
+const fullModalProps = ref({
+  title: '', // 모달 타이틀을 동적으로 변경할 수 있도록 수정
+  isShowCloseButton: true,
+  isShowCancelButton: false,
+  isShowConfirmButton: true,
+  disabledCancelButton: false,
+  disabledConfirmButton: false
+})
+
+const modalContentComponent = ref<Component | null>(null)
+const selectedHospitalData = ref<MedicalHistory | null>(null)
+
+const toggleFullModal = () => {
+  isShowFullModal.value = !isShowFullModal.value
 }
 
 // 목록 데이터 (실사용 시 API 연동)
@@ -81,6 +123,9 @@ interface MedicalHistory {
   buttonCount?: 0 | 1 | 2 | 3
   buttonKeys?: ('share' | 'cd' | 'history')[]
   departments: Department[]
+  isRefund?: string
+  refundDate?: string
+  isShareDate?: boolean
 }
 
 // 영상발급내역
@@ -89,17 +134,18 @@ const medicalInfos = ref<MedicalHistory[]>([
     id: 1,
     hospitalName: '경북대학교병원',
     logo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
-    status: '발급 완료',
+    status: '발급 정보',
     arrowType: true,
     shareFrom: '2025.08.20',
     shareTo: '2025.08.22',
+    accessDate: '2025.08.20',
     buttonCount: 3,
     departments: [
       {
         id: 1,
         department: '영상의학과',
         examinations: [
-          { id: 10, name: 'CT 검사', date: '2025.08.20' },
+          { id: 10, name: 'CT 검사', date: '202 5.08.20' },
           { id: 11, name: 'MRI 검사', date: '2025.08.21' }
         ]
       },
@@ -120,10 +166,24 @@ const medicalInfos = ref<MedicalHistory[]>([
   {
     id: 3,
     hospitalName: '경북대학교병원',
+    shareFrom: '2025.08.20',
     logo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
     status: '다시 발급하기',
     arrowType: true,
     accessDate: '2025.08.20',
+    buttonCount: 0,
+    departments: [{ id: 1, department: '영상의학과', examinations: [{ id: 10, name: 'CT', date: '2025.08.20' }] }],
+    buttonKeys: ['history']
+  },
+  {
+    id: 4,
+    hospitalName: '경북대학교병원',
+    logo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
+    isShareDate: false,
+    status: '환불 정보',
+    isRefund: '환불 완료',
+    arrowType: true,
+    refundDate: '2025.08.20',
     buttonCount: 0,
     departments: [{ id: 1, department: '영상의학과', examinations: [{ id: 10, name: 'CT', date: '2025.08.20' }] }],
     buttonKeys: ['history']
@@ -197,6 +257,32 @@ const deliveries = ref<DeliveryRecord[]>([
     date: '2025.08.21'
   }
 ])
+const handleIssueHistoryClick = (hospital: MedicalHistory) => {
+  // 클릭된 병원 데이터를 저장
+  selectedHospitalData.value = hospital
+
+  // status 값에 따라 동적으로 모달 내용 컴포넌트 결정
+  if (hospital.status === '발급 정보') {
+    modalContentComponent.value = IssuanceInformationModal // '발급 정보'일 때 보여줄 컴포넌트
+    fullModalProps.value.title = '발급 정보'
+    toggleFullModal()
+  } else if (hospital.status === '환불 정보') {
+    modalContentComponent.value = RefundInformationModal // '환불 정보'일 때 보여줄 컴포넌트
+    fullModalProps.value.title = '환불 정보'
+    toggleFullModal()
+  }
+}
+const handleMedicalHistoryClick = (hospital: MedicalHistory) => {
+  modalContentComponent.value = SharedHistoryModal // '영상 공유 내역'클릭 시 보여줄 컴포넌트
+  fullModalProps.value.title = '영상 공유내역'
+  toggleFullModal()
+}
+const handleMedicalShareClick = (hospital: MedicalHistory) => {
+  navigateTo('/insu/medicalVideo/history/ShareHospitalSelection')
+}
+const handleShipCdClick = (hospital: MedicalHistory) => {
+  navigateTo('/insu/medicalVideo/history/DeliveryAddressForm')
+}
 </script>
 <style scoped>
 .issue-history {
