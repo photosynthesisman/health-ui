@@ -1,12 +1,14 @@
 <template>
   <BaseBody :show-back-button="true" page-title="의료영상공유" :has-notification="true">
-    <section class="issue-history">
-      <TitleSection
-        title="의료영상을 공유할<br/>병원을 선택해 주세요."
-        description="제휴병원을 연결하여 의료영상을 전송할 수 있어요."
-      />
-    </section>
-    <Button btn-type="line" element-type="button" aria-label="제휴병원 연결" />
+    <TitleSection
+      title="의료영상을 공유할<br/>병원을 선택해 주세요."
+      description="제휴병원을 연결하여 의료영상을 전송할 수 있어요.<br/>제휴병원이 아닌 병원으로는 이메일로 발송해주세요."
+      class="mt-24"
+    />
+    <FlexSection class="gap-8 mt-32">
+      <P class="fz-14">이메일로 발송할게요</P>
+      <Button btn-type="line" element-type="button" aria-label="이메일로 발송하기" />
+    </FlexSection>
     <hr class="hr-section mt-32 mb-0 ml-n20 mr-n20" />
     <LatestSharedItems
       :hospital-list="hospitalList"
@@ -15,10 +17,7 @@
       @remove-all="handleRemoveAll"
     />
     <hr class="hr-section mt-0 mb-0 ml-n20 mr-n20" />
-    <p class="pd-21y medium">
-      총&nbsp;<strong>{{ hospitals.length }}</strong
-      >건을 찾았어요.
-    </p>
+    <HospitalItemHeader :count="hospitals.length" />
     <HospitalItem v-for="hospital in hospitals" :key="hospital.id" :hospital="hospital" :model-value="false" />
 
     <ConfirmModal
@@ -30,15 +29,24 @@
       @cancel="closeModal"
       @close="closeModal"
     />
+    <!-- <FloatingEmailBtn @click-email="clickEmail" /> -->
   </BaseBody>
 </template>
 <script setup lang="ts">
-import BaseBody from '~/components/layout/BaseBody.vue'
+import InputMail from '~/components/publishing/input/InputMail.vue'
 import Button from '~/components/publishing/button/Button.vue'
+import BaseBody from '~/components/layout/BaseBody.vue'
+import FloatingEmailBtn from '~/components/insu/FloatingEmailBtn.vue'
 import TitleSection from '~/components/insu/TitleSection.vue'
 import LatestSharedItems from '~/components/insu/LatestSharedItems.vue'
+import HospitalItemHeader from '~/components/insu/HospitalItemHeader.vue'
 import HospitalItem from '~/components/insu/HospitalItem.vue'
 import ConfirmModal from '~/components/common/modal/ConfirmModal.vue'
+import FlexSection from '~/components/page/FlexSection.vue'
+const showEmail = ref(false)
+const clickEmail = () => {
+  showEmail.value = !showEmail.value
+}
 // 병원 데이터
 const hospitals = ref([
   {
@@ -115,7 +123,7 @@ const handleRemoveAll = () => {
 
 const ConfirmModalContent = ref('')
 const openConfirmModal = () => {
-  ConfirmModalContent.value = `    
+  ConfirmModalContent.value = `
     <div class="fz-18 bold text-center">선택한 병원은 이메일 전달하기만 가능해요</div>
     <div class="fz-14 mt-6 text-center">제휴병원에 의료영상을 이메일로 전달하시겠어요?</div>`
   showConfirmModal.value = true
@@ -129,8 +137,4 @@ const closeModal = () => {
   showConfirmModal.value = false
 }
 </script>
-<style scoped>
-.issue-history {
-  padding: 2.4rem 0 3.2rem;
-}
-</style>
+<style scoped></style>

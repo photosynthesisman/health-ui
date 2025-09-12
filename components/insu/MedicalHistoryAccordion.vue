@@ -36,9 +36,8 @@
           </div>
           <div v-if="showCheckbox" class="item-checkbox">
             <Checkbox
-              :id="`checkbox-${hospital.hospitalName}`"
+              :id="`checkbox-${hospital.id}`"
               :model-value="hospitalSelections[index]"
-              custom-style="small"
               aria-label=""
               @update:model-value="value => handleCheckboxChange(index, value)"
             />
@@ -167,9 +166,9 @@ const emit = defineEmits<{
 }>()
 
 const allButtons = [
-  { key: 'share', label: '영상 공유', type: 'primary-line' },
-  { key: 'cd', label: 'CD 배송', type: 'line' },
-  { key: 'history', label: '영상 공유 내역', type: 'line' }
+  { key: 'share', label: '영상공유하기', type: 'primary-line' },
+  { key: 'cd', label: 'CD배송신청', type: 'line' },
+  { key: 'history', label: '영상공유내역', type: 'line' }
 ]
 
 const getVisibleButtons = (count?: number, keys?: ('share' | 'cd' | 'history')[]) => {
@@ -268,6 +267,9 @@ const handleButtonClick = (key: string, hospital: MedicalHistory) => {
     .item-logo {
       width: 4.8rem;
       height: 4.8rem;
+      border: 0.1rem solid #eee;
+      overflow: hidden;
+      border-radius: 2rem;
       img {
         width: 100%;
         height: 100%;

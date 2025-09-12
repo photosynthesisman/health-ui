@@ -8,15 +8,10 @@
     :has-add-text="false"
     :add-text-click-enabled="true"
   >
-    <h1 class="c-tit mt-24">
-      <span class="text"> 청구의신 대리청구 순위예요 </span>
-    </h1>
-    <div class="total-claim">
-      <div class="sort-insurance">
-        <button class="item">전체 설계사</button>
-        <button class="item" @click="clickBottomModal">{{ selectedDateText }} <i class="icon-arrow-down"></i></button>
-      </div>
-    </div>
+    <TitleSection title="청구의신 대리청구 순위예요" class="mt-24 mb-32" />
+
+    <TotalItemSort :buttons="sortButtons" :unit="'명'" @button-click="clickBottomModal" />
+
     <!-- ToDo: 나를 등록한 대리인이 없을때 활성화 -->
     <!-- <div class="wrap-empty">
       <img src="/assets/images/insu/subrogation/icon-empty-customer.png" alt="아이콘:검색없음" />
@@ -107,10 +102,14 @@ import BaseBody from '~/components/layout/BaseBody.vue'
 import BottomModal from '~/components/common/modal/BottomModal.vue'
 import ChallengeRankingBox from '~/components/publishing/walkking/ChallengeRankingBox.vue'
 import ChallengeRankingBoxMe from '~/components/publishing/walkking/ChallengeRankingBoxMe.vue'
-import ChallengeRankingBoxRival from '~/components/publishing/walkking/ChallengeRankingBoxRival.vue'
+import TitleSection from '~/components/insu/TitleSection.vue'
 import RoundTabsStyle, { type RoundTab } from '~/components/common/tab/RoundTabs.vue'
 import YearMonthPicker from '~/components/publishing/input/YearMonthPicker.vue'
-
+import TotalItemSort from '~/components/publishing/insu/billingInfo/TotalItemSort.vue'
+const sortButtons = computed(() => [
+  { label: '전체 설계사', value: 'all' },
+  { label: selectedDateText.value, value: 'DB손해', icon: true }
+])
 const isShowBottomModal = ref(false)
 const selectedDate = ref({
   year: new Date().getFullYear(),
@@ -156,51 +155,6 @@ const handleRoundTabClick = (index: number) => {
 </script>
 
 <style scoped lang="scss">
-.total-claim {
-  margin-top: 3.2rem;
-  width: 100%;
-  padding: 2.1rem 0;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  .sort-insurance {
-    .item {
-      position: relative;
-      padding: 0 1.2rem;
-      font-weight: 500;
-      color: #555555;
-      i.icon-arrow-down {
-        margin-left: 0.4rem;
-        display: inline-block;
-        width: 2rem;
-        height: 2rem;
-        background: url('/assets/images/insu/icon-arrow-down.svg') no-repeat center center;
-        background-size: 100%;
-        transition: transform 0.3s ease;
-        transform-origin: center center;
-
-        &.rotated {
-          transform: rotate(180deg);
-        }
-      }
-      &:not(:first-child) {
-        &::before {
-          content: '';
-          width: 0.1rem;
-          height: 1.2rem;
-          position: absolute;
-          top: 50%;
-          left: 0;
-          transform: translateY(-50%);
-          background-color: #e2e2e2;
-        }
-      }
-      &:last-child {
-        padding-right: 0;
-      }
-    }
-  }
-}
 .wrap-rank-list {
   border-top: 0.1rem solid #eeeeee;
   margin: 0 -2rem;

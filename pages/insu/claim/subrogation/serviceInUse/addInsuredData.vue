@@ -8,12 +8,9 @@
     :has-add-text-left="true"
     class="pb-60"
   >
-    <h1 class="c-tit mt-24">
-      <span class="text">
-        피보험자(치료 받은 분)<br />정보를 입력해 주세요
-      </span>
-    </h1>
-    <div class="wrap-form">
+    <TitleSection title="피보험자(치료 받은 분)<br />정보를 입력해 주세요" class="mt-24" />
+
+    <FlexSection class="mt-32 gap-12">
       <Select
         label="담당 설계사"
         class="require"
@@ -50,13 +47,13 @@
         valid-text="생년월일 6자리를 입력해주세요."
         placeholder="생년월일 6자리를 입력해주세요."
       />
-      <div class="wrap-gender">
-        <div class="input-tit required">피보험자 성별</div>
-        <div class="wrap-radio">
+      <FlexColDiv>
+        <InputLabelText label="피보험자 성별" required />
+        <FlexRowDiv class="gap-8">
           <Radio id="rdo1" name="rdo1" checked custom-style="button small w-full" aria-label="남성" />
           <Radio id="rdo2" name="rdo1" custom-style="button small w-full" aria-label="여성" />
-        </div>
-      </div>
+        </FlexRowDiv>
+      </FlexColDiv>
       <InputAddress label="피보험자 주소" :is-valid="false" class="require" placeholder="주소를 검색하세요" />
       <InputText
         label="메모"
@@ -65,10 +62,16 @@
         valid-text="메모할 내용을 입력해주세요."
         placeholder="내용을 입력해 주세요."
       />
-    </div>
+    </FlexSection>
   </BaseBody>
   <ButtonGroup class="is-fixed">
-    <Button btn-type="primary" element-type="button" aria-label="다음" class="lg w-full medium btn-sticky" @click="clickNext" />
+    <Button
+      btn-type="primary"
+      element-type="button"
+      aria-label="다음"
+      class="lg w-full medium btn-sticky"
+      @click="clickNext"
+    />
   </ButtonGroup>
 
   <BottomModal
@@ -81,12 +84,15 @@
     @confirm="clickSame"
   >
     <template #content>
-      <div style="font-size:1.8rem;font-weight: 700;text-align:left;">피보험자(치료 받은 분)와<br />수익자(보험금 받는 분)가 같은가요?</div>
+      <div style="font-size: 1.8rem; font-weight: 700; text-align: left">
+        피보험자(치료 받은 분)와<br />수익자(보험금 받는 분)가 같은가요?
+      </div>
     </template>
   </BottomModal>
 </template>
 
 <script setup lang="ts">
+import TitleSection from '~/components/insu/TitleSection.vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import Select from '~/components/publishing/input/Select.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
@@ -95,7 +101,10 @@ import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import InputAddress from '~/components/publishing/input/InputAddress.vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
-
+import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
+import FlexSection from '~/components/page/FlexSection.vue'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 const isShowModal = ref(false)
 
 const clickDiff = () => {
@@ -110,35 +119,4 @@ const clickNext = () => {
   isShowModal.value = true
 }
 </script>
-<style scoped lang="scss">
-.wrap-form {
-  margin-top: 3.2rem;
-  .c-input {
-    &:not(:first-child) {
-      margin-top: 1.2rem;
-    }
-  }
-  .wrap-gender {
-    .input-tit {
-      margin: 1.2rem 0 0.6rem;
-      font-size: 1.2rem;
-      font-weight: 400;
-      line-height: 1.3;
-      color: #555555;
-      position: relative;
-      &.required::after {
-        content: "*";
-        font-size: 1.2rem;
-        display: inline-block;
-        margin-left: 0.3rem;
-        color: #f14960;
-      }
-    }
-    .wrap-radio {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.8rem;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

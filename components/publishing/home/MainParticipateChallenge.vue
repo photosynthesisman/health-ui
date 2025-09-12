@@ -10,6 +10,7 @@
     :autoplay="false"
     :show-slide-length="false"
     :show-play-pause-button="false"
+    :overflow-visible="true"
   >
     <template #default="{ slide, index }">
       <div class="main-challenge-card in-challenge">
@@ -140,13 +141,23 @@ const emit = defineEmits<{
 </script>
 
 <style lang="scss" scoped>
+.custom-swiper :deep(swiper-container) {
+  padding: 2.5rem;
+  margin: -2.5rem;
+  width: auto;
+  overflow: visible;
+}
+.custom-swiper :deep(swiper-slide) {
+  border-radius: 2rem;
+  box-shadow: 0 0 2.3rem 0 rgba(0, 0, 0, 0.06);
+}
 .main-challenge-card {
   border-radius: 2rem;
   padding: 2.8rem;
   padding-bottom: 4.2rem;
   border: 0.1rem solid #eee;
   background: #fff;
-  box-shadow: 0 0 2.3rem 0 rgba(0, 0, 0, 0.06);
+  // box-shadow: 0 0 2.3rem 0 rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   width: 100%;

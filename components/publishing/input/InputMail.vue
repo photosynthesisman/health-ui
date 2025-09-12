@@ -223,6 +223,7 @@ function handleDomainChange(option: EmailDomainOption) {
       font-size: 1.6rem;
       font-weight: 500;
       background-color: transparent;
+      @include mixin.ellipsis;
       &::placeholder {
         color: #959595;
       }

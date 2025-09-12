@@ -25,7 +25,8 @@ const detailInfos = [
   {
     id: 4,
     title: '공유 기간',
-    detail: '2025.06.27~2025.08.31'
+    detail: '2025.06.27~2025.08.31',
+    hasLine: true
   },
   {
     id: 5,

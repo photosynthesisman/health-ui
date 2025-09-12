@@ -10,13 +10,7 @@
     :white-logo="true"
     :page-type="'dark-bg'"
   >
-    <div class="wrap-doc">
-      <img class="img-doc" src="/assets/images/insu/subrogation/img-doc-insurance.png" alt="진단서 예시" />
-    </div>
-    <div class="wrap-btn-zoom">
-      <button class="btn-minus">축소</button>
-      <button class="btn-plus">확대</button>
-    </div>
+    <ZoomInOut />
   </BaseBody>
   <ButtonGroup class="is-fixed half">
     <Button
@@ -45,7 +39,7 @@
     @confirm="clickNext"
   >
     <template #content>
-      <div class="wrap-form">
+      <FlexSection class="gap-16">
         <InputText
           v-model="password"
           type="password"
@@ -63,7 +57,7 @@
           placeholder="비밀번호 확인"
         />
         <Checkbox id="checkBox01" v-model="checkbox01" aria-label="비밀번호 설정하지 않음" class="mt-12" />
-      </div>
+      </FlexSection>
     </template>
   </BottomModal>
 </template>
@@ -75,6 +69,8 @@ import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import InputText from '~/components/publishing/input/InputText.vue'
 import Checkbox from '~/components/publishing/input/check.vue'
+import ZoomInOut from '~/components/insu/ZoomInOut.vue'
+import FlexSection from '~/components/page/FlexSection.vue'
 const password = ref('')
 const passwordConfirm = ref('')
 const checkbox01 = ref(false)
@@ -99,43 +95,4 @@ const clickNext = () => {
 }
 </script>
 
-<style scoped lang="scss">
-.wrap-doc {
-  margin: 0 -2rem;
-  .img-doc {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    max-height: 73vh;
-  }
-}
-.wrap-btn-zoom {
-  margin: 2.4rem 0 4rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.8rem;
-  .btn-minus {
-    background: url('/assets/images/insu/subrogation/icon-minus.svg') no-repeat center center;
-    background-size: contain;
-  }
-  .btn-plus {
-    background: url('/assets/images/insu/subrogation/icon-plus.svg') no-repeat center center;
-    background-size: contain;
-  }
-  .btn-minus,
-  .btn-plus {
-    width: 4rem;
-    height: 4rem;
-    font-size: 0;
-  }
-}
-.wrap-form {
-  text-align-last: left;
-  .c-input {
-    &:not(:first-child) {
-      margin-top: 1.6rem;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

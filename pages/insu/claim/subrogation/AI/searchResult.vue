@@ -19,18 +19,6 @@
     <FindResultBox :count="hospitalData.length" @reload="clickReload" />
     <FindResultItem :hospital-data="hospitalData" @open-agree="openAgreeModal" @open-modal="handleOpenModal" />
 
-    <!-- ToDo: 진료내역이 없을때 활성화 -->
-    <!-- 
-    <div class="wrap-empty">
-      <img src="/assets/images/insu/icon-empty.svg" alt="병원 없음" class="img" />
-      <div class="tit">
-        <span>숨은 보상금 찾기<br />신청 가능한 진료내역이 없어요.</span>
-        <p>진료내역을 업데이트 <br />해서 최근 진료내역을 가져올 수 있어요.</p>
-      </div>
-
-      <Button btn-type="line" element-type="button" aria-label="진료내역 다시 가져오기" class="xs" :width="15.4" />
-    </div>
-     -->
     <!-- 진료내역 확인 풀모달 -->
     <FullModal
       :is-visible="isShowFullModal"
@@ -42,7 +30,7 @@
         <AiAnalysisConfirmHistory
           :medical-history-data="medicalHistoryData"
           :hospital="selectedHospital.name"
-          :imgSrc="selectedHospital.logoSrc"
+          :img-src="selectedHospital.logoSrc"
         />
       </template>
     </FullModal>
@@ -105,7 +93,7 @@ import FindResultItem from '~/components/insu/FindResultItem.vue'
 import AiAnalysisAgreeTerms1 from '~/components/insu/AiAnalysisAgreeTerms1.vue'
 import AiAnalysisAgreeTerms2 from '~/components/insu/AiAnalysisAgreeTerms2.vue'
 import AiAnalysisConfirmHistory from '~/components/insu/AiAnalysisConfirmHistory.vue'
-const selectedHospital = ref({ name: '' })
+const selectedHospital = ref({ name: '', logoSrc: '' })
 const clickReload = () => {
   console.log('?')
 }
@@ -176,7 +164,7 @@ const fullModalProps = ref({
   disabledConfirmButton: false
 })
 
-const handleOpenModal = (hospital: { name: string }) => {
+const handleOpenModal = (hospital: { name: string; logoSrc: string }) => {
   selectedHospital.value = hospital
   isShowFullModal.value = true
 }
@@ -240,30 +228,4 @@ const hospitalData = ref([
 ])
 </script>
 
-<style scoped lang="scss">
-.wrap-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.6rem;
-  padding: 18.4rem 0;
-  text-align: center;
-  color: #555;
-  .img {
-    width: 8rem;
-    height: 8rem;
-  }
-  .tit {
-    font-size: 1.8rem;
-    font-weight: 500;
-    line-height: 2.5rem;
-    p {
-      margin-top: 0.8rem;
-      font-size: 1.6rem;
-      font-weight: 400;
-      line-height: 2.2rem;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

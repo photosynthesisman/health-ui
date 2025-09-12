@@ -1,5 +1,5 @@
 <template>
-  <div class="floating-btn-wrap">
+  <div :class="['floating-btn-wrap', { 'mb-60': hasBottomContents }]">
     <transition name="fade">
       <button v-if="showButton" class="scroll-top-button" aria-label="맨 위로 스크롤" @click="scrollToTarget">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -36,6 +36,7 @@ const props = defineProps<{
 }>()
 
 const showButton = ref(false)
+const hasBottomContents = ref(false)
 
 const handleScroll = () => {
   if (window.scrollY > 200) {
@@ -65,12 +66,46 @@ const clickNext = () => {
   return navigateTo('/community/[community]/board/[boardID]/create/')
 }
 
+const checkBottomContents = () => {
+  const basePage = document.getElementById('base-page')
+  if (basePage) {
+    const bottomContents = basePage.querySelectorAll('.booster-wrap .commentBox')
+    hasBottomContents.value = !!bottomContents
+  }
+}
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+
+  // Check for booster-wrap on mount
+  checkBottomContents()
+
+  // Set up MutationObserver to detect DOM changes
+  const basePage = document.getElementById('base-page')
+  if (basePage) {
+    const observer = new MutationObserver(() => {
+      checkBottomContents()
+    })
+
+    observer.observe(basePage, {
+      childList: true,
+      subtree: true
+    })
+
+    // Store observer for cleanup
+    ;(window as any).__floatingBtnObserver = observer
+  }
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+
+  // Clean up MutationObserver
+  const observer = (window as any).__floatingBtnObserver
+  if (observer) {
+    observer.disconnect()
+    delete (window as any).__floatingBtnObserver
+  }
 })
 </script>
 

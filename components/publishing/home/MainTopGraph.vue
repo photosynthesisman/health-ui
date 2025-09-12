@@ -1,7 +1,8 @@
 <template>
   <div class="main-sector-graph" :class="props.currentStatus">
     <div class="chart-container">
-      <div class="chart-item">
+      <!-- 왼쪽 차트 (고정 위치) -->
+      <div class="chart-item left-chart" :class="{ 'shuffle-left': isShuffling }">
         <div class="radial-chart" ref="chart1">
           <svg viewBox="0 0 86 86" class="circular-chart">
             <!-- 배경 호 (7/8 원) -->
@@ -24,21 +25,25 @@
               :stroke-dasharray="getCircumference(displayOrder[0])"
               :stroke-dashoffset="calculateDashOffset(displayOrder[0], computedChartData[displayOrder[0]].percentage)"
             />
-            <text x="43" y="40" text-anchor="middle" class="percentage">
+            <text x="43" y="40" text-anchor="middle" class="percentage" :class="{ 'hide-during-shuffle': isShuffling }">
               {{ getChartValue(0) }}
             </text>
-            <text x="43" y="52" text-anchor="middle" class="label">{{ computedChartData[displayOrder[0]].label }}</text>
+            <text x="43" y="52" text-anchor="middle" class="label" :class="{ 'hide-during-shuffle': isShuffling }">
+              {{ computedChartData[displayOrder[0]].label }}
+            </text>
           </svg>
         </div>
       </div>
 
-      <div class="chart-item center-chart">
+      <!-- 가운데 차트 (고정 위치) -->
+      <div class="chart-item center-chart" :class="{ 'shuffle-center': isShuffling }">
         <div
           v-if="
             (props.currentStatus === 'vitality-status' && !props.isSmartRingConnect) ||
             (props.currentStatus === 'walking-status' && !props.isProfileSet)
           "
           class="allow-access"
+          :class="{ 'hide-during-shuffle': isShuffling }"
           @click="handleAllowAccessClick"
         >
           권한 허용하기
@@ -65,14 +70,15 @@
               :stroke-dasharray="getCircumference(displayOrder[1])"
               :stroke-dashoffset="calculateDashOffset(displayOrder[1], computedChartData[displayOrder[1]].percentage)"
             />
-            <text x="43" y="45" text-anchor="middle" class="percentage">
+            <text x="43" y="45" text-anchor="middle" class="percentage" :class="{ 'hide-during-shuffle': isShuffling }">
               {{ getCenterChartValue() }}
             </text>
           </svg>
         </div>
       </div>
 
-      <div class="chart-item">
+      <!-- 오른쪽 차트 (고정 위치) -->
+      <div class="chart-item right-chart" :class="{ 'shuffle-right': isShuffling }">
         <div class="radial-chart" ref="chart3">
           <svg viewBox="0 0 86 86" class="circular-chart">
             <!-- 배경 호 (7/8 원) -->
@@ -95,15 +101,19 @@
               :stroke-dasharray="getCircumference(displayOrder[2])"
               :stroke-dashoffset="calculateDashOffset(displayOrder[2], computedChartData[displayOrder[2]].percentage)"
             />
-            <text x="43" y="40" text-anchor="middle" class="percentage">
+            <text x="43" y="40" text-anchor="middle" class="percentage" :class="{ 'hide-during-shuffle': isShuffling }">
               {{ getChartValue(2) }}
             </text>
-            <text x="43" y="52" text-anchor="middle" class="label">{{ computedChartData[displayOrder[2]].label }}</text>
+            <text x="43" y="52" text-anchor="middle" class="label" :class="{ 'hide-during-shuffle': isShuffling }">
+              {{ computedChartData[displayOrder[2]].label }}
+            </text>
           </svg>
         </div>
       </div>
 
-      <h2 class="main-graph-title">{{ computedChartData[displayOrder[1]].title }}</h2>
+      <h2 class="main-graph-title" :class="{ 'hide-during-shuffle': isShuffling }">
+        {{ computedChartData[displayOrder[1]].title }}
+      </h2>
     </div>
   </div>
 </template>
@@ -282,15 +292,31 @@ const updateChartData = (index: number, newValue: number, newMaxValue?: number, 
   }
 }
 
+// 외부에서 셔플 애니메이션을 트리거할 수 있는 함수
+const triggerShuffle = (direction: 'left' | 'right') => {
+  if (isShuffling.value) return
+
+  isShuffling.value = true
+
+  // 애니메이션 완료 후 상태 리셋
+  setTimeout(() => {
+    isShuffling.value = false
+  }, 500)
+}
+
 // 컴포넌트 외부에서 사용할 수 있도록 export
 defineExpose({
   updateChartData,
-  chartData: computedChartData
+  chartData: computedChartData,
+  triggerShuffle
 })
 
 const chart1 = ref<HTMLElement>()
 const chart2 = ref<HTMLElement>()
 const chart3 = ref<HTMLElement>()
+
+// 셔플 관련 상태
+const isShuffling = ref(false)
 
 // 차트 애니메이션 업데이트 함수
 const updateChartAnimations = () => {
@@ -380,7 +406,8 @@ const handleAllowAccessClick = () => {
   display: flex;
   flex-direction: row;
   gap: 0 3.6rem;
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .chart-item {
@@ -389,7 +416,56 @@ const handleAllowAccessClick = () => {
   align-items: center;
   text-align: center;
   opacity: 0.5;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  // 셔플 애니메이션
+  &.shuffle-left {
+    animation: shuffleLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  &.shuffle-right {
+    animation: shuffleRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  &.shuffle-center {
+    animation: shuffleCenter 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+// 키프레임 애니메이션 정의
+@keyframes shuffleLeft {
+  0% {
+    transform: translateX(-2rem) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 0.5;
+  }
+}
+
+@keyframes shuffleRight {
+  0% {
+    transform: translateX(2rem) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 0.5;
+  }
+}
+
+@keyframes shuffleCenter {
+  0% {
+    transform: translateX(0) scale(2);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
 }
 
 .chart-item:nth-child(1) .radial-chart {
@@ -529,6 +605,15 @@ const handleAllowAccessClick = () => {
 @media (max-width: 375px) {
   .chart-container {
     gap: 0 2rem;
+  }
+}
+
+// 셔플 중 텍스트 숨김 클래스
+.hide-during-shuffle {
+  opacity: 0 !important;
+  transition: all 0.1s ease-in-out;
+  &.main-graph-title {
+    bottom: 0rem;
   }
 }
 </style>

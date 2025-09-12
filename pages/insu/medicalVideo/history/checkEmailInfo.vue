@@ -1,26 +1,68 @@
 <template>
   <BaseBody :show-back-button="true" page-title="의료영상공유" :has-notification="true">
-    <section class="issue-history">
-      <TitleSection
-        title="이메일 발송할 의료영상<br/>내역을 확인해주세요."
-        description="이메일 발송 진행 시 아래 공유내역을<br/>발송할 수 있어요."
+    <TitleSection
+      title="발송할 병원명, 이메일 주소,<br/>비밀번호를 설정해주세요."
+      description="의료영상에 대해 웹 주소 형태로 이메일을 보낼 수 있어요."
+      class="mt-24"
+    />
+    <FlexSection class="gap-12 mt-32">
+      <InputText v-model:model-value="hospitalName" label="공유 병원명" placeholder="공유할 병원명을 입력해주세요." />
+      <InputMail
+        v-model:model-value="hospitalEmail"
+        label="병원 이메일 주소 입력"
+        :is-valid="false"
+        valid-text="올바른 이메일 주소를 입력해주세요."
+        placeholder="이메일을 입력해주세요"
+        :custom-domains="[
+          { value: 'gmail.com', label: 'gmail.com' },
+          { value: 'naver.com', label: 'naver.com' },
+          { value: 'daum.net', label: 'daum.net' },
+          { value: 'kakao.com', label: 'kakao.com' }
+        ]"
       />
-    </section>
-    <HistoryDetail :details-list="detailInfos" />
+      <InputText
+        v-model:model-value="password"
+        :inp-type="'masking'"
+        label="의료영상 비밀번호 설정"
+        type="password"
+        :is-valid="false"
+        valid-text="비밀번호 벨리데이터 메시지"
+        placeholder="비밀번호를 입력해주세요 (숫자 4~10자리)"
+      />
+    </FlexSection>
+    <!-- 2025-09-04 HistoryDetail 삭제 -->
+    <!-- <HistoryDetail :details-list="detailInfos" /> -->
     <MedicalHistoryAccordion
       :medical-history="medicalInfos"
       :is-label-title="true"
       :label-title="'의료영상 발급내역'"
       class="mt-32"
     />
+    <ButtonGroup class="is-fixed half">
+      <Button btn-type="primary" element-type="button" class="lg btn-sticky w-full" :disabled="!isFormValid"
+        >이메일 발송하기</Button
+      >
+    </ButtonGroup>
   </BaseBody>
 </template>
 <script setup lang="ts">
 import BaseBody from '~/components/layout/BaseBody.vue'
 import TitleSection from '~/components/insu/TitleSection.vue'
+import InputText from '~/components/publishing/input/InputText.vue'
+import InputMail from '~/components/publishing/input/InputMail.vue'
 import HistoryDetail from '~/components/insu/HistoryDetail.vue'
+import FlexSection from '~/components/page/FlexSection.vue'
 import MedicalHistoryAccordion from '~/components/insu/MedicalHistoryAccordion.vue'
+import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
+import Button from '~/components/publishing/button/Button.vue'
 
+const hospitalName = ref('')
+const hospitalEmail = ref('')
+const password = ref('')
+
+const isFormValid = computed(() => {
+  return hospitalName.value.trim() !== '' && hospitalEmail.value.trim() !== '' && password.value.trim() !== ''
+})
 const detailInfos = [
   {
     id: 1,
@@ -44,8 +86,9 @@ const medicalInfos = [
     title: '공유 병원명',
     hospitalName: '고려대학병원',
     logo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
-    issueDate: '2025.06.25',
-    accessDate: '2025.06.25~2025.08.31',
+    accessDate: '2025.06.25',
+    shareFrom: '2025.06.25',
+    shareTo: '2025.08.31',
     departments: [
       {
         id: 101,
@@ -78,8 +121,4 @@ const medicalInfos = [
   }
 ]
 </script>
-<style scoped>
-.issue-history {
-  padding: 2.4rem 0 3.2rem;
-}
-</style>
+<style scoped></style>

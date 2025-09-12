@@ -252,8 +252,8 @@ import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import { ref } from 'vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import RadioImg from '~/components/publishing/input/radioImg.vue'
-import iconCamera from '~/assets/images/insu/icon-camera.svg'
-import iconAlbum from '~/assets/images/insu/icon-album.svg'
+import iconCamera from '~/assets/images/insu/icon-camera.png'
+import iconAlbum from '~/assets/images/insu/icon-album.png'
 
 // 각 item의 확장 상태를 관리하는 배열
 const expandedItems = ref([false, false, false])

@@ -11,12 +11,14 @@
   >
     <!-- 메인 배너 -->
     <RecruitmentindividualChallengeBox :end="true" />
-    <!-- 챌린지 종료·순위 박스 -->
-    <ChallengeResultWrap>
+
+    <!-- 챌린지 종료·순위 박스 // 총 시상/경품내역 추가 -->
+    <ChallengeResultWrap :show-history-link="true">
       <ChallengeResultBox :rank="'2'" />
       <ChallengeResultBox :rank="'1'" />
       <ChallengeResultBox :rank="'3'" />
     </ChallengeResultWrap>
+    <ChallengeNoResultBox />
     <!-- 헤더 고정 영역 -->
     <StickyProfileSection>
       <!-- 프로필 -->
@@ -48,118 +50,122 @@
     <ChallengeRankingBox rank="7" changed="up" changed-rank="2" user-name="곰탱이" user-location="서울금천" />
     <!-- 매일 부스터 미션 / 부스터 온  -->
     <EverydayBoosterMission @show-modal="handleShowModal" @hide-modal="handleHideModal" />
+
+    <Teleport to="body">
+      <!-- 일일 걸음수 내역 모달 -->
+      <BottomModal :is-visible="isShowStepHistoryModal" v-bind="StepHistoryModalProps" @close="toggleStepHistoryModal">
+        <template #content>
+          <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
+          <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
+          <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
+        </template>
+      </BottomModal>
+      <!-- 챌린지 미션 모달 -->
+      <BottomModal :is-visible="isShowchallengeModal" v-bind="challengeModalProps" @close="toggleChallengeModal">
+        <template #content>
+          <FlexColDiv class="gap-24">
+            <ChallengeBoosterMissionItem
+              :subtit="'아침운동 시 부스터UP'"
+              :mission="'6~9시 3,000걸음 걷기'"
+              :src="'walkingking/img-mission-item1.png'"
+              :reward="'받기완료'"
+            />
+            <ChallengeBoosterMissionItem
+              :subtit="'저녁운동 시 부스터UP'"
+              :mission="'20~23시 3,000걸음 걷기'"
+              :src="'walkingking/img-mission-item2.png'"
+              :reward="'+300걸음'"
+            />
+            <ChallengeBoosterMissionItem
+              :subtit="'저녁식사는 간단하게'"
+              :mission="'18~21시 저녁식사하기'"
+              :src="'walkingking/img-mission-item3.png'"
+              :condition="'광고보고'"
+              :reward="'+100걸음'"
+            />
+            <ChallengeBoosterMissionItem
+              :subtit="'오늘 하루도 수고했어요.'"
+              :mission="'7~9시간 깊은 잠자기'"
+              :src="'walkingking/img-mission-item4.png'"
+              :reward="'+300걸음'"
+              :disabled="true"
+            />
+            <ChallengeBoosterMissionItem
+              :subtit="'매일매일 기록하는'"
+              :mission="'걷기왕 커뮤니티 글 등록'"
+              :src="'walkingking/img-mission-item5.png'"
+              :reward="'+300걸음'"
+            />
+            <ChallengeBoosterMissionItem
+              :subtit="'매일 건강 챙겨요'"
+              :mission="'레몬링으로 심박수 측정'"
+              :src="'walkingking/img-mission-item6.png'"
+              :reward="'+300걸음'"
+            />
+            <ChallengeBoosterMissionItem
+              :subtit="'건강한 수면, 활기찬 하루'"
+              :mission="'레몬링으로 수면시간 분석'"
+              :src="'walkingking/img-mission-item7.png'"
+              :reward="'+300걸음'"
+            />
+          </FlexColDiv>
+        </template>
+      </BottomModal>
+      <!-- 아이템 사용하기 모달 -->
+      <BottomModal :is-visible="isShowItemUseModal" v-bind="ItemUseModalProps" @close="toggleItemUseModal">
+        <template #content>
+          <UsedBoosterItemSummary :steps="'1234'" :multiply="2" :stacked="'2464'" />
+          <UsingItemWrap>
+            <BoosterItem
+              :src="'walkingking/img-booster-item1.png'"
+              :name="'1시간 걸음수 2배'"
+              :count="'2'"
+              @item-clicked="clickUsingItemModal"
+            />
+            <BoosterItem :src="'walkingking/img-booster-item2.png'" :name="'2시간 걸음수 2배'" :count="'1'" />
+            <BoosterItem :src="'walkingking/img-booster-item3.png'" :name="'4시간 걸음수 2배'" :count="'3'" />
+            <BoosterItem :src="'walkingking/img-booster-item4.png'" :name="'8시간 걸음수 2배'" :count="'3'" />
+            <BoosterItem :name="'아이템 구매하기'" />
+          </UsingItemWrap>
+        </template>
+      </BottomModal>
+      <!-- 아이템 사용 확인 모달 -->
+      <BaseModal
+        :is-visible="isShowUsingItemModal"
+        v-bind="UsingItemModalProps"
+        @close="toggleUsingItemModal"
+        @cancel="toggleUsingItemModal"
+      >
+        <template #content>
+          <UsingItemConfirm />
+        </template>
+      </BaseModal>
+      <!-- 챌린지 메뉴 모달 -->
+      <BottomModal
+        :is-visible="isShowChallengeMenuModal"
+        v-bind="ChallengeMenuModalProps"
+        @close="toggleChallengeMenuModal"
+      >
+        <template #content>
+          <ul>
+            <li>
+              <NuxtLink to="#"><p class="pd-19y fz-16 text-left">응원하기</p></NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="#"><p class="pd-19y fz-16 text-left">참가 취소하기</p> </NuxtLink>
+            </li>
+            <li v-if="challengeProgressing">
+              <NuxtLink to="#"><p class="pd-19y fz-16 text-left">챌린지 상세보기</p> </NuxtLink>
+            </li>
+          </ul>
+        </template>
+      </BottomModal>
+    </Teleport>
   </BaseBody>
-  <!-- 일일 걸음수 내역 모달 -->
-  <BottomModal :is-visible="isShowStepHistoryModal" v-bind="StepHistoryModalProps" @close="toggleStepHistoryModal">
-    <template #content>
-      <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
-      <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
-      <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
-    </template>
-  </BottomModal>
-  <!-- 챌린지 미션 모달 -->
-  <BottomModal :is-visible="isShowchallengeModal" v-bind="challengeModalProps" @close="toggleChallengeModal">
-    <template #content>
-      <FlexColDiv class="gap-24">
-        <ChallengeBoosterMissionItem
-          :subtit="'아침운동 시 부스터UP'"
-          :mission="'6~9시 3,000걸음 걷기'"
-          :src="'walkingking/img-mission-item1.png'"
-          :reward="'받기완료'"
-        />
-        <ChallengeBoosterMissionItem
-          :subtit="'저녁운동 시 부스터UP'"
-          :mission="'20~23시 3,000걸음 걷기'"
-          :src="'walkingking/img-mission-item2.png'"
-          :reward="'+300걸음'"
-        />
-        <ChallengeBoosterMissionItem
-          :subtit="'저녁식사는 간단하게'"
-          :mission="'18~21시 저녁식사하기'"
-          :src="'walkingking/img-mission-item3.png'"
-          :condition="'광고보고'"
-          :reward="'+100걸음'"
-        />
-        <ChallengeBoosterMissionItem
-          :subtit="'오늘 하루도 수고했어요.'"
-          :mission="'7~9시간 깊은 잠자기'"
-          :src="'walkingking/img-mission-item4.png'"
-          :reward="'+300걸음'"
-          :disabled="true"
-        />
-        <ChallengeBoosterMissionItem
-          :subtit="'매일매일 기록하는'"
-          :mission="'걷기왕 커뮤니티 글 등록'"
-          :src="'walkingking/img-mission-item5.png'"
-          :reward="'+300걸음'"
-        />
-        <ChallengeBoosterMissionItem
-          :subtit="'매일 건강 챙겨요'"
-          :mission="'레몬링으로 심박수 측정'"
-          :src="'walkingking/img-mission-item6.png'"
-          :reward="'+300걸음'"
-        />
-        <ChallengeBoosterMissionItem
-          :subtit="'건강한 수면, 활기찬 하루'"
-          :mission="'레몬링으로 수면시간 분석'"
-          :src="'walkingking/img-mission-item7.png'"
-          :reward="'+300걸음'"
-        />
-      </FlexColDiv>
-    </template>
-  </BottomModal>
-  <!-- 아이템 사용하기 모달 -->
-  <BottomModal :is-visible="isShowItemUseModal" v-bind="ItemUseModalProps" @close="toggleItemUseModal">
-    <template #content>
-      <UsedBoosterItemSummary :steps="'1234'" :multiply="2" :stacked="'2464'" />
-      <UsingItemWrap>
-        <BoosterItem
-          :src="'walkingking/img-booster-item1.png'"
-          :name="'1시간 걸음수 2배'"
-          :count="'2'"
-          @item-clicked="clickUsingItemModal"
-        />
-        <BoosterItem :src="'walkingking/img-booster-item2.png'" :name="'2시간 걸음수 2배'" :count="'1'" />
-        <BoosterItem :src="'walkingking/img-booster-item3.png'" :name="'4시간 걸음수 2배'" :count="'3'" />
-        <BoosterItem :src="'walkingking/img-booster-item4.png'" :name="'8시간 걸음수 2배'" :count="'3'" />
-        <BoosterItem :name="'아이템 구매하기'" />
-      </UsingItemWrap>
-    </template>
-  </BottomModal>
-  <!-- 아이템 사용 확인 모달 -->
-  <BaseModal
-    :is-visible="isShowUsingItemModal"
-    v-bind="UsingItemModalProps"
-    @close="toggleUsingItemModal"
-    @cancel="toggleUsingItemModal"
-  >
-    <template #content>
-      <UsingItemConfirm />
-    </template>
-  </BaseModal>
-  <!-- 챌린지 메뉴 모달 -->
-  <BottomModal
-    :is-visible="isShowChallengeMenuModal"
-    v-bind="ChallengeMenuModalProps"
-    @close="toggleChallengeMenuModal"
-  >
-    <template #content>
-      <ul>
-        <li>
-          <NuxtLink to="#"><p class="pd-19y fz-16 text-left">응원하기</p></NuxtLink>
-        </li>
-        <li>
-          <NuxtLink to="#"><p class="pd-19y fz-16 text-left">참가 취소하기</p> </NuxtLink>
-        </li>
-        <li v-if="challengeProgressing">
-          <NuxtLink to="#"><p class="pd-19y fz-16 text-left">챌린지 상세보기</p> </NuxtLink>
-        </li>
-      </ul>
-    </template>
-  </BottomModal>
 </template>
 
 <script setup lang="ts">
+import { ref, inject, onMounted } from 'vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import RecruitmentindividualChallengeBox from '~/components/publishing/walkking/RecruitmentindividualChallengeBox.vue'
 import ChallengeProfileBox from '~/components/publishing/walkking/ChallengeProfileBox.vue'
@@ -176,6 +182,7 @@ import UsingItemConfirm from '~/components/publishing/walkking/UsingItemConfirm.
 import StepsHistoryItem from '~/components/publishing/walkking/StepsHistoryItem.vue'
 import StickyProfileSection from '~/components/publishing/walkking/StickyProfileSection.vue'
 import ChallengeResultWrap from '~/components/publishing/walkking/ChallengeResultWrap.vue'
+import ChallengeNoResultBox from '~/components/publishing/walkking/ChallengeNoResultBox.vue'
 import ChallengeResultBox from '~/components/publishing/walkking/ChallengeResultBox.vue'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import FlexRowDiv from '~/components/page/FlexRowDiv.vue'

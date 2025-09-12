@@ -122,6 +122,7 @@ function handleCarrierChange(option: CarrierOption) {
 // 인증 버튼 클릭
 function onButtonClick() {
   showToast.value = true
+  emit('verify')
 }
 </script>
 

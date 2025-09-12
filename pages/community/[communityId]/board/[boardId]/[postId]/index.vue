@@ -4,10 +4,11 @@
     :has-share="true"
     page-title="커뮤니티명"
     :show-back-button="true"
-    :is-transparent="true"
+    :is-transparent="false"
     :has-add-text="true"
     :add-text-click-enabled="true"
     add-text="<span class='icon ico-menu'>메뉴 아이콘</span>"
+    class="pb-72"
   >
     <!-- 접근 권한이 있는 경우 -->
     <div v-if="hasAccess">
@@ -33,8 +34,13 @@
           :loop="true"
         />
       </PostDetailImageWrap>
+      <!-- 별점 섹션 -->
+      <StarRatingSection class="mt-16" :show-close-button="false" another-type />
       <!-- 해시태그 컴포넌트 -->
-      <PostDetailHashtagWrap :hashtags="['#저속화식단', '#저탄고지', '#고단백', '#식단공유', '#운동후식단병행']" />
+      <PostDetailHashtagWrap
+        :hashtags="['#저속화식단', '#저탄고지', '#고단백', '#식단공유', '#운동후식단병행']"
+        class="mt-16"
+      />
       <!-- 본문 컴포넌트 -->
       <PostDetailTextWrap>
         본문 내용이 표기됩니다. 한강 뛰고 와서 먹기좋은 초간단샐러드 추천해요. 저만의 식단인데, 일단 닭가슴살이랑 바나나
@@ -50,33 +56,28 @@
       <!-- 리액션 컴포넌트 -->
       <PostDetailReactionBox @reaction-selected="updateSelectedReaction" />
       <hr class="hr-section mg-24y ml-n20 mr-n20" />
-      <CommentHeader />
-      <!-- 댓글 컴포넌트 -->
-      <PostDetailComment
-        :nickname="'당근먹는다람쥐'"
-        :author="true"
-        @see-more-self="handleSeeMoreClick"
-        @see-more-other="handleSeeMoreOtherClick"
-      />
-      <!-- 답글 컴포넌트 -->
-      <PostDetailReply
-        :nickname="'당근먹는다람쥐'"
-        @see-more-self="handleSeeMoreClick"
-        @see-more-other="handleSeeMoreOtherClick"
-      />
-      <!-- 댓글 컴포넌트 -->
-      <PostDetailComment
-        :nickname="'당근먹는다람쥐'"
-        :author="true"
-        @see-more-self="handleSeeMoreClick"
-        @see-more-other="handleSeeMoreOtherClick"
-      />
-      <!-- 댓글 컴포넌트 -->
-      <PostDetailComment
-        :nickname="'당근먹는다람쥐'"
-        @see-more-self="handleSeeMoreClick"
-        @see-more-other="handleSeeMoreOtherClick"
-      />
+      <CommentHeader :selected-period="'First'" />
+
+      <div v-for="(comment, index) in comments" :key="index">
+        <PostDetailComment
+          v-if="!comment.isReply"
+          :nickname="comment.nickname"
+          :author="comment.author"
+          :is-deleted="comment.isDeleted"
+          :is-reported="comment.isReported"
+          @see-more-self="handleSeeMoreClick(index)"
+          @see-more-other="handleSeeMoreOtherClick(index)"
+        />
+        <PostDetailReply
+          v-else
+          :nickname="comment.nickname"
+          :author="comment.author"
+          :is-deleted="comment.isDeleted"
+          :is-reported="comment.isReported"
+          @see-more-self="handleSeeMoreClick(index)"
+          @see-more-other="handleSeeMoreOtherClick(index)"
+        />
+      </div>
       <!-- 댓글이 없는 경우 케이스 -->
       <HasNoComment />
       <hr class="hr-section mg-24y ml-n20 mr-n20" />
@@ -89,7 +90,7 @@
         :is-visible="isShowSeeMoreSelfModal"
         v-bind="SeeMoreSelfModalProps"
         @cancel="clickCancelSeeMoreSelfModal"
-        @confirm="clickConfirmSeeMoreSelfModal"
+        @confirm="deleteComment"
         @close="toggleSeeMoreSelfModal"
       >
         <template #content>
@@ -101,7 +102,7 @@
         :is-visible="isShowSeeMoreOtherModal"
         v-bind="SeeMoreOtherModalProps"
         @cancel="clickCancelSeeMoreOtherModal"
-        @confirm="clickConfirmSeeMoreOtherModal"
+        @confirm="reportComment"
         @close="toggleSeeMoreOtherModal"
       >
         <template #content>
@@ -131,8 +132,8 @@
       <PostDetailHashtagWrap :hashtags="['#저속화식단', '#저탄고지', '#고단백', '#식단공유', '#운동후식단병행']" />
       <!-- 본문 컴포넌트 -->
       <PostDetailTextWrap>
-        본문 내용이 표기됩니다. 한강 뛰고 와서 먹기좋은 초간단샐러드 추천해요. 저만의 식단인데, 일단 닭가슴살이랑 바나나
-        그리고 양배추있으면 한 끼 뚝딱이에요.
+        본문 내용이 표기됩1니다. 한강 뛰고 와서 먹기좋은 초간단샐러드 추천해요. 저만의 식단인데, 일단 닭가슴살이랑
+        바나나 그리고 양배추있으면 한 끼 뚝딱이에요.
       </PostDetailTextWrap>
       <!-- 좋아요 + 조회수 표기 컴포넌트 -->
       <PostDetailSummaryBox
@@ -145,32 +146,26 @@
       <PostDetailReactionBox @reaction-selected="updateSelectedReaction" />
       <hr class="hr-section mg-24y ml-n20 mr-n20" />
       <CommentHeader />
-      <!-- 댓글 컴포넌트 -->
-      <PostDetailComment
-        :nickname="'당근먹는다람쥐'"
-        :author="true"
-        @see-more-self="handleSeeMoreClick"
-        @see-more-other="handleSeeMoreOtherClick"
-      />
-      <!-- 답글 컴포넌트 -->
-      <PostDetailReply
-        :nickname="'당근먹는다람쥐'"
-        @see-more-self="handleSeeMoreClick"
-        @see-more-other="handleSeeMoreOtherClick"
-      />
-      <!-- 댓글 컴포넌트 -->
-      <PostDetailComment
-        :nickname="'당근먹는다람쥐'"
-        :author="true"
-        @see-more-self="handleSeeMoreClick"
-        @see-more-other="handleSeeMoreOtherClick"
-      />
-      <!-- 댓글 컴포넌트 -->
-      <PostDetailComment
-        :nickname="'당근먹는다람쥐'"
-        @see-more-self="handleSeeMoreClick"
-        @see-more-other="handleSeeMoreOtherClick"
-      />
+      <div v-for="(comment, index) in comments" :key="index">
+        <PostDetailComment
+          v-if="!comment.isReply"
+          :nickname="comment.nickname"
+          :author="comment.author"
+          :is-deleted="comment.isDeleted"
+          :is-reported="comment.isReported"
+          @see-more-self="handleSeeMoreClick(index)"
+          @see-more-other="handleSeeMoreOtherClick(index)"
+        />
+        <PostDetailReply
+          v-else
+          :nickname="comment.nickname"
+          :author="comment.author"
+          :is-deleted="comment.isDeleted"
+          :is-reported="comment.isReported"
+          @see-more-self="handleSeeMoreClick(index)"
+          @see-more-other="handleSeeMoreOtherClick(index)"
+        />
+      </div>
       <!-- 댓글이 없는 경우 케이스 -->
       <HasNoComment />
       <hr class="hr-section mg-24y ml-n20 mr-n20" />
@@ -192,6 +187,7 @@ import PostDetailHashtagWrap from '~/components/publishing/community/board/PostD
 import PostDetailTextWrap from '~/components/publishing/community/board/PostDetailTextWrap.vue'
 import PostDetailSummaryBox from '~/components/publishing/community/board/PostDetailSummaryBox.vue'
 import PostDetailReactionBox from '~/components/publishing/community/board/PostDetailReactionBox.vue'
+import StarRatingSection from '~/components/publishing/community/board/StarRatingSection.vue'
 import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
 import CommentHeader from '~/components/publishing/community/board/CommentHeader.vue'
 import HasNoComment from '~/components/publishing/community/board/HasNoComment.vue'
@@ -206,6 +202,18 @@ import AccessPermissions from '~/components/publishing/community/board/AccessPer
 import CommNoPermission from '~/components/publishing/community/board/commNoPermission.vue'
 import ReportBox from '~/components/publishing/community/board/ReportBox.vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
+
+// 현재 선택된 댓글의 인덱스를 저장할 변수
+const selectedCommentIndex = ref<number | null>(null)
+
+// 댓글 목록 데이터
+const comments = ref([
+  { nickname: '당근먹는다람쥐', author: true, isDeleted: false, isReported: false, isReply: false },
+  { nickname: '당근먹는다람쥐', author: false, isDeleted: false, isReported: false, isReply: true },
+  { nickname: '당근먹는다람쥐', author: true, isDeleted: false, isReported: false, isReply: true },
+  { nickname: '당근먹는다람쥐', author: false, isDeleted: false, isReported: false, isReply: true },
+  { nickname: '당근먹는다람쥐', author: true, isDeleted: false, isReported: false, isReply: true }
+])
 // 접근권한 없는 케이스 상태
 const hasAccess = ref(true)
 // 이미지 슬라이드 데이터 (로컬 이미지 사용)
@@ -220,7 +228,8 @@ const updateSelectedReaction = (iconClass: string, reactionCount: number) => {
   myLikeCount.value = reactionCount
 }
 // 작성자 본인 댓글 더보기 메뉴 클릭시
-const handleSeeMoreClick = () => {
+const handleSeeMoreClick = (index: number) => {
+  selectedCommentIndex.value = index
   isShowSeeMoreSelfModal.value = true
 }
 // 작성자 본인 댓글 더보기 모달 초기 상태값
@@ -248,8 +257,16 @@ const clickCancelSeeMoreSelfModal = () => {
 const clickConfirmSeeMoreSelfModal = () => {
   isShowSeeMoreSelfModal.value = false
 }
+// 삭제 이벤트
+const deleteComment = () => {
+  if (selectedCommentIndex.value !== null) {
+    comments.value[selectedCommentIndex.value].isDeleted = true
+  }
+  isShowSeeMoreSelfModal.value = false
+}
 // 타인 댓글 더보기 메뉴 클릭시
-const handleSeeMoreOtherClick = () => {
+const handleSeeMoreOtherClick = (index: number) => {
+  selectedCommentIndex.value = index
   isShowSeeMoreOtherModal.value = true
 }
 // 타인 댓글 더보기 모달 초기 상태값
@@ -278,7 +295,11 @@ const clickConfirmSeeMoreOtherModal = () => {
   isShowSeeMoreOtherModal.value = false
   isShowReportModal.value = true
 }
-
+// 신고 이벤트
+const reportComment = () => {
+  isShowSeeMoreOtherModal.value = false
+  isShowReportModal.value = true
+}
 // 신고하기 모달 초기 상태값
 const isShowReportModal = ref(false)
 // 타인 댓글 더보기 모달 props
@@ -296,8 +317,11 @@ const ReportModalProps = ref({
 const toggleReportModal = () => {
   isShowReportModal.value = false
 }
-// 타인 댓글 더보기 모달 신고하기 버튼 클릭시
+// 최종 신고 확인 이벤트
 const clickConfirmReportModal = () => {
+  if (selectedCommentIndex.value !== null) {
+    comments.value[selectedCommentIndex.value].isReported = true
+  }
   isShowReportModal.value = false
 }
 </script>

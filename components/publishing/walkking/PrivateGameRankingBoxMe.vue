@@ -155,6 +155,12 @@ const totalNumFormat = computed(() => {
   height: 4.8rem;
   border-radius: 50%;
   flex: 0 0 4.8rem;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
   @media (max-width: 375px) {
     width: 4rem;
     height: 4rem;

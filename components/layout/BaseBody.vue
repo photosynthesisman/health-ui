@@ -20,6 +20,7 @@ interface Props {
   searchWithSelect?: boolean // 검색창에 Select 포함 여부
   searchSelectOptions?: Array<{ value: string; label: string }> // Select 옵션들
   searchSelectPlaceholder?: string // Select placeholder
+  searchSelectTitle?: string
   hasNotification?: boolean // 알림 버튼
   hasReward?: boolean
   hasSetting?: boolean
@@ -95,6 +96,7 @@ const updateHeader = async () => {
   if (props.searchWithSelect !== undefined) headerConfig.searchWithSelect = props.searchWithSelect
   if (props.searchSelectOptions) headerConfig.searchSelectOptions = props.searchSelectOptions
   if (props.searchSelectPlaceholder) headerConfig.searchSelectPlaceholder = props.searchSelectPlaceholder
+  if (props.searchSelectTitle) headerConfig.searchSelectTitle = props.searchSelectTitle
   if (props.hasNotification !== undefined) headerConfig.hasNotification = props.hasNotification
   if (props.hasCart !== undefined) headerConfig.hasCart = props.hasCart
   if (props.hasReward !== undefined) headerConfig.hasReward = props.hasReward

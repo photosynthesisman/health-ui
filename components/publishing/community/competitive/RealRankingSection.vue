@@ -9,7 +9,7 @@
       :is-show-link="true"
       link-class="btn-link"
       :is-link="true"
-      link-href="#"
+      link-href="/community/[communityId]/realTimeRanking"
     />
     <StickyTabsContainer>
       <BoxedTabs
@@ -28,8 +28,9 @@
         :is-show-change="user.isShowChange"
         :is-show-steps="user.isShowSteps"
         :user-name="user.userName"
-        :user-location="user.userLocation"
-        :total-num="user.totalNumb"
+        :total-num-steps="user.totalNumb"
+        :is-joint="user.isJoint"
+        :is-me="user.isMe"
       />
     </div>
   </div>
@@ -53,45 +54,69 @@ const onBoxTabChangeA = (key: string) => {
   console.log('A 탭 선택됨:', key)
 }
 
-const rankingList = [
+interface RankingUser {
+  rank: string
+  isShowChange: boolean
+  isShowSteps: boolean
+  userName: string
+  totalNumb: number
+  isJoint?: boolean
+  isMe?: boolean
+}
+
+const rankingList: RankingUser[] = [
   {
     rank: '1',
     isShowChange: false,
     isShowSteps: false,
     userName: '곰탱이',
-    userLocation: 'lv.10',
-    totalNumb: '980'
+    totalNumb: 980
   },
   {
-    rank: '2',
+    rank: '1',
     isShowChange: false,
     isShowSteps: false,
     userName: '유교맨',
-    userLocation: 'lv.10',
-    totalNumb: '970'
+    totalNumb: 980
   },
   {
     rank: '3',
     isShowChange: false,
     isShowSteps: false,
     userName: '곰탱이',
-    userLocation: 'lv.10',
-    totalNumb: '960'
+    totalNumb: 960
   },
   {
-    rank: '4',
+    rank: '10,324',
     isShowChange: false,
     isShowSteps: false,
     userName: '유교맨',
-    userLocation: 'lv.10',
-    totalNumb: '950'
+    totalNumb: 950,
+    isMe: true
   }
 ]
+
+// rank별 카운트 세기
+const counts = rankingList.reduce((acc: Record<string, number>, cur) => {
+  acc[cur.rank] = (acc[cur.rank] || 0) + 1
+  return acc
+}, {})
+
+// 공동 여부 추가
+rankingList.forEach(user => {
+  user.isJoint = counts[user.rank] > 1
+})
 </script>
 <style scoped lang="scss">
 .ranking-wrap {
   &:last-child {
     border-bottom: 0;
+  }
+  &:deep {
+    padding-inline: 0.8rem;
+  }
+  &:deep(.rangking) {
+    width: 100%;
   }
 }
 </style>

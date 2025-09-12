@@ -9,21 +9,22 @@
         class="pt-20 pb-20"
       />
     </div>
-    <StarRating data-anchor="target-section" />
-    <TotalCountSelectType
-      :count="6"
-      class="pt-20 pb-20"
-      v-model:selected-period="selectedPeriod"
-      :select-options="periodOptions"
-    />
-    <!-- 게시글 없음 상태 -->
-    <CommNoItem v-if="commList.length === 0" />
-    <!-- 게시글 있음 상태 -->
-    <div v-else class="content-wrapper">
-      <FlexSection class="flex flex-col community-list">
-        <CommItem v-for="item in commList" :key="item.id" :item="item" :type="item.type" />
-      </FlexSection>
-
+    <div style="position: relative">
+      <StarRating data-anchor="target-section" />
+      <TotalCountSelectType
+        :count="6"
+        class="pt-20 pb-20"
+        v-model:selected-period="selectedPeriod"
+        :select-options="periodOptions"
+      />
+      <!-- 게시글 없음 상태 -->
+      <CommNoItem v-if="commList.length === 0" />
+      <!-- 게시글 있음 상태 -->
+      <div v-else class="content-wrapper">
+        <FlexSection class="flex flex-col community-list">
+          <CommItem v-for="item in commList" :key="item.id" :item="item" :type="item.type" />
+        </FlexSection>
+      </div>
       <CommNoPermission v-if="!hasPermission" />
     </div>
   </div>
@@ -111,10 +112,9 @@ const commList = [
 ]
 </script>
 <style scoped lang="scss">
-.content-wrapper {
-  position: relative;
-}
 .community-list {
+  margin: 0 -2rem;
+  padding: 0 2rem;
   border-top: 1px solid #eee;
 }
 .sticky-boxed-wrap {

@@ -7,26 +7,24 @@
     :has-tel-btn="true"
     class="pb-60"
   >
-    <h1 class="c-tit mt-24">
-      <span class="text" v-html="pageTitle"></span>
-    </h1>
+    <TitleSection :title="pageTitle" class="mt-24" />
     <!-- computed 속성을 사용하여 동적으로 이미지 경로를 바인딩합니다. -->
-    <img class="img-identification" :src="computedImageSrc" :alt="computedImageAlt" />
-    <button type="button" class="btn-take-picture" @click="shotID"><i class="icon-camera"></i>{{ shotTxt }}</button>
-    <div class="wrap-info-lists">
-      <div class="item">반드시 본인의 신분증 앞면을 글씨가 잘 보이도록 촬영해 주세요.</div>
-      <div class="item">빛이 반사 되거나 기타 이유로 신분증 내용 확인이 어려운 경우 재촬영 요구가 있을 수 있어요.</div>
-    </div>
-  </BaseBody>
-  <ButtonGroup class="is-fixed">
-    <Button
-      btn-type="primary"
-      element-type="button"
-      aria-label="다음"
-      class="lg w-full medium btn-sticky"
-      @click="clickNext"
+    <IdentificationCapture
+      :image-src="computedImageSrc"
+      :image-alt="computedImageAlt"
+      :shot-txt="shotTxt"
+      @shot="shotID"
     />
-  </ButtonGroup>
+    <ButtonGroup class="is-fixed">
+      <Button
+        btn-type="primary"
+        element-type="button"
+        aria-label="다음"
+        class="lg w-full medium btn-sticky"
+        @click="clickNext"
+      />
+    </ButtonGroup>
+  </BaseBody>
 </template>
 
 <script setup lang="ts">
@@ -34,6 +32,8 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import BaseBody from '~/components/layout/BaseBody.vue'
+import TitleSection from '~/components/insu/TitleSection.vue'
+import IdentificationCapture from '~/components/publishing/insu/auto/IdentificationCapture.vue'
 import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 
@@ -101,52 +101,4 @@ const clickNext = () => {
 }
 </script>
 
-<style scoped lang="scss">
-.img-identification {
-  margin-top: 3.2rem;
-}
-.btn-take-picture {
-  @include mixin.flex-container(justify-center items-center);
-  gap: 0.6rem;
-  padding: 1.4rem 2rem;
-  border-radius: 5rem;
-  background-color: #4f5561;
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: #fff;
-  width: max-content;
-  margin: 1.6rem auto 0;
-  .icon-camera {
-    display: inline-block;
-    background: url('/assets/images/insu/auto/icon-camera.svg') no-repeat center center;
-    background-size: contain;
-    width: 2rem;
-    height: 2rem;
-  }
-}
-.wrap-info-lists {
-  padding: 2rem 0;
-  .item {
-    text-align: left;
-    position: relative;
-    padding-left: 1rem;
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: #555555;
-    margin-top: 0.8rem;
-    & > span {
-      color: #4c7ff7;
-    }
-    &::before {
-      content: '';
-      display: inline-block;
-      width: 0.3rem;
-      height: 0.3rem;
-      background-color: #959595;
-      position: absolute;
-      top: 0.8rem;
-      left: 0;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

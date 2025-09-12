@@ -64,7 +64,8 @@ const props = withDefaults(defineProps<Props>(), {
     {
       id: 1,
       title: '프리썸머 챌린지',
-      schedule: '2025. 06. 15 ~ 2025. 06. 30',
+      schedule: '2025.06.15 12:30~ 2025.06.30 19:00',
+      duration: '2025.06.15 12:30~ 2025.06.30 19:00',
       totalPrize: '6,224,500',
       increaseAmount: '+45,000',
       buttonLink: 'javascript:void(0)',
@@ -82,7 +83,8 @@ const props = withDefaults(defineProps<Props>(), {
     {
       id: 2,
       title: '여름 다이어트 챌린지',
-      schedule: '2025. 07. 01 ~ 2025. 07. 31',
+      schedule: '2025.06.15 12:30~ 2025.06.30 19:00',
+      duration: '2025.06.15 12:30~ 2025.06.30 19:00',
       totalPrize: '5,150,000',
       increaseAmount: '+32,000',
       buttonLink: 'javascript:void(0)',
@@ -100,7 +102,8 @@ const props = withDefaults(defineProps<Props>(), {
     {
       id: 3,
       title: '건강한 출퇴근 챌린지',
-      schedule: '2025. 08. 01 ~ 2025. 08. 31',
+      schedule: '2025.06.15 12:30~ 2025.06.30 19:00',
+      duration: '2025.06.15 12:30~ 2025.06.30 19:00',
       totalPrize: '3,890,000',
       increaseAmount: '+18,500',
       buttonLink: 'javascript:void(0)',

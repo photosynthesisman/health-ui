@@ -14,7 +14,7 @@
     <MainSectionTitle title-text="요즘 핫한 커뮤니티" custom-class="communityTit" />
     <MainCommunity />
     <MainCommunityReply />
-    <!-- 하단 배너 -->
+    <!-- 하단 배너  -->
     <MainBottomBanner />
   </BaseBody>
 </template>
@@ -34,7 +34,7 @@ import MainInsu from '~/components/publishing/home/MainInsu.vue'
 import MainCommunity from '~/components/publishing/home/MainCommunity.vue'
 import MainCommunityReply from '~/components/publishing/home/MainCommunityReply.vue'
 
-import MainBottomBanner from '~/components/publishing/home/MainBottomBanner.vue'
+import MainBottomBanner from '~/components/publishing/healthDebt/MainBottomBanner.vue'
 </script>
 
 <style scoped lang="scss"></style>

@@ -15,11 +15,14 @@
         </h1>
       </div>
       <LineTabs :tabs="tabs" />
-      <div class="wrap-insurance-list">
-        <button v-for="item in insuranceList" :key="item.id" class="item" @click="clickAgency(item)">
-          <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-          <div class="name-insurance">{{ item.name }}</div>
-        </button>
+      <div class="grid_card mt-20">
+        <SelectInsuranceItem
+          v-for="(insu, idx) in myInsurances"
+          :key="idx"
+          :logo="insu.logo"
+          :name="insu.name"
+          @click="clickInsurance(insu)"
+        />
       </div>
     </client-only>
   </BaseBody>
@@ -29,6 +32,7 @@
 import { ConfirmModal } from '@lemonhc/fo-ui/components/modal'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import LineTabs, { type Tab } from '~/components/tabbar/LineTabs.vue'
+import SelectInsuranceItem from '~/components/publishing/insu/paperless/SelectInsuranceItem.vue'
 // import { useAsyncData } from '#app'
 
 const activeLineTab = ref('accountInfo')
@@ -40,25 +44,22 @@ const tabs = ref<Tab[]>([
 definePageMeta({
   title: '설계사 가입'
 })
-
-const insuranceList = ref([
-  { id: 1, name: 'DB손해DB손해DB손해' },
-  { id: 2, name: 'DB손해' },
-  { id: 3, name: 'DB손해' },
-  { id: 4, name: 'DB손해' },
-  { id: 5, name: 'DB손해' },
-  { id: 6, name: 'DB손해' },
-  { id: 7, name: 'DB손해' },
-  { id: 8, name: 'DB손해' }
-])
+const myInsurances = [
+  { logo: '/_nuxt/assets/images/insu/icon_bank_whitebg.svg', name: 'DB손해' },
+  { logo: '/_nuxt/assets/images/insu/icon_bank_whitebg.svg', name: 'DB손해' },
+  { logo: '/_nuxt/assets/images/insu/icon_bank_whitebg.svg', name: 'DB손해' },
+  { logo: '/_nuxt/assets/images/insu/icon_bank_whitebg.svg', name: 'DB손해' },
+  { logo: '/_nuxt/assets/images/insu/icon_bank_whitebg.svg', name: 'DB손해' },
+  { logo: '/_nuxt/assets/images/insu/icon_bank_whitebg.svg', name: 'DB손해' },
+  { logo: '/_nuxt/assets/images/insu/icon_bank_whitebg.svg', name: 'DB손해' },
+  { logo: '/_nuxt/assets/images/insu/icon_bank_whitebg.svg', name: 'DB손해' }
+]
 const insuList = ref<any>([])
 
-const clickAgency = async (item: any) => {
+const clickInsurance = async (insu: any) => {
   const modalContent = `
     <div>
-      <div>
-        <i class="ri-information-line"></i>
-      </div>
+    <strong>${insu.name}</strong>
       <div>보험설계사용 서비스에 가입하시겠어요?</div>
     </div>`
 
@@ -79,31 +80,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped lang="scss">
-.wrap-insurance-list {
-  margin-top: 2rem;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-columns: auto;
-  gap: 0.8rem;
-  .item {
-    padding: 1.8rem 1.6rem 1.4rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    align-items: center;
-    border-radius: 0.8rem;
-    background-color: #f9f9f9;
-    .logo-insurance {
-      width: 4rem;
-      height: 4rem;
-    }
-    .name-insurance {
-      font-size: 1.4rem;
-      font-weight: 500;
-      color: #2b2b2b;
-      word-break: break-all;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

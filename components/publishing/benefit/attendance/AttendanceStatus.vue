@@ -10,6 +10,9 @@
         <strong class="result">150P</strong>
       </div>
     </div>
+    <div class="attendance-current">
+      <strong class="tit">출석주기</strong> <span class="current-date">15일</span>/20일
+    </div>
   </div>
 </template>
 
@@ -20,8 +23,28 @@
 
 .attendance-status-wrap {
   position: relative;
-  height: 0;
+  height: 8.2rem;
+  top: -6rem;
   z-index: 2;
+}
+.attendance-current {
+  position: relative;
+  border-radius: 5rem;
+  padding: 0.8rem 1.6rem;
+  background: #7abd5e;
+  display: flex;
+  font-size: 1.3rem;
+  gap: 0 0.8rem;
+  justify-self: center;
+  align-self: center;
+  color: #2b2b2b;
+  margin-top: 3.2rem;
+  .tit {
+    font-weight: 400;
+  }
+  .current-date {
+    font-weight: 700;
+  }
 }
 .attendance-status {
   display: flex;
@@ -30,7 +53,7 @@
   background: vars.$white;
   padding: 2rem 2.4rem;
   position: relative;
-  top: -8rem;
+
   width: 100%;
   gap: 0 2.4rem;
   @media (max-width: 375px) {

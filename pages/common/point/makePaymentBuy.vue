@@ -13,6 +13,12 @@
         </div>
       </div>
     </div>
+
+    <!-- 안내문구 추가 -->
+    <div class="payment-info-text">
+      {{ paymentInfoText }}
+    </div>
+
     <div class="pay-box-wrap">
       <div class="pay-box">
         <p class="tit">수량</p>
@@ -21,10 +27,10 @@
       <div class="pay-box">
         <p class="tit">결제금액</p>
         <p class="num">2,000원</p>
-      </div>
-      <div class="pay-box">
-        <p class="tit">포인트 환산 금액</p>
-        <p class="num">10,000P</p>
+        <div class="point-box">
+          <p class="tit">포인트 환산 금액</p>
+          <p class="num">10,000P</p>
+        </div>
       </div>
       <div class="pay-box">
         <p class="tit">포인트 사용</p>
@@ -37,6 +43,7 @@
       <div class="pay-box">
         <p class="tit">포인트 사용 할인 금액</p>
         <p class="num">-600원</p>
+        <span class="point-noti">10P = 2원 입니다.</span>
       </div>
     </div>
     <ButtonGroup class="is-fixed">
@@ -58,7 +65,11 @@ const props = defineProps({
   brandName: { type: String, default: '브랜드' },
   giftName: { type: String, default: '상품 이름' },
   cost: { type: String, default: '1,000' },
-  calcPoint: { type: String, default: '5,000' }
+  calcPoint: { type: String, default: '5,000' },
+  paymentInfoText: {
+    type: String,
+    default: '본 상품은 결제 후 단순변심으로 환불이 불가합니다.\n 구매 전 내용을 충분히 확인해 주세요.'
+  }
 })
 </script>
 <style scoped lang="scss">
@@ -119,6 +130,16 @@ const props = defineProps({
     line-height: 2.2rem;
   }
 }
+.payment-info-text {
+  margin: 1.6rem 0 0;
+  padding-bottom: 1.6rem;
+  border-bottom: 0.1rem solid #eee;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 140%;
+  color: vars.$blue-primary;
+  white-space: pre-line;
+}
 .pay-box {
   display: flex;
   justify-content: space-between;
@@ -136,6 +157,27 @@ const props = defineProps({
   }
   .num {
     font-weight: 500;
+  }
+  .point-box {
+    width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.8rem;
+    .tit,
+    .num {
+      font-size: 1.4rem;
+      color: #31519e;
+    }
+  }
+  .point-noti {
+    width: 100%;
+    margin-top: 0.8rem;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    letter-spacing: -0.028rem;
+    color: #31519e;
   }
 }
 </style>

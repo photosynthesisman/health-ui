@@ -30,38 +30,39 @@
     @confirm="clickNext"
   >
     <template #content>
-      <div class="flex gap-8">
-        <Radio
-          id="rdo1"
-          v-model="selectedMethod"
-          name="rdo1"
-          custom-style="button small"
-          value="이메일"
-          aria-label="이메일"
-          class="w-full"
-        />
-        <Radio
-          id="rdo2"
-          v-model="selectedMethod"
-          name="rdo1"
-          custom-style="button small"
-          value="SNS 공유"
-          aria-label="SNS 공유"
-          class="w-full"
-        />
-        <Radio
-          id="rdo3"
-          v-model="selectedMethod"
-          name="rdo1"
-          custom-style="button small"
-          value="다운로드"
-          aria-label="다운로드"
-          class="w-full"
-        />
-      </div>
+      <FlexSection class="gap-16">
+        <FlexRowDiv class="gap-8">
+          <Radio
+            id="rdo1"
+            v-model="selectedMethod"
+            name="rdo1"
+            custom-style="button small"
+            value="이메일"
+            aria-label="이메일"
+            class="w-full"
+          />
+          <Radio
+            id="rdo2"
+            v-model="selectedMethod"
+            name="rdo1"
+            custom-style="button small"
+            value="SNS 공유"
+            aria-label="SNS 공유"
+            class="w-full"
+          />
+          <Radio
+            id="rdo3"
+            v-model="selectedMethod"
+            name="rdo1"
+            custom-style="button small"
+            value="다운로드"
+            aria-label="다운로드"
+            class="w-full"
+          />
+        </FlexRowDiv>
 
-      <div v-if="selectedMethod === '이메일'" class="mt-16 text-left">
         <InputMail
+          v-if="selectedMethod === '이메일'"
           label="이메일 주소 입력"
           :is-valid="false"
           valid-text="올바른 이메일 주소를 입력해주세요."
@@ -73,8 +74,7 @@
             { value: 'kakao.com', label: 'kakao.com' }
           ]"
         />
-      </div>
-      <div class="mt-16 text-left">
+
         <InputText
           label="비밀번호"
           type="password"
@@ -82,7 +82,7 @@
           valid-text="비밀번호 벨리데이터 메시지"
           placeholder="비밀번호를 입력해 주세요."
         />
-      </div>
+      </FlexSection>
     </template>
   </BottomModal>
 </template>
@@ -96,7 +96,8 @@ import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import InputMail from '~/components/publishing/input/InputMail.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
 import Radio from '~/components/publishing/input/radio.vue'
-
+import FlexSection from '~/components/page/FlexSection.vue'
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 const selectedMethod = ref('이메일')
 const isShowExportMethodModal = ref(true)
 const clickExportMethod = () => {

@@ -7,9 +7,8 @@
     :cart-count="2"
     class="pb-60"
   >
-    <h1 class="c-tit mt-24">
-      <span class="text"> 발급할 서류 정보를<br />선택해 주세요. </span>
-    </h1>
+    <TitleSection title="발급할 서류 정보를<br />선택해 주세요." class="mt-24" />
+
     <div class="wrap-form">
       <div class="tit-form">병원</div>
       <Select
@@ -79,11 +78,10 @@ import BaseBody from '~/components/layout/BaseBody.vue'
 import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import Select from '~/components/publishing/input/Select.vue'
-import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import type { BaseModalProps, ModalEmitEvent } from '~/types/common/modal.type'
 import SegmentedTabs, { type SegmentTab } from '~/components/tabbar/SegmentedTabs.vue'
 import InputCalendarFromTo from '~/components/publishing/input/InputCalendarFromTo.vue'
-
+import TitleSection from '~/components/insu/TitleSection.vue'
 const hospitalOptions = [
   { value: '강동성심병원', label: '강동성심병원' },
   { value: '삼성서울병원', label: '삼성서울병원' },
@@ -245,15 +243,6 @@ const onSegmentedTabChange = (key: string) => {
 
   console.log(`📅 기간 탭 변경: ${getPeriodLabel()}`)
 }
-
-definePageMeta({
-  // isShowHeader: false
-  // isShowUtils: false
-  // isShowBackButton: false,
-  title: '병원서류 발급신청'
-  // utils: ['phone']
-  // customTitle: 'logo',
-})
 </script>
 
 <style scoped lang="scss">

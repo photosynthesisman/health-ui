@@ -3,10 +3,39 @@
     <PointStoreSummaryCard />
     <hr class="hr-section ml-n20 mr-n20 mb-8" />
     <LineTabsStyle :tabs="lineTabs" :active-index="lineActiveIndex" @tab-click="handleLineTabClick" />
-    <!-- 챌린지 아이템 구매 -->
+    <!-- 구독권 구매 -->
     <div v-if="lineActiveIndex === 0" class="mt-20">
       <InputText inp-type="search" :placeholder="'아이템명을 입력해주세요.'" />
+      <SearchResult :count="ParticipateTickets.length + SubscribeTickets.length" />
+      <FlexColDiv class="pt-12 gap-40">
+        <PointStoreTicketWrap>
+          <ParticipateTicketItem
+            v-for="(item, index) in ParticipateTickets"
+            :key="index"
+            :image-name="item.imageName"
+            :name="item.name"
+            :point="item.point"
+            @button-click="toggleBottomModal(item)"
+          />
+        </PointStoreTicketWrap>
+        <PointStoreSubscribeWrap>
+          <SubscribeTicketItem
+            v-for="(item, index) in SubscribeTickets"
+            :key="index"
+            :image-name="item.imageName"
+            :name="item.name"
+            :point="item.point"
+            @button-click="toggleBottomModal(item)"
+          />
+        </PointStoreSubscribeWrap>
+      </FlexColDiv>
+    </div>
+
+    <!-- 챌린지 아이템 구매 -->
+    <div v-if="lineActiveIndex === 1" class="mt-20">
+      <InputText inp-type="search" :placeholder="'아이템명을 입력해주세요.'" />
       <SearchResult :count="ChallengeItems.length" />
+      <PurchasePackageButton />
       <PointStoreItemWrap>
         <ChallengeItem
           v-for="(item, index) in ChallengeItems"
@@ -19,7 +48,7 @@
       </PointStoreItemWrap>
     </div>
     <!-- 모바일 교환권 구매 -->
-    <div v-if="lineActiveIndex === 1" class="mt-20">
+    <div v-if="lineActiveIndex === 2" class="mt-20">
       <InputText inp-type="search" :placeholder="'상품명을 입력해주세요.'" />
       <SearchResult :item="'상품'" :count="couponItems.length" />
       <PointStoreCouponWrap>
@@ -34,45 +63,48 @@
         />
       </PointStoreCouponWrap>
     </div>
+
+    <Teleport to="body">
+      <BottomModal
+        :is-visible="isShowBottomModal"
+        v-bind="bottomModalProps"
+        @close="toggleBottomModal"
+        @confirm="handleNavigation('/common/point/makePaymentBuy')"
+      >
+        <template #content>
+          <OrderItem
+            :image-name="selectedItem?.imageName || RewardImage1"
+            :brand-name="selectedItem?.brand || '챌린지 부스터'"
+            :gift-name="selectedItem?.name || '정보 없음'"
+            :gift-type="selectedItem?.point ? `${selectedItem.point}P` : '정보 없음'"
+            :info-text="'상품정보 상세보기'"
+            :beg-friend-image="begFriendImagePath"
+            :gift-friend-image="giftFriendImagePath"
+            @see-more-info="handleSeeMoreInfo"
+            @beg-for-gift="openFriendsIndex('beg')"
+            @to-give-gift="openFriendsIndex('gift')"
+            @update:cal-order-cost="handleCostUpdate"
+            @navigate-to="handleNavigation"
+          />
+        </template>
+      </BottomModal>
+
+      <FullModal :is-visible="isShowFullModal1" v-bind="fullModalProps1" @close="toggleFullModal1">
+        <template #content><ViewDetailItem :image-name="RewardImage1" /></template>
+      </FullModal>
+
+      <FullModal
+        :is-visible="isShowFullModal2"
+        v-bind="fullModalProps2"
+        @close="toggleFullModal2"
+        @confirm="onConfirmFullModal"
+      >
+        <template #content>
+          <FriendsIndex v-model="friendsIndexSelectedId" @selected-image-path="handleSelectedImagePath" />
+        </template>
+      </FullModal>
+    </Teleport>
   </BaseBody>
-  <BottomModal
-    :is-visible="isShowBottomModal"
-    v-bind="bottomModalProps"
-    @close="toggleBottomModal"
-    @confirm="handleNavigation('/common/point/makePaymentBuy')"
-  >
-    <template #content>
-      <OrderItem
-        :image-name="selectedItem?.imageName || RewardImage1"
-        :brand-name="selectedItem?.brand || '챌린지 부스터'"
-        :gift-name="selectedItem?.name || '정보 없음'"
-        :gift-type="selectedItem?.point ? `${selectedItem.point}P` : '정보 없음'"
-        :info-text="'상품정보 상세보기'"
-        :beg-friend-image="begFriendImagePath"
-        :gift-friend-image="giftFriendImagePath"
-        @see-more-info="handleSeeMoreInfo"
-        @beg-for-gift="openFriendsIndex('beg')"
-        @to-give-gift="openFriendsIndex('gift')"
-        @update:cal-order-cost="handleCostUpdate"
-        @navigate-to="handleNavigation"
-      />
-    </template>
-  </BottomModal>
-
-  <FullModal :is-visible="isShowFullModal1" v-bind="fullModalProps1" @close="toggleFullModal1">
-    <template #content><ViewDetailItem :image-name="RewardImage1" /></template>
-  </FullModal>
-
-  <FullModal
-    :is-visible="isShowFullModal2"
-    v-bind="fullModalProps2"
-    @close="toggleFullModal2"
-    @confirm="onConfirmFullModal"
-  >
-    <template #content>
-      <FriendsIndex v-model="friendsIndexSelectedId" @selected-image-path="handleSelectedImagePath" />
-    </template>
-  </FullModal>
 </template>
 
 <script setup lang="ts">
@@ -84,6 +116,8 @@ import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import PointStoreSummaryCard from '~/components/publishing/point/PointStoreSummaryCard.vue'
 import PointStoreItemWrap from '~/components/publishing/point/PointStoreItemWrap.vue'
 import PointStoreCouponWrap from '~/components/publishing/point/PointStoreCouponWrap.vue'
+import PointStoreTicketWrap from '~/components/publishing/point/PointStoreTicketWrap.vue'
+import PointStoreSubscribeWrap from '~/components/publishing/point/PointStoreSubscribeWrap.vue'
 import ChallengeItem from '~/components/publishing/point/ChallengeItem.vue'
 import MobileCoupon from '~/components/publishing/point/MobileCoupon.vue'
 import SearchResult from '~/components/publishing/point/SearchResult.vue'
@@ -100,6 +134,17 @@ import RewardImage10 from '~/assets/images/lottery/img-reward-10.png'
 import RewardImage11 from '~/assets/images/lottery/img-reward-11.png'
 import OrderItem from '~/components/publishing/point/OrderItem.vue'
 import FriendsIndex from '~/components/publishing/point/FriendsIndex.vue'
+import ParticipateTicketItem from '~/components/publishing/point/ParticipateTicketItem.vue'
+import SubscribeTicketItem from '~/components/publishing/point/SubscribeTicketItem.vue'
+import TicketImage1 from '~/assets/images/lottery/img-ticket-1.svg'
+import TicketImage2 from '~/assets/images/lottery/img-ticket-2.svg'
+import TicketImage3 from '~/assets/images/lottery/img-ticket-3.svg'
+import TicketImage4 from '~/assets/images/lottery/img-ticket-4.svg'
+import SubImage1 from '~/assets/images/lottery/img-sub-1.svg'
+import SubImage2 from '~/assets/images/lottery/img-sub-2.svg'
+import SubImage3 from '~/assets/images/lottery/img-sub-3.svg'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
+import PurchasePackageButton from '~/components/publishing/point/PurchasePackageButton.vue'
 
 interface StoreItem {
   imageName: string
@@ -134,8 +179,9 @@ const bottomModalProps = computed(() => {
 })
 // LineTabs 데이터
 const lineTabs: Tab[] = [
-  { name: '챌린지 아이템 구매', code: 'item' },
-  { name: '모바일 교환권 구매', code: 'Coupon' }
+  { name: '구독권', code: 'item' },
+  { name: '챌린지 아이템', code: 'item' },
+  { name: '모바일 교환권', code: 'Coupon' }
 ]
 const lineActiveIndex = ref(1)
 
@@ -219,6 +265,58 @@ const onConfirmFullModal = () => {
 
 // FriendsIndex에서 v-model로 관리될 값
 const friendsIndexSelectedId = ref('')
+
+// 챌린지 참가권 데이터
+const ParticipateTickets: StoreItem[] = [
+  {
+    imageName: TicketImage1,
+    brand: '챌린지 참가권',
+    name: '1회권',
+    point: '15,000'
+  },
+  {
+    imageName: TicketImage2,
+    brand: '챌린지 참가권',
+    name: '5회권',
+    point: '75,000'
+  },
+  {
+    imageName: TicketImage3,
+    brand: '챌린지 참가권',
+    name: '10회권',
+    point: '150,000'
+  },
+  {
+    imageName: TicketImage4,
+    brand: '챌린지 참가권',
+    name: '30회권',
+    point: '450,000'
+  }
+]
+
+// 구독권 데이터 데이터
+const SubscribeTickets: StoreItem[] = [
+  {
+    imageName: SubImage1,
+    brand: '구독권',
+    name: '1개월 구독권',
+    point: '15,000'
+  },
+  {
+    imageName: SubImage2,
+    brand: '구독권',
+    name: '6개월 구독권',
+    point: '75,000'
+  },
+  {
+    imageName: SubImage3,
+    brand: '구독권',
+    name: '12개월 구독권',
+    point: '150,000'
+  }
+]
+
+// 챌린지 아이템 데이터
 const ChallengeItems: StoreItem[] = [
   {
     imageName: RewardImage2,
@@ -241,6 +339,8 @@ const ChallengeItems: StoreItem[] = [
     point: '15,000'
   }
 ]
+
+// 모바일 교환권 데이터
 const couponItems: StoreItem[] = [
   {
     imageName: RewardImage9,

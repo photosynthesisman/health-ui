@@ -1,5 +1,8 @@
 <template>
   <div class="ml-n20 mr-n20">
+    <div class="mg-20x">
+      <TotalItemSort :total="props.deliveryHistory.length || 0" :buttons="sortButtons" @button-click="clickSort" />
+    </div>
     <div class="list">
       <InssueAccordion v-for="item in props.deliveryHistory" :key="item.id" v-model="item.open">
         <template #header>
@@ -17,7 +20,9 @@
             </div>
             <div class="item-header-bottom">
               <div class="item-date">
-                <span class="item-date-label">{{ item.label }}</span>
+                <!-- <span class="item-date-label">{{ item.label }}</span> -->
+                <!-- label에서 상품명으로 변경 -->
+                <span class="item-date-label">{{ item.productName }}</span>
                 <span class="item-date-text">{{ item.date }}</span>
               </div>
               <strong class="item-price">{{ priceFormat(totalPrice(item)) }}</strong>
@@ -47,16 +52,12 @@
                 <span class="label">휴대폰번호</span>
                 <span class="value">{{ item.phone }}</span>
               </div>
-              <div class="detail-row" v-if="item.memo">
+              <div v-if="item.memo" class="detail-row">
                 <span class="label">배송전달사항</span>
                 <span class="value">{{ item.memo }}</span>
               </div>
             </div>
             <div class="detail-list">
-              <div class="detail-row">
-                <span class="label">상품명</span>
-                <span class="value">{{ item.productName }}</span>
-              </div>
               <div class="detail-row">
                 <span class="label">상품명</span>
                 <span class="value">{{ item.productName }}</span>
@@ -83,7 +84,13 @@
 <script setup lang="ts">
 import InssueAccordion from '~/components/insu/InssueAccordion.vue'
 import Button from '~/components/publishing/button/Button.vue'
-
+import TotalItemSort from '~/components/publishing/insu/billingInfo/TotalItemSort.vue'
+// Sort 버튼명 배열
+const sortButtons = [
+  // { label: '전체', value: 'all' },
+  { label: '6개월', value: '6months' },
+  { label: '최신순', value: 'latest', icon: true }
+]
 interface DeliveryRecord {
   id: number
   open: boolean
@@ -99,7 +106,7 @@ interface DeliveryRecord {
   deliveryFee: number
   label: string
   date: string
-  price: number
+  price?: number
 }
 
 const props = defineProps<{ deliveryHistory: DeliveryRecord[] }>()
@@ -123,6 +130,12 @@ const priceFormat = (price: number) => {
 
 const totalPrice = (item: DeliveryRecord) => {
   return item.productAmount + item.deliveryFee
+}
+const emit = defineEmits<{
+  'click-sort': []
+}>()
+const clickSort = () => {
+  emit('click-sort')
 }
 </script>
 <style lang="scss" scoped>

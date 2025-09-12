@@ -55,7 +55,7 @@ import Button from '~/components/publishing/button/Button.vue'
 import CommonBadge from '~/components/common/badge/CommonBadge.vue'
 const emit = defineEmits<{
   openAgree: []
-  openModal: []
+  openModal: [hospital: { name: string; logoSrc: string }]
 }>()
 defineProps<{
   hospitalData: {
@@ -71,7 +71,7 @@ defineProps<{
 const clickAgree = () => {
   emit('openAgree')
 }
-const openFullModal = (hospital: { name: string }) => {
+const openFullModal = (hospital: { name: string; logoSrc: string }) => {
   emit('openModal', hospital)
 }
 </script>

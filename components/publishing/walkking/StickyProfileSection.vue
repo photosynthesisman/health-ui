@@ -9,7 +9,7 @@
 <style scoped lang="scss">
 .sticky-profile-section {
   position: sticky;
-  top: 2.4rem;
+  top: 0;
   z-index: 10;
   margin: 0 -2rem;
   padding: 0 2rem;

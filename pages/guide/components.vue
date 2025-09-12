@@ -373,7 +373,8 @@ import InputText from '~/components/publishing/input/InputText.vue'
 import InputPhone from '~/components/publishing/input/InputPhone.vue'
 import InputMail from '~/components/publishing/input/InputMail.vue'
 import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
-import InputRRN from '~/components/publishing/input/inputRRN.vue'
+import InputRRN from '~/components/publishing/input/InputRRN.vue'
+
 import InputRRNGender from '~/components/publishing/input/InputRRNGender.vue'
 
 import Select from '~/components/publishing/input/Select.vue'

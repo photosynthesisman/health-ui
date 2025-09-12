@@ -11,13 +11,31 @@
   >
     <div class="flex flex-col gap-12 mt-24 pb-48">
       <div class="sub-tit fz-16 bold">계정정보</div>
-      <InputText
+      <!-- <InputText
         label="아이디"
         class="require"
         :is-valid="true"
         valid-text="이미 사용하고 있는 아이디입니다."
         placeholder="아이디를 입력해주세요."
-      />
+      /> -->
+      <div class="email-wrap">
+        <InputMail
+          v-model="emailValue"
+          label="아이디(이메일)"
+          :is-valid="false"
+          class="require"
+          valid-text="올바른 이메일 주소를 입력해주세요."
+          placeholder="입력해주세요"
+          :custom-domains="[
+            { value: 'gmail.com', label: 'gmail.com' },
+            { value: 'naver.com', label: 'naver.com' },
+            { value: 'daum.net', label: 'daum.net' },
+            { value: 'kakao.com', label: 'kakao.com' }
+          ]"
+        />
+        <Button btn-type="primary" class="medium mt-8" :disabled="!isEmailComplete">이메일 인증하기</Button>
+      </div>
+
       <InputText
         type="password"
         label="비밀번호"
@@ -43,20 +61,6 @@
         placeholder="닉네임을 입력해주세요."
       />
 
-      <InputMail
-        label="이메일주소"
-        :is-valid="false"
-        class="require"
-        valid-text="올바른 이메일 주소를 입력해주세요."
-        placeholder="이메일을 입력해주세요"
-        :custom-domains="[
-          { value: 'gmail.com', label: 'gmail.com' },
-          { value: 'naver.com', label: 'naver.com' },
-          { value: 'daum.net', label: 'daum.net' },
-          { value: 'kakao.com', label: 'kakao.com' }
-        ]"
-      />
-
       <InputAddress label="지역선택" :is-valid="false" class="require" placeholder="주소를 검색해주세요" />
     </div>
     <!-- 비대칭 버튼 레이아웃 asymmetric  -->
@@ -70,6 +74,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 
 import Button from '~/components/publishing/button/Button.vue'
@@ -80,4 +85,11 @@ import Radio from '~/components/publishing/input/radio.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
 import InputMail from '~/components/publishing/input/InputMail.vue'
 import InputAddress from '~/components/publishing/input/InputAddress.vue'
+
+const emailValue = ref('')
+
+// 이메일 확인
+const isEmailComplete = computed(() => {
+  return emailValue.value && emailValue.value.includes('@') && emailValue.value.split('@')[1]?.length > 0
+})
 </script>

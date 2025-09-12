@@ -27,7 +27,14 @@
     <div class="challenge-tit mt-12">
       <div class="challenge-info">
         <strong class="tit">{{ cardData?.title || '출퇴근 러닝 챌린지' }}</strong>
-        <span class="during-date">{{ cardData?.schedule || '2025. 06. 15 ~ 2025. 06. 30' }}</span>
+        <div class="date-wrap">
+          <span class="during-date"
+            ><span class="schedule-tit">모집기간</span>{{ cardData?.schedule || '2025. 06. 15 ~ 2025. 06. 30' }}</span
+          >
+          <span class="during-date"
+            ><span class="schedule-tit">진행기간</span>{{ cardData?.duration || '2025. 06. 15 ~ 2025. 06. 30' }}</span
+          >
+        </div>
       </div>
     </div>
     <div class="challenge-detail">
@@ -84,6 +91,7 @@ interface CardData {
   id: number
   title: string
   schedule: string
+  duration: string
   totalPrize?: string
   increaseAmount?: string // 상금 증가량 추가
   buttonLink?: string
@@ -299,6 +307,7 @@ function startCountingAnimation() {
   width: 100%;
   box-shadow: 0 0 2.3rem 0 rgba(0, 0, 0, 0.06);
   min-height: 21.6rem;
+  overflow: hidden;
 }
 
 .challenge-tit {
@@ -317,11 +326,19 @@ function startCountingAnimation() {
       font-weight: 700;
       color: #2b2b2b;
     }
-
+    .date-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
     .during-date {
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       font-weight: 400;
-      color: #555;
+      line-height: 1.5rem;
+      .schedule-tit {
+        color: #555;
+        margin-right: 0.6rem;
+      }
     }
   }
 }
@@ -364,11 +381,11 @@ function startCountingAnimation() {
 
   .img-wrap {
     position: absolute;
-    right: -2rem;
+    right: -4rem;
     bottom: -4rem;
     width: 18rem;
     height: 18rem;
-    background-position: right -2rem;
+    background-position: right -2rem bottom;
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 1.2rem;
@@ -376,7 +393,10 @@ function startCountingAnimation() {
     display: flex;
     align-items: center;
     justify-content: center;
-
+    @media (max-width: 375px) {
+      width: 14rem;
+      height: 14rem;
+    }
     img {
       width: 100%;
       height: 100%;

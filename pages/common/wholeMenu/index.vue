@@ -32,7 +32,7 @@
           <img src="~/assets/images/img-profile.svg" alt="프로필 사진" />
         </div>
       </section>
-      <section class="flex flex-row gap-12 profile-info pb-12">
+      <section class="flex flex-row gap-12 profile-info pt-0 pb-12">
         <div class="box-info flex flex-col">
           <!-- 2025-08-28 바우처 > 리워드 문구 변경 -->
           <span class="tit">리워드</span>
@@ -48,28 +48,22 @@
       <section class="menu-section">
         <div class="flex flex-row align-center">
           <div class="fz-16 medium">건강</div>
-          <Button btn-type="line" element-type="button" class="xs pl-14 pr-14 w-auto ml-auto regular">
-            걸음수 통계
-          </Button>
         </div>
         <div class="menu-list">
+          <div class="list-item">
+            <NuxtLink to="#">걸음수 통계</NuxtLink>
+          </div>
           <div class="list-item">
             <NuxtLink to="#">걷기왕 챌린지</NuxtLink>
           </div>
           <div class="list-item">
-            <NuxtLink to="#">LeMON 건강지수</NuxtLink>
+            <NuxtLink to="#">레몬건강지수</NuxtLink>
+          </div>
+          <div class="list-item">
+            <NuxtLink to="#">레몬활력지수</NuxtLink>
           </div>
           <div class="list-item">
             <NuxtLink to="#">식단관리</NuxtLink>
-          </div>
-          <div class="list-item">
-            <NuxtLink to="#">건강노트</NuxtLink>
-          </div>
-          <div class="list-item">
-            <NuxtLink to="#">마음건강</NuxtLink>
-          </div>
-          <div class="list-item">
-            <NuxtLink to="#">건강 Tip</NuxtLink>
           </div>
         </div>
       </section>
@@ -88,25 +82,28 @@
         </div>
         <div class="menu-list">
           <div class="list-item">
-            <NuxtLink to="#">보상금찾기</NuxtLink>
-          </div>
-          <div class="list-item">
             <NuxtLink to="#">실손청구</NuxtLink>
           </div>
           <div class="list-item">
-            <NuxtLink to="#">실손청구 이력</NuxtLink>
-          </div>
-          <div class="list-item">
-            <NuxtLink to="#">진료예약</NuxtLink>
-          </div>
-          <div class="list-item">
-            <NuxtLink to="#">진료예약 이력</NuxtLink>
+            <NuxtLink to="#">실손청구 내역</NuxtLink>
           </div>
           <div class="list-item">
             <NuxtLink to="#">병원서류발급</NuxtLink>
           </div>
           <div class="list-item">
+            <NuxtLink to="#">병원서류발급 내역</NuxtLink>
+          </div>
+          <div class="list-item">
+            <NuxtLink to="#">의료영상전송</NuxtLink>
+          </div>
+          <div class="list-item">
+            <NuxtLink to="#">의료영상발급 내역</NuxtLink>
+          </div>
+          <div class="list-item">
             <NuxtLink to="#">자동청구가입</NuxtLink>
+          </div>
+          <div class="list-item">
+            <NuxtLink to="#">보상금찾기</NuxtLink>
           </div>
         </div>
       </section>
@@ -120,16 +117,10 @@
         </div>
         <div class="menu-list">
           <div class="list-item">
-            <NuxtLink to="#">걷기왕</NuxtLink>
+            <NuxtLink to="#">패밀리케어</NuxtLink>
           </div>
           <div class="list-item">
-            <NuxtLink to="#">건강/질병</NuxtLink>
-          </div>
-          <div class="list-item">
-            <NuxtLink to="#">운동</NuxtLink>
-          </div>
-          <div class="list-item">
-            <NuxtLink to="#">일상/유머</NuxtLink>
+            <NuxtLink to="#">마음건강</NuxtLink>
           </div>
         </div>
       </section>
@@ -143,13 +134,10 @@
         </div>
         <div class="menu-list">
           <div class="list-item">
-            <NuxtLink to="#">레몬스토어 내역</NuxtLink>
-          </div>
-          <div class="list-item">
             <NuxtLink to="#">레몬포인트 스토어</NuxtLink>
           </div>
           <div class="list-item">
-            <NuxtLink to="#">레몬포인트 충전</NuxtLink>
+            <NuxtLink to="#">레몬스토어 내역</NuxtLink>
           </div>
           <div class="list-item">
             <NuxtLink to="#">결제 내역</NuxtLink>
@@ -255,6 +243,18 @@ const imageSlides = [imgBanner, imgBanner, imgBanner, imgBanner]
         margin-top: -0.7rem;
         background: #e2e2e2;
       }
+    }
+  }
+  .profile-photo {
+    width: 8rem;
+    border-radius: 50%;
+    height: 8rem;
+    overflow: hidden;
+    background-color: #f4f4f4;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 }

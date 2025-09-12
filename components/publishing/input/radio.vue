@@ -134,7 +134,7 @@ function onChange(e: Event) {
     width: 2.4rem;
     height: 2.4rem;
     border-radius: 50%;
-    border: 1.5px solid #e8eefa;
+    border: 0.2rem solid #e8eefa;
     background-color: #fff;
     background-size: 1.9rem;
     background-repeat: no-repeat;

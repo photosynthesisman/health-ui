@@ -139,6 +139,7 @@ body {
   line-height: 1.4;
   color: #2b2b2b;
   letter-spacing: -0.032rem; // 기본 letter-spacing
+
   &.is-lock {
     overflow: hidden;
   }
@@ -175,7 +176,8 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-text-size-adjust: none;
   user-select: none;
-  scroll-behavior: smooth;
+  scroll-behavior: none;
+  overscroll-behavior: none; /* 기본 브라우저 오버스크롤 제어 */
   -webkit-text-size-adjust: none;
   -moz-text-size-adjust: none;
   -ms-text-size-adjust: none;

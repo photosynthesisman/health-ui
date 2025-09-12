@@ -4,14 +4,15 @@
       <button type="button" class="amount-tit" @click="toggleAmount">섭취량 일일그래프</button>
 
       <div class="date-box">
-        <div v-for="day in days" :key="day.date" class="date-item" :class="{ today: day.today }">
-          <div class="bar">
+        <div v-for="(day, index) in days" :key="day.date" class="date-item" :class="{ today: day.today }">
+          <div class="bar" @click="showTooltip(index)">
             <i
               class="current-bar"
               :style="{
                 height: isExpanded ? day.progress * 100 + '%' : '0%'
               }"
             ></i>
+            <div v-if="tooltipIndex === index" class="tooltip">{{ day.eatCalorie }}kal / {{ calorieGoal }}kal</div>
           </div>
           <span class="date-num">{{ day.date }}</span>
         </div>
@@ -55,18 +56,39 @@ import CalorieChart from '~/components/publishing/calorieIntake/CalorieChart.vue
 const isExpanded = ref(false)
 const toggleAmount = () => {
   isExpanded.value = !isExpanded.value
+  if (!isExpanded.value) {
+    tooltipIndex.value = null
+  }
 }
 
-// 각 날짜별 progress 값(0~1 범위) 추가
-const days = [
-  { date: '10', today: false, progress: 0.3 },
-  { date: '11', today: false, progress: 0.45 },
-  { date: '12', today: false, progress: 0.6 },
-  { date: '13', today: false, progress: 0.75 },
-  { date: '14', today: false, progress: 0.2 },
-  { date: '15', today: false, progress: 0.5 },
-  { date: '16', today: true, progress: 0.9 }
+const tooltipIndex = ref<number | null>(null)
+const showTooltip = (index: number) => {
+  if (tooltipIndex.value === index) {
+    tooltipIndex.value = null
+  } else {
+    tooltipIndex.value = index
+  }
+}
+
+// 목표 칼로리
+const calorieGoal = 2000
+
+// 각 날짜별 데이터 (progress는 eatCalorie/calorieGoal로 자동 계산)
+const daysData = [
+  { date: '10', today: false, eatCalorie: 400 },
+  { date: '11', today: false, eatCalorie: 450 },
+  { date: '12', today: false, eatCalorie: 600 },
+  { date: '13', today: false, eatCalorie: 750 },
+  { date: '14', today: false, eatCalorie: 200 },
+  { date: '15', today: false, eatCalorie: 400 },
+  { date: '16', today: true, eatCalorie: 1900 }
 ]
+
+// progress 계산(섭취 칼로리 / 목표 칼로리)
+const days = daysData.map(day => ({
+  ...day,
+  progress: Math.min(day.eatCalorie / calorieGoal, 1) // 최대 1(100%)로 제한
+}))
 </script>
 
 <style lang="scss" scoped>
@@ -100,11 +122,11 @@ const days = [
   padding: 0 1.6rem 2.4rem;
   max-height: 25rem;
   transition: max-height 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
-  overflow: hidden;
 
   &.collapsed {
     max-height: 5.2rem;
     padding: 0 1.6rem;
+    overflow: hidden;
   }
 
   &::before {
@@ -166,6 +188,7 @@ const days = [
         border: 1px solid rgba(255, 255, 255, 0.4);
         background: rgba(255, 255, 255, 0.3);
         position: relative;
+        cursor: pointer;
 
         .current-bar {
           background-color: #fff;
@@ -176,6 +199,33 @@ const days = [
           height: 0%;
           border-radius: 2rem;
           transition: height 0.6s ease-out;
+        }
+
+        .tooltip {
+          width: fit-content;
+          height: fit-content;
+          position: absolute;
+          bottom: calc(100% + 0.8rem);
+          left: 50%;
+          transform: translateX(-50%);
+          background: #4f5561;
+          color: #fff;
+          padding: 0.6rem 1rem;
+          border-radius: 0.6rem;
+          font-size: 1.2rem;
+          white-space: nowrap;
+          z-index: 10;
+          pointer-events: none;
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 0.5rem solid transparent;
+            border-top-color: #4f5561;
+          }
         }
       }
 

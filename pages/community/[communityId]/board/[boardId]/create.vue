@@ -39,65 +39,92 @@
         rows="10"
         class="mt-8"
       ></textarea> -->
-      <EditorCustom />
+      <EditorCustom
+        :selected-health-data="selectedHealthDataItems"
+        @open-health-modal="openHealthModal"
+        @remove-health-data="removeHealthDataItem"
+      />
+
+      <!-- -->
     </FlexSection>
 
-    <BottomModal
-      :is-visible="isShowCategoryModal"
-      :title="'게시글 카테고리'"
-      :is-show-cancel-button="false"
-      :is-show-confirm-button="false"
-      :is-show-close-button="true"
-      @close="cancelCategorySelection"
-    >
-      <template #content>
-        <SelectBoard
-          v-model="selectedCategoryValue"
-          :categories-data="boardCategories"
-          @change="handleCategoryChange"
-          @close-modal="isShowCategoryModal = false"
-        />
-      </template>
-    </BottomModal>
+    <Teleport to="body">
+      <BottomModal
+        :is-visible="isShowCategoryModal"
+        :title="'게시글 카테고리'"
+        :is-show-cancel-button="false"
+        :is-show-confirm-button="false"
+        :is-show-close-button="true"
+        @close="cancelCategorySelection"
+      >
+        <template #content>
+          <SelectBoard
+            v-model="selectedCategoryValue"
+            :categories-data="boardCategories"
+            @change="handleCategoryChange"
+            @close-modal="isShowCategoryModal = false"
+          />
+        </template>
+      </BottomModal>
 
-    <!-- close 버튼 클릭 시 노출되는 팝업 -->
-    <BottomModal
-      :is-visible="isShowClosePopup"
-      :title="closePopupTitle"
-      :content="closePopupContent"
-      :is-show-cancel-button="true"
-      :is-show-confirm-button="true"
-      cancel-button-text="취소"
-      confirm-button-text="네"
-      @close="isShowClosePopup = false"
-      @cancel="isShowClosePopup = false"
-      @confirm="handleCloseConfirm"
-    >
-      <template #content>
-        <div class="flex flex-col gap-12">
-          <p class="text-left">{{ closePopupContent }}</p>
-        </div>
-      </template>
-    </BottomModal>
-    <!-- <ButtonGroup class="is-fixed">
+      <!-- close 버튼 클릭 시 노출되는 팝업 -->
+      <BottomModal
+        :is-visible="isShowClosePopup"
+        :title="closePopupTitle"
+        :content="closePopupContent"
+        :is-show-cancel-button="true"
+        :is-show-confirm-button="true"
+        cancel-button-text="취소"
+        confirm-button-text="네"
+        @close="isShowClosePopup = false"
+        @cancel="isShowClosePopup = false"
+        @confirm="handleCloseConfirm"
+      >
+        <template #content>
+          <div class="flex flex-col gap-12">
+            <p class="text-left">{{ closePopupContent }}</p>
+          </div>
+        </template>
+      </BottomModal>
+      <!-- <ButtonGroup class="is-fixed">
       <Button btn-type="primary" element-type="button" aria-label="등록하기" class="lg w-full medium btn-sticky" />
     </ButtonGroup> -->
+
+      <!-- 건강 정보 바텀 모달 추가 -->
+      <BottomModal
+        :is-visible="isShowHealthModal"
+        :title="'건강 데이터 불러오기'"
+        :is-show-cancel-button="false"
+        :is-show-confirm-button="false"
+        :is-show-close-button="true"
+        @close="closeHealthModal"
+      >
+        <template #content>
+          <SelectHealthData
+            v-model="selectedCategoryValue"
+            :categories-data="healthData"
+            @change="handleHealthDataChange"
+            @close-modal="isShowHealthModal = false"
+          />
+        </template>
+      </BottomModal>
+    </Teleport>
   </BaseBody>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, inject, onMounted, computed } from 'vue'
 import Button from '~/components/publishing/button/Button.vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import Select from '~/components/publishing/input/Select.vue'
 import BottomModal from '~/components/common/modal/BottomModal.vue'
 import SelectBoard from '~/components/publishing/community/board/SelectBoard.vue'
+import SelectHealthData from '~/components/publishing/community/board/SelectHealthData.vue'
 import SelectTypeBtn from '~/components/publishing/community/board/SelectTypeBtn.vue'
 import EditorCustom from '~/components/publishing/community/board/EditorCustom.vue'
 import FlexSection from '~/components/page/FlexSection.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
-import { inject, onMounted } from 'vue'
 
 // 최종 선택된 옵션의 value (v-model용)
 const selectedCategoryValue = ref<string>('')
@@ -118,6 +145,17 @@ const showErrors = ref({
 const selectedCommunity = ref('')
 // close 버튼 클릭 시 팝업 노출 여부
 const isShowClosePopup = ref(false)
+// 건강 데이터 모달 상태
+const isShowHealthModal = ref(false)
+// 선택된 건강 데이터 아이템들
+interface SelectedHealthDataItem {
+  categoryName: string
+  optionLabel: string
+  combinedLabel: string
+  value: string
+  data: string
+}
+const selectedHealthDataItems = ref<SelectedHealthDataItem[]>([])
 
 // setCloseHandler inject
 const setCloseHandler = inject<(handler: () => void) => void>('setCloseHandler')
@@ -168,6 +206,49 @@ const boardCategories = ref([
     ]
   }
 ])
+
+// 건강 데이터 불러오기
+const healthData = ref([
+  {
+    id: 'common',
+    name: '공통',
+    options: [
+      { value: 'tall', label: '키', data: '170cm' },
+      { value: 'weight', label: '몸무게', data: '120kg' },
+      { value: 'alchol', label: '음주', data: '10병' },
+      { value: 'smoke', label: '흡연', data: '하루 10갑' },
+      { value: 'workout', label: '운동', data: '하나도 안함' }
+    ]
+  },
+  {
+    id: 'walkking',
+    name: '걷기왕',
+    options: [
+      { value: 'steps', label: '일일 걸음수', data: '10' },
+      { value: 'calory', label: '소모 칼로리', data: '1000' },
+      { value: 'challengeSteps', label: '걷기 대회 걸음 수', data: '100000' },
+      { value: 'prizeRank', label: '올해 상금 랭킹', data: '1333' },
+      { value: 'joinChallenge', label: '걷기 대회 참가', data: '5회' },
+      { value: 'rankChallenge', label: '걷기 대회 순위', data: '1' }
+    ]
+  },
+  {
+    id: 'smartRing',
+    name: '스마트링',
+    options: [
+      { value: 'val_1', label: '수면시간', data: '2시간' },
+      { value: 'val_2', label: '스트레스 지수', data: '100' },
+      { value: 'val_3', label: '심박수', data: '150' },
+      { value: 'val_4', label: '심박변이도', data: '100' },
+      { value: 'val_5', label: '체온', data: '37.5' },
+      { value: 'val_6', label: '산소포화도', data: '30' },
+      { value: 'val_7', label: '레몬건강지수', data: '15' },
+      { value: 'val_8', label: '건강부채', data: '1000000' },
+      { value: 'val_9', label: '기대수명', data: '40세' },
+      { value: 'val_10', label: '연간 예상 의료비', data: '100억' }
+    ]
+  }
+])
 const openCategoryModal = () => {
   isShowCategoryModal.value = true
 }
@@ -187,6 +268,38 @@ const handleCategoryChange = (data: {
 // 모달이 닫힐 때 이벤트
 const cancelCategorySelection = () => {
   isShowCategoryModal.value = false
+}
+
+// 건강 데이터 모달 열기
+const openHealthModal = () => {
+  isShowHealthModal.value = true
+}
+
+// 건강 데이터 모달 닫기
+const closeHealthModal = () => {
+  isShowHealthModal.value = false
+}
+
+// 건강 데이터 아이템 제거
+const removeHealthDataItem = (value: string) => {
+  const index = selectedHealthDataItems.value.findIndex(item => item.value === value)
+  if (index !== -1) {
+    selectedHealthDataItems.value.splice(index, 1)
+  }
+}
+
+// 건강 데이터 선택 핸들러 (1개만 허용)
+const handleHealthDataChange = (data: {
+  categoryName: string
+  optionLabel: string
+  combinedLabel: string
+  value: string
+  data: string
+}) => {
+  // 기존 데이터를 새로운 데이터로 교체 (1개만 허용)
+  selectedHealthDataItems.value = [data]
+  // 모달 닫기
+  isShowHealthModal.value = false
 }
 
 // 커뮤니티 선택 시 게시판 관련 상태를 리셋하는 함수

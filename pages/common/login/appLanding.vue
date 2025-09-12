@@ -4,7 +4,7 @@
     page-title="건강의신"
     :has-notification="false"
     :has-reward="false"
-    class="h100vh mt-n56 mb-n20"
+    class="h100vh space-between"
   >
     <div class="landing-container flex flex-col">
       <div class="landing-top mt-60">
@@ -16,39 +16,52 @@
       <div class="landing-btn-group">
         <i class="img-char char-lemon-working" aria-hidden="true"></i>
 
-        <div class="flex flex-col gap-8 mb-20">
-          <Button
-            btn-type="sns-login"
-            element-type="button"
-            aria-label="카카오로 계속하기"
-            class="md kakao fz-16 medium"
-          />
-          <Button
+        <div class="flex flex-col gap-16 mb-20">
+          <div class="btn-wrap">
+            <Button
+              btn-type="sns-login"
+              element-type="button"
+              aria-label="카카오로 계속하기"
+              class="md kakao fz-16 medium"
+            />
+            <div class="tooltip">최근 로그인했어요</div>
+          </div>
+
+          <!-- <Button
             btn-type="sns-login"
             element-type="button"
             aria-label="네이버로 계속하기"
             class="md naver fz-16 medium"
-          />
-          <Button
-            btn-type="sns-login"
-            element-type="button"
-            aria-label="Google로 계속하기"
-            class="md google fz-16 medium"
-          />
-          <Button
-            btn-type="sns-login"
-            element-type="button"
-            aria-label="Apple로 계속하기"
-            class="md apple fz-16 medium"
-          />
+          /> -->
+          <div class="btn-wrap">
+            <Button
+              btn-type="sns-login"
+              element-type="button"
+              aria-label="Google로 계속하기"
+              class="md google fz-16 medium"
+            />
+            <div class="tooltip">최근 로그인했어요</div>
+          </div>
+          <div class="btn-wrap">
+            <Button
+              btn-type="sns-login"
+              element-type="button"
+              aria-label="Apple로 계속하기"
+              class="md apple fz-16 medium"
+            />
+            <div class="tooltip">최근 로그인했어요</div>
+          </div>
         </div>
 
         <div class="landing-line fz-13 mb-20"><span>또는</span></div>
 
         <!-- 비대칭 버튼 레이아웃 asymmetric -->
-        <ButtonGroup gap="8" asymmetric class="mb-48">
+        <ButtonGroup gap="8" asymmetric class="mb-98">
           <Button btn-type="secondary" element-type="button" aria-label="회원가입" class="md medium" />
-          <Button btn-type="primary" element-type="button" aria-label="로그인" class="md medium" />
+          <div class="btn-wrap">
+            <Button btn-type="primary" element-type="button" aria-label="로그인" class="md medium" />
+            <div class="tooltip">최근 로그인했어요</div>
+          </div>
         </ButtonGroup>
       </div>
     </div>
@@ -102,8 +115,21 @@ onMounted(() => {
     background-position: center;
     background-size: contain;
     z-index: 1;
-    top: -12rem;
+    top: -15rem;
     right: -1.1rem;
+    opacity: 0;
+    animation: slideInFromRight 0.8s 0.5s ease-out forwards;
+  }
+
+  @keyframes slideInFromRight {
+    from {
+      transform: translateX(30%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 }
 
@@ -151,7 +177,37 @@ onMounted(() => {
     right: 0;
   }
 }
+.btn-wrap {
+  position: relative;
 
+  .tooltip {
+    width: fit-content;
+    position: absolute;
+    top: -1.8rem;
+    left: 0.1rem;
+    background: #4f5561;
+    color: #fff;
+    padding: 0rem 0.8rem;
+    border-radius: 2rem;
+    line-height: 2.4rem;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    z-index: 10;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -0.4rem;
+      left: 1.2rem;
+      width: 0.8rem;
+      height: 0.4rem;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' viewBox='0 0 7 4' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.19615 3C4.42635 4.33333 2.50185 4.33333 1.73205 3L-3.68836e-08 0H6.9282L5.19615 3Z' fill='%234F5561'/%3E%3C/svg%3E");
+    }
+  }
+}
 .btn-sns-login {
   position: relative;
   &::before {
@@ -180,6 +236,11 @@ onMounted(() => {
   &.apple {
     background-color: vars.$black;
     color: vars.$white;
+  }
+}
+.btn-group {
+  .btn-wrap {
+    flex: 1;
   }
 }
 </style>

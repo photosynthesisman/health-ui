@@ -145,6 +145,9 @@ const toggleDetail = () => {
         width: 4.8rem;
         height: 4.8rem;
         flex-shrink: 0;
+        border: 0.1rem solid #eee;
+        overflow: hidden;
+        border-radius: 2rem;
       }
 
       img {

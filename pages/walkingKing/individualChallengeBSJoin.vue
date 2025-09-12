@@ -207,7 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, inject, onMounted } from 'vue'
 import RecruitmentindividualChallengeCard from '~/components/publishing/walkking/RecruitmentindividualChallengeCard.vue'
 import RecruitmentGuidelines from '~/components/publishing/walkking/RecruitmentGuidelines.vue'
 import RewardTitWrap from '~/components/publishing/walkking/RewardTitWrap.vue'

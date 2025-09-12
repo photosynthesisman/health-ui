@@ -7,7 +7,7 @@
           :active-key="activeBoxTab"
           variant="fill-type"
           @tab-change="onBoxTabChange"
-          class="pt-20 mb-20"
+          class="pt-20"
         />
       </StickyTabsContainer>
 

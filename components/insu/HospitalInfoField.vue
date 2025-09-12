@@ -1,6 +1,6 @@
 <template>
   <div class="c-input">
-    <label :for="id" class="c-label">{{ label }}</label>
+    <label v-if="label" :for="id" class="c-label">{{ label }}</label>
     <div class="c-input-content">
       <img :src="logoSrc" :alt="logoAlt" />
       <strong>{{ name }}</strong>
@@ -9,21 +9,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
-const props = defineProps<{
+interface Props {
   label?: string
   id?: string
   name: string
   logoSrc?: string
   logoAlt?: string
-}>()
+}
 
-const label = computed(() => props.label ?? '발급병원')
-const id = computed(() => props.id ?? 'calendar')
-
-const logoAlt = computed(() => props.logoAlt ?? '')
-const name = computed(() => props.name)
+const props = withDefaults(defineProps<Props>(), {
+  label: '발급병원',
+  id: 'calendar',
+  logoSrc: '',
+  logoAlt: ''
+})
 </script>
 
 <style scoped lang="scss">

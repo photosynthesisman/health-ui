@@ -62,6 +62,7 @@
             v-model="searchType"
             :custom-opts="searchSelectOptions"
             :select-placeholder="searchSelectPlaceholder"
+            :modal-title="searchSelectTitle"
             transparent
             class="search-select"
             :is-show-cancel-btn="false"
@@ -322,7 +323,7 @@ const props = defineProps({
   searchWithSelect: { type: Boolean, default: false }, // 검색창에 Select 포함 여부
   searchSelectOptions: { type: Array, default: () => [] }, // Select 옵션들
   searchSelectPlaceholder: { type: String, default: '전체' }, // Select placeholder
-
+  searchSelectTitle: { type: String, default: '옵션 선택' },
   hasNotification: { type: Boolean, default: false }, // 공지 버튼 표시 여부
   hasNotificationDot: { type: Boolean, default: false }, // 공지 알림 여부
   notificationCount: { type: Number, default: 0 }, // 공지 갯수
@@ -532,9 +533,26 @@ const currentLogoType = computed(() => {
 })
 
 // 스크롤 이벤트 핸들러
-const handleScroll = () => {
-  const scrollY = window.scrollY
-  isSticky.value = scrollY >= headerHeight
+const handleScroll = e => {
+  let scrollY = 0
+
+  // main#base-page 요소나 이벤트 타겟에서 스크롤 값 가져오기
+  if (e && e.target) {
+    scrollY = e.target.scrollTop || 0
+  } else {
+    // main 요소 직접 찾기
+    const mainElement = document.getElementById('base-page') || document.querySelector('main.l-page')
+    if (mainElement) {
+      scrollY = mainElement.scrollTop
+    }
+  }
+
+  // 대체 방법들
+  if (scrollY === 0) {
+    scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+  }
+
+  isSticky.value = scrollY > 0
 }
 
 // 생명주기 훅들
@@ -544,13 +562,29 @@ onMounted(() => {
     headerHeight = headerRef.value.offsetHeight
   }
 
-  // 스크롤 이벤트 리스너 추가
-  window.addEventListener('scroll', handleScroll)
+  // 초기 스크롤 상태 확인
+  handleScroll()
+
+  // main#base-page 요소에 직접 리스너 추가
+  const mainElement = document.getElementById('base-page') || document.querySelector('main.l-page')
+  if (mainElement) {
+    mainElement.addEventListener('scroll', handleScroll)
+  }
+
+  // 백업으로 다른 요소들에도 추가
+  window.addEventListener('scroll', handleScroll, true)
+  document.addEventListener('scroll', handleScroll, true)
 })
 
 onUnmounted(() => {
   // 스크롤 이벤트 리스너 제거
-  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('scroll', handleScroll, true)
+  document.removeEventListener('scroll', handleScroll, true)
+
+  const mainElement = document.getElementById('base-page') || document.querySelector('main.l-page')
+  if (mainElement) {
+    mainElement.removeEventListener('scroll', handleScroll)
+  }
 })
 </script>
 
@@ -571,7 +605,8 @@ onUnmounted(() => {
     background-color: transparent;
   }
   &.sticky {
-    background-color: rgba($color: #ffffff, $alpha: 0.8);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0.4rem 1.2rem 0 rgba(0, 0, 0, 0.06);
   }
   .h_title {
     display: flex;

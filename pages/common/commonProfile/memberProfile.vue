@@ -20,7 +20,30 @@
     <!-- 걷기왕 탭 컨텐츠 -->
     <div v-else-if="activeLineTab === 'walkking'">
       <ChallengeStatistics class="mt-24" />
-      <WalkingChallenge class="mt-24" />
+      <CommonSwiper
+        :slides="mainChallengeSlides"
+        :slides-per-view="1"
+        :navigation="false"
+        :pagination="true"
+        :scrollbar="false"
+        :autoplay="false"
+        :show-slide-length="false"
+        :show-play-pause-button="false"
+        slide-type="custom"
+      >
+        <template #default="{ slide }">
+          <WalkingChallenge
+            class="mt-24"
+            :is-open-soon="(slide as any).isOpenSoon"
+            :is-recruit-end="(slide as any).isRecruitEnd"
+            :is-recruiting="(slide as any).isRecruiting"
+            :is-inactivity="(slide as any).isInactivity"
+            :is-up-coming="(slide as any).isUpComing"
+            :is-ended="(slide as any).isEnded"
+            :flag-tit="(slide as any).flagTit"
+          />
+        </template>
+      </CommonSwiper>
     </div>
 
     <!-- 커뮤니티 탭 컨텐츠 -->
@@ -40,7 +63,7 @@ import Followers from '~/components/publishing/commonProfile/Followers.vue'
 
 import DayStepsGraph from '~/components/publishing/commonProfile/DayStepsGraph.vue'
 import WalkingStatistics from '~/components/publishing/commonProfile/WalkingStatistics.vue'
-
+import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
 import ChallengeStatistics from '~/components/publishing/commonProfile/ChallengeStatistics.vue'
 import WalkingChallenge from '~/components/publishing/commonProfile/WalkingChallenge.vue'
 
@@ -49,9 +72,34 @@ import CommunityStatistics from '~/components/publishing/commonProfile/Community
 import CommunityContent from '~/components/publishing/commonProfile/CommunityContent.vue'
 
 import LineTabs, { type Tab } from '~/components/tabbar/LineTabs.vue'
-
+const mainChallengeSlides = ref([
+  {
+    isOpenSoon: true,
+    flagTit: '모집<br/>예정'
+  },
+  {
+    isRecruitEnd: true,
+    flagTit: '모집<br/>종료'
+  },
+  {
+    isRecruiting: true,
+    flagTit: '<strong>D-8</strong><br/>모집중'
+  },
+  {
+    isInactivity: true,
+    flagTit: '챌린지<br/>진행중'
+  },
+  {
+    isUpComing: true,
+    flagTit: '<strong>D-8</strong><br/>모집중'
+  },
+  {
+    isEnded: true,
+    flagTit: '챌린지<br/><strong>종료</strong>'
+  }
+])
 // LineTabs 상태 관리
-const activeLineTab = ref('walk')
+const activeLineTab = ref('walkking')
 
 const lineTabs = ref<Tab[]>([
   { title: '걷기', key: 'walk' },
@@ -64,4 +112,9 @@ const onLineTabChange = (key: string) => {
   activeLineTab.value = key
 }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+:deep(swiper-container::part(pagination)) {
+  position: relative;
+  margin-top: 1.2rem;
+}
+</style>

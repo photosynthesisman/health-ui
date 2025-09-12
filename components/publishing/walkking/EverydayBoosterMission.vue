@@ -174,6 +174,8 @@ const hideBooster = () => {
   height: 6rem;
   padding: 0.8rem;
   flex-shrink: 0;
+  overflow: hidden;
+  box-sizing: border-box;
   border-radius: 8rem;
   border: 0.2rem solid #00f7c5;
   background: linear-gradient(135deg, #0c5654 0%, #2ebeb0 100%);

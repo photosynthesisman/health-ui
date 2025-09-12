@@ -5,7 +5,6 @@
       >건
     </div>
     <!-- 버튼 타입 -->
-
     <div class="select-option select-type" v-if="select">
       <Select modal-title="조회하기" :transparent="true" v-model="selectedPeriod" :custom-opts="selectOptions" />
     </div>
@@ -64,6 +63,9 @@ const selectedPeriod = computed({
           font-weight: 700;
         }
       }
+    }
+    :deep(.custom-select .select-display) {
+      min-width: auto;
     }
   }
 }

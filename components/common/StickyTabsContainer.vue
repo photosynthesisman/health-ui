@@ -10,7 +10,7 @@
 <style scoped lang="scss">
 .sticky-tabs-container {
   position: sticky;
-  top: 5.6rem; // c-header 높이만큼 떨어진 위치에 고정
+  top: 0; // c-header 높이만큼 떨어진 위치에 고정
   z-index: 90; // header보다 낮은 z-index
   background-color: rgba(255, 255, 255, 0.8);
 }

@@ -80,10 +80,11 @@ const props = defineProps({
   isInvalid: { type: Boolean, default: false },
   validText: { type: String, default: '상세주소를 입력해 주세요.' }, // 유효성 검사 메시지
   customOpts: { type: Array as () => OptionType[], default: () => [] },
-  size: { type: String, validator: (value: string) => ['lg', 'sm', 'normal'].includes(value), default: 'normal' }
+  size: { type: String, validator: (value: string) => ['lg', 'sm', 'normal'].includes(value), default: 'normal' },
+  isValid: { type: Boolean, default: false }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:isValid'])
 
 const time = ref(300)
 let intervalId: ReturnType<typeof setInterval> | null = null
@@ -186,7 +187,8 @@ function onAddressSearch() {
 
   // 두 번째 input의 readonly 속성을 false로 변경
   secondInputReadonly.value = false
-
+  //주소 검색이 완료되면 유효성 상태를 true로 업데이트
+  emit('update:isValid', true)
   // 향후 주소검색 API 연동 위치
   // 예: 다음 주소 API, 카카오 주소 API 등
 }
@@ -247,9 +249,15 @@ function onAddressSearch() {
       border-color: #e2e2e2;
       background-color: #f4f4f4;
     }
-    &.c-inp-address:has(.c-inp:read-only) {
-      background: #fff;
-      border: 1px solid #e2e2e2;
+    &.c-inp-address {
+      .c-inp {
+        padding-right: 0.8rem;
+        @include mixin.ellipsis;
+      }
+      &:has(.c-inp:read-only) {
+        background: #fff;
+        border: 1px solid #e2e2e2;
+      }
     }
     &:has(.c-inp:disabled) {
       border-color: #e2e2e2;

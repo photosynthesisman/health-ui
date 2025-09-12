@@ -25,7 +25,7 @@ import { ConfirmModal } from '@lemonhc/fo-ui/components/modal'
 const clickConfirmModal = async () => {
   const modalContent = `
     <img src="/_nuxt/assets/images/walkingking/ico-warning.svg" alt="알림 이미지" style="margin: 0 auto"/>
-    <div class="fz-18 bold mt-6" >
+    <div class="fz-18 bold mt-6" style="text-align: center;">
       걷기왕 대회 참여하기 전에<br/>반드시 알아두세요!
     </div>
     <div class="mt-20 fz-14 text-left" style="color: #555; max-width: 28rem">

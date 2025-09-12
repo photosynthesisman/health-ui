@@ -292,6 +292,14 @@ const btnevtClick = (event: MouseEvent) => {
       background-color: #e7f4ff;
       outline: 1px solid #4c7ff7;
     }
+    &.btn-download {
+      margin-top: 2rem;
+      background-color: #f6f9ff;
+      outline-color: #4c7ff7;
+      :deep(.text) {
+        color: #4c7ff7;
+      }
+    }
   }
   &.btn-text {
     width: auto;

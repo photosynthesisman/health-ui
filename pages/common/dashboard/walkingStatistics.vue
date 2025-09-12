@@ -9,10 +9,29 @@
   >
     <RoundTabs :tabs="roundTabs" :active-index="roundActiveIndex" class="mt-8" @tab-click="handleRoundTabClick" />
 
-    <!-- 날짜 선택 -->
-    <WalkingDateRange />
-    <!-- 날짜 별 걸음수 현황판 -->
-    <WalkingDashboard />
+    <!-- 시간별 탭 -->
+    <FlexColDiv v-if="roundActiveIndex === 0">
+      <!-- 날짜 선택 -->
+      <WalkingDateRange time="시간" />
+      <!-- 날짜 별 걸음수 현황판 -->
+      <WalkingDashboard time="시간" />
+    </FlexColDiv>
+
+    <!-- 일일 걸음수 탭 -->
+    <FlexColDiv v-else-if="roundActiveIndex === 1">
+      <!-- 날짜 선택 -->
+      <WalkingDateRange time="일" />
+      <!-- 날짜 별 걸음수 현황판 -->
+      <WalkingDashboard time="일" />
+    </FlexColDiv>
+
+    <!-- 월간 걸음수 탭 -->
+    <FlexColDiv v-else>
+      <!-- 날짜 선택 -->
+      <WalkingDateRange time="월" />
+      <!-- 날짜 별 걸음수 현황판 -->
+      <WalkingDashboard time="월" />
+    </FlexColDiv>
 
     <!-- 목표걸음수 설정 -->
     <StepGoalModal ref="stepGoalModalRef" />
@@ -24,6 +43,7 @@ import { ref, inject, onMounted } from 'vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 
 import RoundTabs, { type RoundTab } from '~/components/common/tab/RoundTabs.vue'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
 
 import WalkingDateRange from '~/components/publishing/dashboard/WalkingDateRange.vue'
 import WalkingDashboard from '~/components/publishing/dashboard/WalkingDashboard.vue'
@@ -50,6 +70,7 @@ onMounted(() => {
 
 // RoundTabs 데이터
 const roundTabs: RoundTab[] = [
+  { name: '시간별', code: 'timeWalkLength' },
   { name: '일일 걸음수', code: 'dayWalkLength' },
   { name: '월간 걸음수', code: 'monthWalkLength' }
 ]

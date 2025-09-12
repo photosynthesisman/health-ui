@@ -1,9 +1,9 @@
 <template>
-  <BaseBody page-title="걷기왕" :is-transparent="true" :has-reward="true" white-logo="true">
+  <BaseBody page-title="걷기왕" :is-transparent="true" :has-reward="true" :white-logo="true">
     <MainProfile />
     <MainChallengeBanner class="mt-40" />
     <RoundTabs :tabs="roundTabs" :active-index="roundActiveIndex" @tab-click="handleRoundTabClick" />
-    <!-- <MainChallengeList class="mt-12" /> -->
+    <MainChallengeList class="mt-12" />
     <!-- 2025-08-28 챌린지 없음 화면 추가 -->
     <EmptyMainChallenge
       v-if="roundActiveIndex === 0"

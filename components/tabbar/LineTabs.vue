@@ -3,10 +3,12 @@
     <div ref="tabsContainerRef" class="tabs-container">
       <template v-for="(tab, index) in props.tabs" :key="tab.key || tab.to || index">
         <NuxtLink v-if="tab.to" :to="tab.to" :class="{ active: isActive(tab, index) }" class="tab-link">
-          {{ tab.title }}
+          <span>{{ tab.title }}</span>
+          <span v-if="tab.count !== undefined && tab.count > 0" class="tab-count">{{ tab.count }}</span>
         </NuxtLink>
         <button v-else @click="handleTabClick(tab, index)" :class="{ active: isActive(tab, index) }" class="tab-link">
-          {{ tab.title }}
+          <span>{{ tab.title }}</span>
+          <span v-if="tab.count !== undefined && tab.count > 0" class="tab-count">{{ tab.count }}</span>
         </button>
       </template>
 
@@ -24,6 +26,7 @@ export interface Tab {
   title: string
   to?: string // 라우팅이 필요한 경우
   key?: string // 독립적인 탭 관리를 위한 키
+  count?: number // 탭에 표시할 숙자 (선택적)
 }
 
 interface Props {
@@ -340,6 +343,8 @@ const updateActiveBarPosition = async (skipTransition = false) => {
       text-decoration: none;
       color: #555;
       display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
       padding-bottom: 1.6rem;
       padding-top: 0.8rem;
       font-weight: vars.$bold;

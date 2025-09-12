@@ -39,16 +39,33 @@
           <img class="img-claim" src="/assets/images/insu/img-claim-picture.png" alt="사진 찍어 청구하기" />
         </button>
       </div>
-      <button class="btn-wide">
-        <div class="wrap-wide-text">
-          <span class="text">보험금 대리청구</span>
-          <div class="label puple">설계사</div>
-        </div>
-      </button>
+      <FlexRowDiv v-if="beforeProxyClaim" class="btn-type-wrap smaller">
+        <button class="btn-type family">
+          <div class="wrap-type-text">
+            <span class="text">가족/제3자<br />대리청구</span>
+          </div>
+        </button>
+        <button class="btn-type">
+          <div class="wrap-type-text">
+            <span class="text"
+              >설계사전용<br />
+              대리청구</span
+            >
+          </div>
+        </button>
+      </FlexRowDiv>
+      <FlexRowDiv v-else class="btn-type-wrap">
+        <button class="btn-type">
+          <div class="wrap-type-text">
+            <span class="text">보험금 대리청구</span>
+            <div class="label puple">설계사</div>
+          </div>
+        </button>
+      </FlexRowDiv>
     </div>
     <FlexSection>
       <h2 class="tit2">놓치기 쉬운 보상금 돌려받으세요</h2>
-      <div class="wrap-payback">
+      <FlexColDiv class="wrap-payback">
         <button class="item type-a blue">
           <div class="wrap-text">
             <span class="text">AI 분석 실손 보험금 예측</span>
@@ -63,18 +80,25 @@
           </div>
           <img class="img-payback" src="/assets/images/insu/img-payback2.png" alt="AI 분석 휴면보험금 찾기" />
         </button>
-        <button class="item type-b b1">
-          <div class="wrap-text">
-            <span class="text">청구내역<br />조회</span>
-          </div>
-          <img class="img-payback" src="/assets/images/insu/img-payback3.png" alt="청구내역 조회" />
-        </button>
-        <button class="item type-b b2">
-          <div class="wrap-text">
-            <span class="text">병원 서류<br />발급</span>
-          </div>
-          <img class="img-payback" src="/assets/images/insu/img-payback4.png" alt="병원 서류 발급" />
-        </button>
+        <FlexRowDiv class="gap-8">
+          <button class="item type-b b1">
+            <div class="wrap-text">
+              <span class="text">청구내역<br />조회</span>
+            </div>
+            <img class="img-payback" src="/assets/images/insu/img-payback3.png" alt="청구내역 조회" />
+          </button>
+          <button class="item type-b b2">
+            <div class="wrap-text">
+              <span class="text">병원 서류<br />발급</span>
+            </div>
+            <img class="img-payback" src="/assets/images/insu/img-payback4.png" alt="병원 서류 발급" />
+          </button>
+          <button class="item type-b b3">
+            <div class="wrap-text">
+              <span class="text">병원 서류<br />발급</span>
+            </div>
+            <img class="img-payback" src="/assets/images/insu/img-payback6.png" alt="병원 서류 발급" /></button
+        ></FlexRowDiv>
         <div class="item type-c">
           <div class="wrap-auto">
             <div class="wrap-text">
@@ -88,7 +112,7 @@
             <button class="btn-claim">청구 병원 3개</button>
           </div>
         </div>
-      </div>
+      </FlexColDiv>
       <h2 class="tit2">청구의신 더 알아보기</h2>
       <div class="wrap-more">
         <button class="item purple">
@@ -100,7 +124,7 @@
           <div class="text">제휴병원 찾아보기</div>
         </button>
         <button class="item yellow">
-          <img class="img-more" src="/assets/images/insu/img-more-myhospital.png" alt="실손청구 알아보기" />
+          <img class="img-more" src="/assets/images/insu/img-more-claim.png" alt="실손청구 알아보기" />
           <div class="text">실손청구 알아보기</div>
         </button>
       </div>
@@ -142,7 +166,10 @@
 import { ref, inject, onMounted } from 'vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import FlexSection from '~/components/page/FlexSection.vue'
-
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
+// const beforeProxyClaim = ref(true)
+const beforeProxyClaim = ref(false)
 // 청구의신 MY병원 상태 관리
 type InsuStatus = 'unregistered' | 'needUpdate' | 'registered'
 const insuStatus = ref<InsuStatus>('unregistered')
@@ -259,33 +286,53 @@ const insuStatus = ref<InsuStatus>('unregistered')
       }
     }
   }
-  .btn-wide {
-    position: relative;
-    margin: 1.2rem 2rem 0;
-    padding: 3.1rem 2.4rem;
-    border-radius: 1.2rem;
-    box-shadow: 4px 4px 12px 0px #0000000a;
-    width: calc(100% - 4rem);
-    background: url('/assets/images/insu/img-claim-people.png') no-repeat right bottom #f6f9ff;
-    @include mixin.rippleEffectPrimary;
-    .wrap-wide-text {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      .text {
-        font-size: 2rem;
-        font-weight: 700;
-        line-height: 130%;
-        color: #2b2b2b;
+  .btn-type-wrap {
+    margin-top: 1.2rem;
+    padding: 0 2rem;
+    gap: 1.2rem;
+    &.smaller {
+      .btn-type {
+        padding: 2.2rem 2.4rem;
+        background: #f6f9ff url('/assets/images/insu/img-claim-people.png') right bottom / 8.7rem 5.8rem no-repeat;
+        .wrap-type-text {
+          .text {
+            font-size: 1.6rem;
+            line-height: 2.2rem;
+          }
+        }
       }
-      .label {
-        font-size: 1.2rem;
-        line-height: 130%;
-        font-weight: 500;
-        color: #fff;
-        background-color: #6449fc;
-        padding: 0.3rem 0.6rem;
-        border-radius: 0.4rem;
+    }
+    .btn-type {
+      position: relative;
+      padding: 3.1rem 2.4rem;
+      border-radius: 1.2rem;
+      box-shadow: 4px 4px 12px 0px #0000000a;
+      width: 100%;
+      background: #f6f9ff url('/assets/images/insu/img-claim-people.png') right bottom / 11.1rem 7.4rem no-repeat;
+      @include mixin.rippleEffectPrimary;
+      &.family {
+        background: #f6f9ff url('/assets/images/insu/img-claim-family.png') right bottom / 8.7rem 5.8rem no-repeat;
+      }
+      .wrap-type-text {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        .text {
+          font-size: 2rem;
+          font-weight: 700;
+          line-height: 130%;
+          color: #2b2b2b;
+          text-align: left;
+        }
+        .label {
+          font-size: 1.2rem;
+          line-height: 130%;
+          font-weight: 500;
+          color: #fff;
+          background-color: #6449fc;
+          padding: 0.3rem 0.6rem;
+          border-radius: 0.4rem;
+        }
       }
     }
   }
@@ -299,12 +346,9 @@ h2.tit2 {
 }
 .wrap-payback {
   margin-top: 1.2rem;
-  display: grid;
   gap: 1.2rem;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(4, auto);
   .item {
-    padding: 2.4rem 2rem 2.4rem 2.4rem;
+    padding: 2.4rem 2rem;
     border: 0.1rem solid #eeeeee;
     border-radius: 2rem;
     box-shadow: 0px 0px 2.3rem 0 #0000000f;
@@ -312,17 +356,16 @@ h2.tit2 {
     justify-content: space-between;
     align-items: center;
     position: relative;
-
     &.type-a {
-      flex: 1 1 0;
+      padding: 2.4rem;
       @include mixin.rippleEffectPrimary;
       &.blue {
-        grid-area: 1 / 1 / 2 / 3;
-        background-image: linear-gradient(to top right, transparent, #e8f0ff);
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='226' height='124' viewBox='0 0 226 124' fill='none'%3E%3Cg opacity='0.2' filter='url(%23filter0_f_6424_62949)'%3E%3Cellipse cx='174.988' cy='10.1998' rx='113.156' ry='50.0123' transform='rotate(-25.7411 174.988 10.1998)' fill='%236A88AF'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_6424_62949' x='0.750366' y='-126.469' width='348.475' height='273.337' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='35' result='effect1_foregroundBlur_6424_62949'/%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E")
+          right top / contain no-repeat;
       }
       &.orange {
-        grid-area: 2 / 1 / 3 / 3;
-        background-image: linear-gradient(to top right, transparent, #fff4e8);
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='226' height='124' viewBox='0 0 226 124' fill='none'%3E%3Cg opacity='0.2' filter='url(%23filter0_f_6424_62951)'%3E%3Cellipse cx='174.988' cy='10.1998' rx='113.156' ry='50.0123' transform='rotate(-25.7411 174.988 10.1998)' fill='%23B08E3A'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_6424_62951' x='0.750366' y='-126.469' width='348.475' height='273.337' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='35' result='effect1_foregroundBlur_6424_62951'/%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E")
+          right top / contain no-repeat;
       }
       .wrap-text {
         .text {
@@ -331,23 +374,25 @@ h2.tit2 {
       }
     }
     &.type-b {
+      flex: 1;
+      flex-direction: column;
+      padding: 1.6rem;
+      border-radius: 1.2rem;
       @include mixin.rippleEffectPrimary;
-      .wrap-text .text {
-        color: #555555;
+      .wrap-text {
+        align-self: flex-start;
+        .text {
+          font-size: 1.6rem;
+          line-height: 2.2rem;
+          color: #555555;
+        }
       }
       .img-payback {
         width: 3.2rem;
         align-self: flex-end;
       }
-      &.b1 {
-        grid-area: 3 / 1 / 4 / 2;
-      }
-      &.b2 {
-        grid-area: 3 / 2 / 4 / 3;
-      }
     }
     &.type-c {
-      grid-area: 4 / 1 / 5 / 3;
       display: flex;
       flex-direction: column;
       align-items: center;

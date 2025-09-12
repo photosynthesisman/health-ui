@@ -92,7 +92,8 @@ watch(
   }
 )
 function onInput(e: Event) {
-  inputValue.value = (e.target as HTMLInputElement).value
+  const value = (e.target as HTMLInputElement).value
+  emit('update:modelValue', value)
 }
 </script>
 

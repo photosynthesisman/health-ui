@@ -29,7 +29,7 @@
       @confirm="clickDatePickerConfirm"
       @close="toggleDatePickerModal"
     />
-    
+
     <!-- 커스텀 모달 슬롯 -->
     <DateRangeModal
       v-if="useCustomModal"
@@ -42,10 +42,12 @@
       @close="toggleDatePickerModal"
     >
       <template #content>
-        <slot name="modal-content" 
-              :close="toggleDatePickerModal"
-              :confirm="handleCustomModalConfirm"
-              :cancel="clickDatePickerCancel">
+        <slot
+          name="modal-content"
+          :close="toggleDatePickerModal"
+          :confirm="handleCustomModalConfirm"
+          :cancel="clickDatePickerCancel"
+        >
           <!-- 기본 내용 -->
           <div class="default-modal-content">
             <p>커스텀 모달 내용을 여기에 추가하세요.</p>
@@ -72,15 +74,16 @@ export interface SelectOption {
 // Props 정의
 interface Props {
   count?: number
-  data?: any[]  // 전체 데이터를 받아서 내부에서 필터링
+  data?: any[] // 전체 데이터를 받아서 내부에서 필터링
   selectOptions?: SelectOption[]
   activeOption?: string | number
   modalTitle?: string
   showModal?: boolean
+  isShowConfirmButton?: boolean
   confirmButtonText?: string
   cancelButtonText?: string
-  useCustomModal?: boolean  // 커스텀 모달 사용 여부
-  customFilterMode?: boolean  // 커스텀 필터링 모드 (부모에서 직접 처리)
+  useCustomModal?: boolean // 커스텀 모달 사용 여부
+  customFilterMode?: boolean // 커스텀 필터링 모드 (부모에서 직접 처리)
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -99,15 +102,16 @@ const props = withDefaults(defineProps<Props>(), {
   confirmButtonText: '조회하기',
   cancelButtonText: '취소',
   useCustomModal: false,
-  customFilterMode: false
+  customFilterMode: false,
+  isShowConfirmButton: true
 })
 
 // Emits 정의
 const emit = defineEmits<{
   (e: 'filtered-data-change', data: any[]): void
   (e: 'period-change', period: string): void
-  (e: 'option-change', option: SelectOption, index: number): void  // 커스텀 모드용
-  (e: 'custom-modal-confirm', data: any): void  // 커스텀 모달 확인
+  (e: 'option-change', option: SelectOption, index: number): void // 커스텀 모드용
+  (e: 'custom-modal-confirm', data: any): void // 커스텀 모달 확인
   (e: 'update:activeOption', value: string | number): void
   (e: 'update:showModal', value: boolean): void
 }>()
@@ -133,7 +137,7 @@ const filterDataByPeriod = (period: string) => {
   }
 
   const now = new Date()
-  
+
   switch (period) {
     case 'all':
       filteredData.value = [...props.data]
@@ -150,7 +154,7 @@ const filterDataByPeriod = (period: string) => {
     default:
       filteredData.value = [...props.data]
   }
-  
+
   // 필터링된 데이터를 부모에게 전달
   emit('filtered-data-change', filteredData.value)
   emit('period-change', period)
@@ -159,12 +163,12 @@ const filterDataByPeriod = (period: string) => {
 // 월별 필터링 헬퍼 함수
 const filterByMonths = (months: number, now: Date) => {
   const startDate = new Date(now.getFullYear(), now.getMonth() - months, now.getDate())
-  
+
   return props.data.filter(item => {
     // date 필드를 찾아서 필터링 (여러 필드명 지원)
     const dateValue = item.date || item.createdAt || item.created_at || item.timestamp
     if (!dateValue) return false
-    
+
     const itemDate = new Date(dateValue)
     return itemDate >= startDate && itemDate <= now
   })
@@ -175,7 +179,7 @@ const handleOptionClick = (option: SelectOption, index: number) => {
   console.log('클릭된 옵션:', option)
   console.log('커스텀 필터 모드:', props.customFilterMode)
   console.log('커스텀 모달 사용:', props.useCustomModal)
-  
+
   // 비활성화된 옵션은 무시
   if (option.disabled) {
     console.log('비활성화된 옵션')
@@ -190,7 +194,7 @@ const handleOptionClick = (option: SelectOption, index: number) => {
   if (props.customFilterMode) {
     console.log('커스텀 필터링 모드 - 부모에게 이벤트 전달')
     emit('option-change', option, index)
-    
+
     // 모달 액션인 경우 모달 열기
     if (option.action === 'modal') {
       console.log('모달 열기 시도')
@@ -234,11 +238,11 @@ const clickDatePickerCancel = () => {
 const clickDatePickerConfirm = (dateRange: DateRange) => {
   isShowDatePickerModal.value = false
   emit('update:showModal', false)
-  
+
   // 사용자 지정 기간으로 데이터 필터링
   currentPeriod.value = 'custom'
   filterDataByDateRange(dateRange)
-  
+
   console.log('📅 날짜 범위 선택 완료:', dateRange, `- ${filteredData.value.length}개 데이터`)
 }
 
@@ -247,7 +251,7 @@ const handleCustomModalConfirm = (data?: any) => {
   isShowDatePickerModal.value = false
   emit('update:showModal', false)
   emit('custom-modal-confirm', data)
-  
+
   console.log('📅 커스텀 모달 확인:', data)
 }
 
@@ -257,15 +261,15 @@ const filterDataByDateRange = (dateRange: DateRange) => {
     filteredData.value = []
     return
   }
-  
+
   filteredData.value = props.data.filter(item => {
     const dateValue = item.date || item.createdAt || item.created_at || item.timestamp
     if (!dateValue) return false
-    
+
     const itemDate = new Date(dateValue)
     return itemDate >= dateRange.startDate && itemDate <= dateRange.endDate
   })
-  
+
   // 필터링된 데이터를 부모에게 전달
   emit('filtered-data-change', filteredData.value)
   emit('period-change', 'custom')
@@ -294,20 +298,27 @@ const datepickerProps = computed(() => ({
 }))
 
 // props.data 변경 감시
-watch(() => props.data, (newData) => {
-  if (newData && newData.length > 0) {
-    // 데이터가 변경되면 현재 기간으로 다시 필터링
-    filterDataByPeriod(currentPeriod.value?.toString() || 'all')
-  }
-}, { immediate: true })
+watch(
+  () => props.data,
+  newData => {
+    if (newData && newData.length > 0) {
+      // 데이터가 변경되면 현재 기간으로 다시 필터링
+      filterDataByPeriod(currentPeriod.value?.toString() || 'all')
+    }
+  },
+  { immediate: true }
+)
 
 // activeOption 변경 감시
-watch(() => props.activeOption, (newOption) => {
-  if (newOption !== currentPeriod.value) {
-    currentPeriod.value = newOption
-    filterDataByPeriod(newOption?.toString() || 'all')
+watch(
+  () => props.activeOption,
+  newOption => {
+    if (newOption !== currentPeriod.value) {
+      currentPeriod.value = newOption
+      filterDataByPeriod(newOption?.toString() || 'all')
+    }
   }
-})
+)
 
 // 초기화
 onMounted(() => {

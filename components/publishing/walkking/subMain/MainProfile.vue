@@ -19,5 +19,11 @@ import MainMyChallenge from '~/components/publishing/walkking/subMain/MainMyChal
   padding: 5.6rem 2rem 2.8rem;
   overflow: hidden;
   position: relative;
+  :deep(.walking-challenge-item) {
+    overflow: visible;
+  }
+  :deep(.challenge-detail .img-wrap) {
+    background-position: right -2rem;
+  }
 }
 </style>

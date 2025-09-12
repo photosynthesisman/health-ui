@@ -20,6 +20,7 @@
         :search-with-select="headerOptions.searchWithSelect"
         :search-select-options="headerOptions.searchSelectOptions"
         :search-select-placeholder="headerOptions.searchSelectPlaceholder"
+        :search-select-title="headerOptions.searchSelectTitle"
         :has-notification="headerOptions.hasNotification"
         :has-notification-dot="headerOptions.hasNotificationDot"
         :has-cart="headerOptions.hasCart"
@@ -113,6 +114,7 @@ const headerOptions = ref({
   searchWithSelect: false,
   searchSelectOptions: [],
   searchSelectPlaceholder: '전체',
+  searchSelectTitle: '옵션 선택',
 
   // 알림 옵션
   hasNotification: false,
@@ -210,6 +212,7 @@ watch(
       searchWithSelect: false,
       searchSelectOptions: [],
       searchSelectPlaceholder: '전체',
+      searchSelectTitle: '옵션 선택',
       hasNotification: false,
       hasNotificationDot: false,
       hasCart: false,

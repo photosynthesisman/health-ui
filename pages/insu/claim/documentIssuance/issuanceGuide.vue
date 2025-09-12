@@ -7,12 +7,11 @@
     :cart-count="2"
     class="pb-36"
   >
-    <h1 class="c-tit mt-24">
-      <span class="text"> 병원서류 발급 받는 방법 </span>
-    </h1>
-    <div class="c-tit-sub">
-      온라인으로 받는 서류는 모두 사본이에요.<br />원본이 필요하시면 병원에 직접 방문해 주세요!
-    </div>
+    <TitleSection
+      title="병원서류 발급 받는 방법"
+      :description="'온라인으로 받는 서류는 모두 사본이에요.<br />원본이 필요하시면 병원에 직접 방문해 주세요!'"
+      class="mt-24"
+    />
     <CommonSwiper
       class="custom-swiper"
       :slides="imageSlides"
@@ -43,6 +42,7 @@
 
 <script setup lang="ts">
 // 타입지정 필요
+import TitleSection from '~/components/insu/TitleSection.vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import Select from '~/components/publishing/input/Select.vue'
 import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
@@ -51,14 +51,7 @@ import imgBanner2 from '@/assets/images/insu/docIssuance/img-doc-info02.png'
 import imgBanner3 from '@/assets/images/insu/docIssuance/img-doc-info03.png'
 import imgBanner4 from '@/assets/images/insu/docIssuance/img-doc-info04.png'
 import TableWrap from '~/components/common/tableWrap.vue'
-definePageMeta({
-  // isShowHeader: false
-  // isShowUtils: false
-  // isShowBackButton: false,
-  title: '대리청구 안내'
-  // utils: ['phone']
-  // customTitle: 'logo',
-})
+
 const hospital = [
   { value: '강동성심병원', label: '강동성심병원' },
   { value: '서울아산병원', label: '서울아산병원' },

@@ -61,6 +61,10 @@ const totalCalories = computed(() => {
   return props.foods.reduce((total, food) => total + food.calories, 0)
 })
 
+const handleAddFood = () => {
+  emit('addFood', props.mealType)
+}
+
 const handleDeleteFood = (food: FoodItem, index: number) => {
   emit('deleteFood', food, index, props.mealType)
 }

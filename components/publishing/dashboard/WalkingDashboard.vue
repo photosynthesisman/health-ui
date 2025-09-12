@@ -1,9 +1,9 @@
 <template>
   <div class="graph-wrap">
     <div class="walking-length">
-      <span class="tit">일 평균 걸음수</span>
+      <span class="tit">{{ time }} 평균 걸음수</span>
       <strong class="steps-amount">15,876</strong>
-      <span class="sub-tit">일평균 <span class="average-txt">36.45 km / 549 kcal</span></span>
+      <span class="sub-tit">{{ time }}평균 <span class="average-txt">36.45 km / 549 kcal</span></span>
     </div>
     <div class="average-detail">
       <div class="item">
@@ -14,7 +14,7 @@
         <strong class="amount">36.45 km</strong>
         <span class="detail-txt">총 이동거리</span>
       </div>
-      <div class="item">
+      <div v-if="time === '일'" class="item">
         <strong class="amount">7 / 15</strong>
         <span class="detail-txt">목표달성</span>
       </div>
@@ -26,6 +26,10 @@
 
 <script setup lang="ts">
 import WalkingGraph from '~/components/publishing/dashboard/WalkingGraph.vue'
+
+const props = defineProps<{
+  time: string
+}>()
 </script>
 
 <style scoped lang="scss">
@@ -33,6 +37,7 @@ import WalkingGraph from '~/components/publishing/dashboard/WalkingGraph.vue'
   background: #e7f4ff;
   border-radius: 1.2rem;
   padding-bottom: 2rem;
+  margin-bottom: 2rem;
   .walking-length {
     padding-top: 3.2rem;
     display: flex;

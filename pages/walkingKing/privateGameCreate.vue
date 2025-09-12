@@ -14,16 +14,7 @@
 
     <FlexSection class="gap-12 pb-40">
       <InputText label="게임명*" :model-value="'여의도 테니스 모임 오세요'" />
-      <InputCalendarFromTo
-        label="게임 기간*"
-        placeholder="시작일시"
-        placeholder2="종료일시"
-        :show-time-picker="true"
-        :default-hour="9"
-        :default-minute="0"
-        :minute-step="5"
-        @time-change="handleTimeChange"
-      />
+      <SelectGameTimeBox />
       <FlexColDiv class="gap-12">
         <InputLabelText label="휴식 시간" :required="true" />
         <FlexRowDiv class="gap-28">
@@ -90,6 +81,7 @@ import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
 import Radio from '~/components/publishing/input/radio.vue'
 import ConfirmModal from '~/components/common/modal/ConfirmModal.vue'
+import SelectGameTimeBox from '~/components/publishing/walkking/SelectGameTimeBox.vue'
 import { ref } from 'vue'
 
 // 먼저 목표도달하기 선택시

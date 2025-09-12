@@ -31,6 +31,7 @@
   .profile-img {
     flex: 0 0 auto;
     width: 6.4rem;
+    height: 6.4rem;
     overflow: hidden;
     border-radius: 50%;
     margin-right: 1.2rem;

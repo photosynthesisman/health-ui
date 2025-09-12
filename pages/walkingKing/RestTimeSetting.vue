@@ -3,10 +3,7 @@
     <div class="rest-time-setting">
       <h2 class="tit">휴식시간 설정하기</h2>
       <div class="sub-tit">
-        <strong class="bold-txt"
-          >챌리지에 참가하려면<br />
-          휴식시간을 설정해야 합니다.</strong
-        >
+        <strong class="bold-txt">챌린지에 참가하려면 <br />휴식시간을 설정해야 합니다.</strong>
         <span
           >휴식 시작 시간을 자유롭게 선택할 수 있습니다. <br />
           단, 시작 시간 이후 8시간을 휴식 시간으로 지정합니다.
@@ -15,7 +12,7 @@
 
       <div class="info-blue-txt">
         <p>챌린지가 시작되면 휴식 시간 변경은 불가능합니다.</p>
-        휴식시간 동안 챌린지 내 걸음수는 인정하지 않으며 부스터 아이템 적용에도 제외됩니다.
+        휴식시간 동안 챌린지 내 걸음수는 인정하지 않으며 <br />부스터 아이템 적용에도 제외됩니다.
       </div>
     </div>
 

@@ -85,6 +85,12 @@ const props = withDefaults(
     width: 8rem;
     height: 8rem;
     border-radius: 50%;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
     &::after {
       content: '';
       position: absolute;

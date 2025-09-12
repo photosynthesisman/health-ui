@@ -84,7 +84,7 @@
     .c-modal-body {
       justify-content: center;
       align-items: center;
-      text-align: center;
+      text-align: left;
       vertical-align: middle;
       padding-bottom: 0;
     }
@@ -269,7 +269,7 @@
 // 모달 상단
 .c-modal-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex: 0 0 auto;
   position: relative;
   padding: 2rem 2rem 1.2rem;
@@ -307,7 +307,7 @@
   flex: 1 1 auto;
   position: relative;
   padding: 1.6rem 2rem 2.4rem;
-  text-align: center;
+  text-align: left;
   font-size: var(--num-18);
   color: #2b2b2b;
   &.overflow-initial {

@@ -3,20 +3,34 @@
     <div class="date-range">
       <button type="button" disabled class="c-btn icon btn-prev" aria-label="이전 날짜로"></button>
       <div class="date-text">
-        <div class="main-date">2025년 4월</div>
-        <span class="detail-range">04월 1일 ~ 04월 30일</span>
+        <div class="main-date">
+          <template v-if="time === '시간'">2025년 4월 24일 목요일</template>
+          <template v-else-if="time === '일'">2025년 4월</template>
+          <template v-else-if="time === '월'">2025년</template>
+        </div>
+        <span v-if="time != '시간'" class="detail-range">
+          <template v-if="time === '일'">4월 1일 ~ 4월 30일</template>
+          <template v-else-if="time === '월'">1월 1일 ~ 12월 31일</template>
+        </span>
       </div>
       <button type="button" class="c-btn icon btn-next" aria-label="다음 날짜로"></button>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps<{
+  time: string
+}>()
+</script>
 
 <style scoped lang="scss">
 .date-range-wrap {
   margin-top: 0.8rem;
-  padding: 2.4rem 0;
+  height: 9.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   .date-range {
     display: flex;
     flex-direction: column;

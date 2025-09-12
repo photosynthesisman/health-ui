@@ -23,6 +23,9 @@ defineProps<{
     font-size: 2.4rem;
     font-weight: 700;
     line-height: 3.1rem;
+    :deep(span) {
+      color: var(--blue-primary);
+    }
   }
   .description {
     font-size: 1.6rem;

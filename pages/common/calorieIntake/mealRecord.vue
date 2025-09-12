@@ -1,26 +1,33 @@
 <template>
   <BaseBody :show-back-button="true" page-title="식사기록">
-    <div class="food-search-wrap">
-      <InputText inp-type="search" />
-      <button type="button" class="btn-regist-food" @click="clickBottomModal">직접등록</button>
-    </div>
+    <FlexRowDiv class="pt-8 gap-12">
+      <InputText inp-type="search" placeholder="음식검색" />
+    </FlexRowDiv>
 
     <FoodItemList :foods="foodList" @update:foods="handleFoodsUpdate" @food-change="handleFoodChange" />
 
+    <!-- 바텀 버튼 그룹 -->
+    <ButtonGroup class="is-fixed">
+      <Button btn-type="secondary" element-type="a" href="" aria-label="취소" class="lg btn-sticky" />
+      <Button btn-type="primary" element-type="a" href="" aria-label="등록하기" class="lg btn-sticky" />
+    </ButtonGroup>
+
     <!-- 직접등록하기 바텀시트 -->
-    <BottomModal
-      :is-visible="isShowBottomModal"
-      v-bind="bottomModalProps"
-      @confirm="clickConfirm"
-      @close="toggleBottomModal"
-    >
-      <template #content>
-        <FlexColDiv class="gap-8 mt-10">
-          <InputText placeholder="음식명을 입력해 주세요." />
-          <InputText placeholder="섭취칼로리를 입력해 주세요." unit-r="Kcal" type="number" class="t-left" />
-        </FlexColDiv>
-      </template>
-    </BottomModal>
+    <Teleport to="body">
+      <BottomModal
+        :is-visible="isShowBottomModal"
+        v-bind="bottomModalProps"
+        @confirm="clickConfirm"
+        @close="toggleBottomModal"
+      >
+        <template #content>
+          <FlexColDiv class="gap-8 mt-10">
+            <InputText placeholder="음식명을 입력해 주세요." />
+            <InputText placeholder="섭취칼로리를 입력해 주세요." unit-r="Kcal" type="number" class="t-left" />
+          </FlexColDiv>
+        </template>
+      </BottomModal>
+    </Teleport>
   </BaseBody>
 </template>
 <script setup lang="ts">
@@ -28,10 +35,13 @@ import { ref } from 'vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 
 import FoodItemList from '~/components/publishing/calorieIntake/FoodItemList.vue'
+import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
+import Button from '~/components/publishing/button/Button.vue'
 
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
 import BottomModal from '~/components/common/modal/BottomModal.vue'
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 
 const isShowBottomModal = ref(false)
 
@@ -94,11 +104,6 @@ const foodList = ref([
 ])
 </script>
 <style lang="scss" scoped>
-.food-search-wrap {
-  display: flex;
-  flex-direction: row;
-  gap: 0 1.2rem;
-}
 .btn-regist-food {
   flex: 0 0 auto;
   width: 11.7rem;
@@ -124,7 +129,7 @@ const foodList = ref([
 
 @media (max-width: 400px) {
   .btn-regist-food {
-    width: 8rem;
+    width: 8.4rem;
     padding: 1rem 0;
     font-size: 1.4rem;
   }

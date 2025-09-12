@@ -9,7 +9,7 @@
     add-text="<span class='icon ico-menu'>메뉴 아이콘</span>"
   >
     <RecruitmentTeamChallengeCard />
-    <FlexColDiv class="gap-20 mt-24 mb-32">
+    <FlexColDiv class="gap-12 mt-24 mb-32">
       <RecruitmentGuidelines :type="'date'" :title="'모집기간'" :detail="'2025.05.15 ~ 챌린지 종료까지'" />
       <RecruitmentGuidelines :type="'method'" :title="'진행방식'" :detail="'팀전(4인)/무조건 많이 걷기'" />
       <RecruitmentGuidelines :title="'참가방식'" :detail="'12,000P 유료참가 / FREE 무료참가'" />

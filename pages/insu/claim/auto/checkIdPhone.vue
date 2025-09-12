@@ -9,9 +9,7 @@
     :has-tel-btn="true"
     class="pb-60"
   >
-    <h1 class="c-tit mt-24 mb-32">
-      <span class="text"> 문자로 전송된<br />인증번호 6자리를 입력해 주세요. </span>
-    </h1>
+    <TitleSection title="문자로 전송된<br />인증번호 6자리를 입력해 주세요." class="mt-24 mb-32" />
     <FlexSection class="gap-12">
       <FlexColDiv class="gap-6">
         <InputTimer label="인증번호 입력" error-message="인증번호를 다시 확인해 주세요." />
@@ -29,21 +27,22 @@
       <InputRRNGender />
       <InputText label="이름" :is-valid="true" valid-text="이름을 입력해주세요." placeholder="이름을 입력해 주세요." />
     </FlexSection>
+    <ButtonGroup class="is-fixed">
+      <Button
+        btn-type="primary"
+        element-type="button"
+        aria-label="확인"
+        class="lg btn-sticky w-full"
+        @click="clickNext"
+      />
+    </ButtonGroup>
   </BaseBody>
-  <ButtonGroup class="is-fixed">
-    <Button
-      btn-type="primary"
-      element-type="button"
-      aria-label="확인"
-      class="lg btn-sticky w-full"
-      @click="clickNext"
-    />
-  </ButtonGroup>
 </template>
 
 <script setup lang="ts">
 // 타입지정 필요
 import BaseBody from '~/components/layout/BaseBody.vue'
+import TitleSection from '~/components/insu/TitleSection.vue'
 import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import InputText from '~/components/publishing/input/InputText.vue'

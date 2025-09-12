@@ -17,12 +17,12 @@
     </div>
 
     <div class="flex flex-col align-center gap-12 mt-24 pb-48">
-      <section class="profile-photo">
+      <section class="profile-photo" @click="toggleBottomModal">
         <img :src="profileImageSrc" alt="프로필 사진" />
         <label>
           <input type="file" accept="image/*" @change="handleImageUpload" />
-          <i class="icon ico-photo" aria-label="프로필 사진 선택"></i>
         </label>
+        <i class="icon ico-photo" aria-label="프로필 사진 선택"></i>
       </section>
 
       <section class="btn-radio-box w-full">
@@ -110,6 +110,44 @@
       @cancel="closeExpertMemberModal"
       @close="closeExpertMemberModal"
     />
+
+    <BottomModal
+      title="프로필 사진 설정"
+      :is-visible="isShowBottomModal"
+      :is-show-cancel-button="false"
+      @confirm="clickConfirm"
+      @close="toggleBottomModal"
+    >
+      <template #content>
+        <div class="flex flex-col gap-8 mt-10">
+          <RadioImg
+            id="rdo1"
+            name="rdo1"
+            checked
+            custom-style="button attached-file"
+            text="카메라 촬영"
+            :icon-src="iconCamera"
+            icon-alt="아이콘:카메라 촬영"
+          />
+          <RadioImg
+            id="rdo2"
+            name="rdo1"
+            custom-style="button attached-file"
+            text="앨범에서 선택"
+            :icon-src="iconAlbum"
+            icon-alt="아이콘:앨범에서 선택"
+          />
+          <RadioImg
+            id="rdo3"
+            name="rdo1"
+            custom-style="button attached-file"
+            text="기본 프로필 이미지로 설정"
+            :icon-src="iconBasic"
+            icon-alt="아이콘:기본 프로필 이미지로 설정"
+          />
+        </div>
+      </template>
+    </BottomModal>
   </BaseBody>
 </template>
 
@@ -120,10 +158,15 @@ import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import Radio from '~/components/publishing/input/radio.vue'
 import Check from '~/components/publishing/input/Check.vue'
+import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import InputText from '~/components/publishing/input/InputText.vue'
 import defaultProfileImage from '~/assets/images/img-profile.svg'
 import FieldSet from '~/components/publishing/input/FieldSet.vue'
+import RadioImg from '~/components/publishing/input/radioImg.vue'
+import iconCamera from '~/assets/images/insu/icon-camera.png'
+import iconAlbum from '~/assets/images/insu/icon-album.png'
 
+import iconBasic from '~/assets/images/insu/icon-basic.png'
 import LineTabs, { type Tab } from '~/components/tabbar/LineTabs.vue'
 
 import ConfirmModal from '~/components/common/modal/ConfirmModal.vue'
@@ -156,7 +199,14 @@ const confirmStatusIcon = computed(() => {
       return 'ico-decline'
   }
 })
-
+// 프로필 사진 바텀 팝업 관련
+const isShowBottomModal = ref(false)
+const clickConfirm = () => {
+  toggleBottomModal()
+}
+const toggleBottomModal = () => {
+  isShowBottomModal.value = !isShowBottomModal.value
+}
 const confirmStatusText = computed(() => {
   switch (confirmStatus.value) {
     case 'decline':
@@ -229,19 +279,22 @@ onMounted(() => {
       width: 100%;
       height: 100%;
     }
-    .ico-photo {
-      display: inline-block;
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      width: 2.8rem;
-      height: 2.8rem;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 2.8rem;
-    }
+  }
+  .ico-photo {
+    display: inline-block;
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: 0;
+    width: 2.8rem;
+    height: 2.8rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 2.8rem;
   }
   img {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: contain;

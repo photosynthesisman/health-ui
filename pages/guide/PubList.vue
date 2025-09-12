@@ -60,6 +60,7 @@
               page.status === 'ing'
             "
             :to="page.path"
+            target="_blank"
             class="view-btn"
           >
             보기
@@ -335,6 +336,14 @@ const pageListData: PageItemData[] = [
     title: 'MY병원찾기 결과',
     description: 'MY병원찾기 결과',
     path: '/insu/claim/paperless/successFindHospitals',
+    category: '보험청구',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: 'MY병원찾기 결과 - 없음',
+    description: 'MY병원찾기 결과 - 없음',
+    path: '/insu/claim/paperless/failedFindHospitals',
     category: '보험청구',
     section: 'insu',
     status: ''
@@ -636,9 +645,17 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
-    title: '피보험자 목록 - 고객목록-고객',
+    title: '피보험자 목록 - 고객목록-나의 가족/제3자',
     description: '피보험자 목록 - 고객목록-고객',
     path: '/insu/claim/subrogation/serviceInUse/insuredManagementByGeneral',
+    category: '보험금 대리청구 신청(설계사, 기타대리인)',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '피보험자 목록 - 고객목록-검색',
+    description: '피보험자 목록 - 고객목록-검색',
+    path: '/insu/claim/subrogation/serviceInUse/insuredManagementSearch',
     category: '보험금 대리청구 신청(설계사, 기타대리인)',
     section: 'insu',
     status: ''
@@ -852,6 +869,14 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
+    title: '6_12_AI분석 진료내역 조회_결과(no data)',
+    description: '6_12_AI분석 진료내역 조회_결과(no data)',
+    path: '/insu/claim/subrogation/ai/hasNoSearchResult',
+    category: 'AI분석 숨은 보상금 찾기 신청',
+    section: 'insu',
+    status: ''
+  },
+  {
     title: '6_13_AI분석_숨은보상금찾기 신청',
     description: '6_13_AI분석_숨은보상금찾기 신청',
     path: '/insu/claim/subrogation/ai/freeConsultingRequest',
@@ -871,6 +896,14 @@ const pageListData: PageItemData[] = [
     title: '6_21_AI분석_숨은보상금찾기결과',
     description: '6_21_AI분석_숨은보상금찾기결과',
     path: '/insu/claim/subrogation/ai/findConpensationResult',
+    category: 'AI분석 숨은 보상금 찾기 결과',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '6_21_AI분석_숨은보상금찾기결과(no data)',
+    description: '6_21_AI분석_숨은보상금찾기결과(no data)',
+    path: '/insu/claim/subrogation/ai/findConpensationNoResult',
     category: 'AI분석 숨은 보상금 찾기 결과',
     section: 'insu',
     status: ''
@@ -900,6 +933,14 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
+    title: '6_32_AI 실손 예상 보험금 결과 확인 - 진료내역 조회중',
+    description: '6_32_AI 실손 예상 보험금 결과 확인 - 진료내역 조회중',
+    path: '/insu/claim/subrogation/ai/loadingAnalysisResults',
+    category: 'AI 실손 에상 보험금 확인',
+    section: 'insu',
+    status: ''
+  },
+  {
     title: '6_32_AI 실손 예상 보험금 결과 확인',
     description: '6_32_AI 실손 예상 보험금 결과 확인',
     path: '/insu/claim/subrogation/ai/checkAnalysisResults',
@@ -911,6 +952,14 @@ const pageListData: PageItemData[] = [
     title: '6_41_AI실손보험금_예상결과',
     description: '6_41_AI실손보험금_예상결과',
     path: '/insu/claim/subrogation/ai/expectedResult',
+    category: 'AI 실손 예상 보험금 결과',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '6_41_AI실손보험금_예상결과(no data)',
+    description: '6_41_AI실손보험금_예상결과(no data)',
+    path: '/insu/claim/subrogation/ai/hasNoExpectedResult',
     category: 'AI 실손 예상 보험금 결과',
     section: 'insu',
     status: ''
@@ -935,6 +984,14 @@ const pageListData: PageItemData[] = [
     title: '6_52_내 보험 건별 상세',
     description: '6_52_내 보험 건별 상세',
     path: '/insu/claim/subrogation/ai/myInsuranceDetail',
+    category: '내 보험정보',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '6_52_내 보험 건별 상세(자동차)',
+    description: '6_52_내 보험 건별 상세',
+    path: '/insu/claim/subrogation/ai/myCarInsuranceDetail',
     category: '내 보험정보',
     section: 'insu',
     status: ''
@@ -1402,6 +1459,14 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
+    title: '의료영상공유 - 발급대기함',
+    description: '의료영상 발급대기함',
+    path: '/insu/medicalVideo/issue/waiting',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
     title: '의료영상 내역 - 영상보관함',
     description: '의료영상 내역 - 영상보관함',
     path: '/insu/medicalVideo/history',
@@ -1445,6 +1510,30 @@ const pageListData: PageItemData[] = [
     title: '의료영상 내역 - 공유 정보 확인',
     description: '의료영상 내역 - 공유 정보 확인',
     path: '/insu/medicalVideo/history/confirmSharedData',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상 내역 - 환불 내역 확인',
+    description: '의료영상 내역 - 환불 내역 확인',
+    path: '/insu/medicalVideo/history/confirmRefundedData',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상 내역 - 공유 완료',
+    description: '의료영상 내역 - 공유 완료',
+    path: '/insu/medicalVideo/history/sharedDataComplete',
+    category: '의료영상 발급',
+    section: 'insu',
+    status: ''
+  },
+  {
+    title: '의료영상 내역 - 환불 완료',
+    description: '의료영상 내역 - 환불 완료',
+    path: '/insu/medicalVideo/history/refundedDataComplete',
     category: '의료영상 발급',
     section: 'insu',
     status: ''
@@ -1788,6 +1877,22 @@ const pageListData: PageItemData[] = [
     section: 'walkingKing',
     status: ''
   },
+  {
+    title: '연간랭킹',
+    description: '연간랭킹',
+    path: '/walkingKing/individualChallengeAnnualRanking',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
+    title: '시상/경품내역',
+    description: '챌린지 시상/경품 내역',
+    path: '/walkingKing/individualchallengeAwards',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
   // login
   {
     title: '랜딩 페이지',
@@ -2032,7 +2137,14 @@ const pageListData: PageItemData[] = [
     section: 'DirectMessage',
     status: ''
   },
-
+  {
+    title: 'DM 채팅화면',
+    description: 'DM 채팅',
+    path: '/common/DM/DmChat',
+    category: 'DM',
+    section: 'DirectMessage',
+    status: ''
+  },
   // 설정
   {
     title: '설정',
@@ -2264,8 +2376,16 @@ const pageListData: PageItemData[] = [
   },
   {
     title: '일일섭취칼로리 - 식사기록',
-    description: '식사기록',
+    description: '검색해서 식사기록',
     path: '/common/calorieIntake/mealRecord',
+    category: '일일섭취칼로리',
+    section: 'calorieIntake',
+    status: ''
+  },
+  {
+    title: '일일섭취칼로리 - 식사기록',
+    description: '직접 식사기록',
+    path: '/common/calorieIntake/mealRecordDirectly',
     category: '일일섭취칼로리',
     section: 'calorieIntake',
     status: ''
@@ -2481,9 +2601,41 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
+    title: '게시글 상세 - 대댓글쓰기',
+    description: '커뮤니티 공통-게시글 상세',
+    path: '/community/[community]/board/[boardID]/comment',
+    category: '커뮤니티',
+    section: 'community',
+    status: ''
+  },
+  {
     title: '게시글 수정',
     description: '커뮤니티 공통-게시글 수정',
     path: '/community/[community]/board/[boardID]/[postId]/edit',
+    category: '커뮤니티',
+    section: 'community',
+    status: ''
+  },
+  {
+    title: '커뮤니티 전체 랭킹 - 실시간 랭킹',
+    description: '커뮤니티 전체 랭킹 - 실시간 랭킹',
+    path: '/community/[communityId]/realTimeRanking',
+    category: '커뮤니티',
+    section: 'community',
+    status: ''
+  },
+  {
+    title: '커뮤니티 전체 랭킹 - 활동 종합 랭킹',
+    description: '커뮤니티 전체 랭킹 - 활동 종합 랭킹',
+    path: '/community/[communityId]/totalRanking',
+    category: '커뮤니티',
+    section: 'community',
+    status: ''
+  },
+  {
+    title: '커뮤니티 전체 랭킹 - 활동 건수 랭킹',
+    description: '커뮤니티 전체 랭킹 - 활동 건수 랭킹',
+    path: '/community/[communityId]/byActivityRanking',
     category: '커뮤니티',
     section: 'community',
     status: ''
@@ -2936,6 +3088,28 @@ const getSectionText = (section: string) => {
       background: #6c757d;
       cursor: not-allowed;
       opacity: 0.6;
+    }
+  }
+}
+:deep(.boxed-tabs) {
+  .tabs-container {
+    overflow-x: auto !important;
+    scrollbar-width: auto;
+    padding-bottom: 2rem;
+    &::-webkit-scrollbar {
+      display: block !important;
+      height: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+      &:hover {
+        background: #555;
+      }
     }
   }
 }

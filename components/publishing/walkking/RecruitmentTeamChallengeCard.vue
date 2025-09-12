@@ -12,7 +12,7 @@
     <div class="challenge-tit mt-16">
       <div class="challenge-info">
         <strong class="tit">16th 하이워킹 챌린지</strong>
-        <span class="during-date">2025.06.15 ~ 06.30</span>
+        <span class="during-date">2025.06.15 12:30 ~ 2025.06.30 19:00</span>
       </div>
     </div>
     <div class="challenge-detail">
@@ -51,7 +51,11 @@ const props = defineProps({
     height: 22rem;
     top: 0;
     right: 0;
-    background: url(~/assets/images/walkingking/img-walkingking-card2.png) center / contain no-repeat;
+    background: url(~/assets/images/walkingking/img-walkingking-card2.png) center bottom/ contain no-repeat;
+    @media (max-width: 375px) {
+      width: 14rem;
+      height: 20.5rem;
+    }
   }
 }
 .challenge-tit {
@@ -69,7 +73,7 @@ const props = defineProps({
     }
     .during-date {
       color: #555;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 500;
     }
   }

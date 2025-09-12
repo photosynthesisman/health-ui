@@ -9,13 +9,7 @@
     :has-tel-btn="true"
     class="pb-60"
   >
-    <h1 class="c-tit mt-24 mb-32">
-      <span v-if="nameValue.length <= 2" class="text"> 본인확인을 위해<br />이름을 입력해 주세요. </span>
-      <span v-else-if="nameValue.length > 2 && backValue.length === 0" class="text">
-        주민등록번호를<br />입력해 주세요.
-      </span>
-      <span v-else-if="backValue.length > 0" class="text"> 휴대폰번호를<br />입력해 주세요.</span>
-    </h1>
+    <TitleSection :title="dynamicTitle" class="mt-24 mb-32" />
     <FlexColDiv class="gap-12">
       <Transition name="fade-slide" mode="out-in">
         <InputPhone v-if="backValue.length > 0" v-model="phoneNum" label="휴대폰 번호" :has-verify-btn="false" />
@@ -36,59 +30,63 @@
         placeholder="이름을 입력해 주세요."
       />
     </FlexColDiv>
+    <ButtonGroup class="is-fixed">
+      <Button
+        btn-type="primary"
+        element-type="button"
+        aria-label="확인"
+        class="w-full lg btn-sticky"
+        :disabled="phoneNum.length < 13"
+        @click="clickAgreeTerm"
+      />
+    </ButtonGroup>
+    <Teleport to="body">
+      <BottomModal
+        :is-visible="isShowAgreeModal"
+        title="본인인증을 위해 동의가 필요해요."
+        :is-show-cancel-button="false"
+        confirm-button-text="동의하고 다음"
+        @close="isShowAgreeModal = false"
+        @confirm="clickNext"
+      >
+        <template #content>
+          <AgreeToTerms v-model="terms" :terms-list="termsList" @show-detail-term="showDetailTerm" />
+        </template>
+      </BottomModal>
+    </Teleport>
+    <Teleport to="body">
+      <FullModal
+        :is-visible="isShowDetailTerm"
+        title="보험사 약관 동의"
+        :is-show-cancel-button="false"
+        confirm-button-text="동의하기"
+        @confirm="showDetailTerm"
+      >
+        <template #content>
+          <div class="wrap-agree-detail flex flex-col gap-10 pb-48">
+            <div class="fz-14 semibold">1. 수집 · 이용에 관한 사항</div>
+            <div class="agree-txt-box fz-14 flex flex-col gap-2">
+              <div class="semibold">제1조(목적)</div>
+              보험약관내용을 입력해주세요.
+            </div>
+            <div class="agree-txt-box fz-14 flex flex-col gap-2">
+              <div class="semibold">제2조(용어의 정의)</div>
+              본 약관에서 사용하는 용어의 정의는 다음과 같습니다.
+              <ol class="num-type">
+                <li>보험약관내용을 입력해주세요.</li>
+                <li>보험약관내용을 입력해주세요.</li>
+                <li>보험약관내용을 입력해주세요.</li>
+              </ol>
+            </div>
+          </div>
+        </template>
+      </FullModal>
+    </Teleport>
   </BaseBody>
-  <ButtonGroup class="is-fixed">
-    <Button
-      btn-type="primary"
-      element-type="button"
-      aria-label="확인"
-      class="w-full lg btn-sticky"
-      :disabled="phoneNum.length < 13"
-      @click="clickAgreeTerm"
-    />
-  </ButtonGroup>
-  <BottomModal
-    :is-visible="isShowAgreeModal"
-    title="본인인증을 위해 동의가 필요해요."
-    :is-show-cancel-button="false"
-    confirm-button-text="동의하고 다음"
-    @close="isShowAgreeModal = false"
-    @confirm="clickNext"
-  >
-    <template #content>
-      <AgreeToTerms v-model="terms" :terms-list="termsList" @show-detail-term="showDetailTerm" />
-    </template>
-  </BottomModal>
-
-  <FullModal
-    :is-visible="isShowDetailTerm"
-    title="보험사 약관 동의"
-    :is-show-cancel-button="false"
-    confirm-button-text="동의하기"
-    @confirm="showDetailTerm"
-  >
-    <template #content>
-      <div class="wrap-agree-detail flex flex-col gap-10 pb-48">
-        <div class="fz-14 semibold">1. 수집 · 이용에 관한 사항</div>
-        <div class="agree-txt-box fz-14 flex flex-col gap-2">
-          <div class="semibold">제1조(목적)</div>
-          보험약관내용을 입력해주세요.
-        </div>
-        <div class="agree-txt-box fz-14 flex flex-col gap-2">
-          <div class="semibold">제2조(용어의 정의)</div>
-          본 약관에서 사용하는 용어의 정의는 다음과 같습니다.
-          <ol class="num-type">
-            <li>보험약관내용을 입력해주세요.</li>
-            <li>보험약관내용을 입력해주세요.</li>
-            <li>보험약관내용을 입력해주세요.</li>
-          </ol>
-        </div>
-      </div>
-    </template>
-  </FullModal>
 </template>
 
 <script setup lang="ts">
+import TitleSection from '~/components/insu/TitleSection.vue'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import Button from '~/components/publishing/button/Button.vue'
@@ -117,8 +115,22 @@ const terms = {
 const nameValue = ref('')
 const backValue = ref('')
 const phoneNum = ref('')
+
+// 동적 타이틀
+const dynamicTitle = computed(() => {
+  if (nameValue.value.length <= 2) {
+    return `본인확인을 위해<br />이름을 입력해 주세요.`
+  } else if (nameValue.value.length > 2 && backValue.value.length === 0) {
+    return `주민등록번호를<br />입력해 주세요.`
+  } else if (backValue.value.length > 0) {
+    return `휴대폰번호를<br />입력해 주세요.`
+  }
+  return ''
+})
+
 const isShowAgreeModal = ref(false)
 const isShowDetailTerm = ref(false)
+
 const showDetailTerm = () => {
   isShowDetailTerm.value = !isShowDetailTerm.value
 }

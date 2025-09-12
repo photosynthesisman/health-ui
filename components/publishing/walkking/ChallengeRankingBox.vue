@@ -1,46 +1,72 @@
 <template>
-  <div class="ranking-wrap">
-    <div class="ranking-box">
-      <span
-        class="rangking"
-        :class="{
-          gold: rank === '1',
-          silver: rank === '2',
-          copper: rank === '3'
-        }"
-        >{{ rank }}</span
-      >
-      <span
-        v-if="isShowChange"
-        class="changed-rank"
-        :class="{
-          up: changed === 'up',
-          down: changed === 'down'
-        }"
-        >{{ changedRank }}</span
-      >
+  <div class="ranking-wrap" :class="{ me: isMe }">
+    <div class="flex align-center gap-12">
+      <div class="ranking-box">
+        <span
+          class="rangking"
+          :class="{
+            gold: rank === '1',
+            silver: rank === '2',
+            copper: rank === '3'
+          }"
+        >
+          {{ rank }}
+        </span>
+        <span
+          v-if="isShowChange"
+          class="changed-rank"
+          :class="{
+            up: changed === 'up',
+            down: changed === 'down'
+          }"
+          >{{ changedRank }}</span
+        >
+        <span v-if="isJoint" class="joint-rank">공동</span>
+      </div>
+      <div class="profile-img-box">
+        <img :src="fullImagePath" alt="프로필 이미지" />
+      </div>
+      <div class="profile-detail-box">
+        <p class="user-name">
+          <strong>{{ userName }}</strong
+          ><span class="name">{{ maskedUserName }}</span>
+        </p>
+        <span class="user-location">{{ userLocation }}</span>
+      </div>
+      <div class="steps-box">
+        <p :class="['total-steps', totalClass]">
+          {{ totalNumFormat }}
+          <span v-if="totalClass === 'cases'">건</span>
+        </p>
+        <p v-if="isShowSteps" class="use-item-steps">26,300 걸음</p>
+        <!-- 걸은 거리 -->
+        <p v-if="isShowDistance" class="use-item-distance">4.8km</p>
+      </div>
     </div>
-
-    <div class="profile-img-box">
-      <img :src="fullImagePath" alt="프로필 이미지" />
-    </div>
-    <div class="profile-detail-box">
-      <p class="user-name">{{ userName }}</p>
-      <span class="user-location">{{ userLocation }}</span>
-    </div>
-
-    <div class="steps-box">
-      <p :class="['total-steps', totalClass]">
-        {{ totalNumFormat }}
-        <span v-if="totalClass === 'cases'">건</span>
-      </p>
-      <p v-if="isShowSteps" class="use-item-steps">26,300 걸음</p>
+    <div v-if="isShowComActivity" class="activity-summary-box">
+      <dl v-if="board">
+        <dt>게시글&nbsp;</dt>
+        <dd>{{ board }}건</dd>
+      </dl>
+      <dl v-if="empathy">
+        <dt>공감&nbsp;</dt>
+        <dd>{{ empathy }}건</dd>
+      </dl>
+      <dl v-if="comment">
+        <dt>댓글&nbsp;</dt>
+        <dd>{{ comment }}건</dd>
+      </dl>
+      <dl v-if="connect">
+        <dt>접속&nbsp;</dt>
+        <dd>{{ connect }}건</dd>
+      </dl>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 // Props 정의
 import { computed } from 'vue'
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 const IMAGE_BASE_PATH = '/_nuxt/assets/images/'
 
 const fullImagePath = computed(() => {
@@ -57,10 +83,19 @@ const props = withDefaults(
     src?: string
     isShowChange?: boolean
     isShowSteps?: boolean
+    isShowDistance?: boolean // 걸은 거리 추가
+    userRealName?: string
     userName?: string
     userLocation?: string
     totalClass?: string
-    totalNum?: string
+    totalNumSteps?: number
+    isJoint?: boolean // 공동 순위
+    isMe?: boolean // 본인순위
+    isShowComActivity?: boolean // 커뮤니티 활동
+    board?: number // 게시글 수
+    empathy?: number // 공감 수
+    comment?: number // 댓글 수
+    connect?: number // 접속 수
   }>(),
   {
     src: 'img-profile.svg',
@@ -68,29 +103,80 @@ const props = withDefaults(
     changedRank: '-',
     isShowChange: true,
     isShowSteps: true,
+    userRealName: '',
     userName: '',
     userLocation: '',
     totalClass: '',
-    totalNum: ''
+    totalNumSteps: 0,
+    inJoint: false,
+    isMe: false,
+    isShowComActivity: false,
+    board: 0,
+    empathy: 0,
+    comment: 0,
+    connect: 0
   }
 )
 
 const totalNumFormat = computed(() => {
-  const num = Number(props.totalNum)
+  const num = Number(props.totalNumSteps)
   return isNaN(num) ? '0' : num.toLocaleString()
+})
+
+const maskedUserName = computed(() => {
+  if (!props.userRealName || props.userRealName.length === 1) {
+    return props.userRealName
+  }
+  if (props.userName.length === 2) {
+    return props.userName[0] + '*'
+  }
+  const first = props.userRealName[0]
+  const last = props.userRealName[props.userRealName.length - 1]
+  const middle = '*'.repeat(props.userRealName.length - 2)
+  return first + middle + last
 })
 </script>
 
 <style lang="scss" scoped>
 .ranking-wrap {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 1.2rem;
-  padding: 1.6rem 0.8rem 1.6rem 0;
-  border-bottom: 0.1rem solid #eee;
+  gap: 0.6rem;
+  padding: 1.6rem 0 1.6rem 0;
+  & + .ranking-wrap {
+    border-top: 0.1rem solid #eee;
+  }
   @media (max-width: 375px) {
     gap: 0.8rem;
+  }
+  &.me {
+    margin-inline: -0.8rem;
+    padding-inline: 1.6rem;
+    border-radius: 1.2rem;
+    border: 0.1rem solid #e2e2e2 !important;
+    box-shadow: 0 0 2.3rem 0 rgba(0, 0, 0, 0.06);
+    .profile-img-box {
+      position: relative;
+      border: 0.3rem solid #4c7ff7;
+      &::after {
+        content: 'me';
+        width: 3.3rem;
+        height: 1.9rem;
+        border-radius: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        bottom: -1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #4c7ff7;
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+    }
   }
 }
 .ranking-detail-box {
@@ -151,12 +237,23 @@ const totalNumFormat = computed(() => {
       }
     }
   }
+  .joint-rank {
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
 }
 .profile-img-box {
   width: 4.8rem;
   height: 4.8rem;
   border-radius: 50%;
   flex: 0 0 4.8rem;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
   @media (max-width: 375px) {
     width: 4rem;
     height: 4rem;
@@ -171,9 +268,18 @@ const totalNumFormat = computed(() => {
   text-align: left;
   .user-name {
     margin-bottom: 0.4rem;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 2.2rem;
-    @include mixin.ellipsis;
+    display: flex;
+    color: #2b2b2b;
+    gap: 0 0.2rem;
+    .name {
+      flex: 0 0 auto;
+    }
+    strong {
+      font-weight: 700;
+      @include mixin.ellipsis;
+    }
   }
   .user-location {
     font-size: 1.3rem;
@@ -208,6 +314,37 @@ const totalNumFormat = computed(() => {
       width: 1.8rem;
       height: 1.8rem;
       background: url(~/assets/images/walkingking/ico-booster.svg);
+    }
+  }
+}
+.activity-summary-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  dl {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 0.6rem;
+    dt,
+    dd {
+      font-size: 1.2rem;
+      line-height: 1.6rem;
+      color: #555;
+    }
+    &:last-child {
+      padding-right: 0;
+      &::after {
+        display: none;
+      }
+    }
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 0.1rem;
+      height: 1.2rem;
+      margin-left: 0.6rem;
+      background-color: #e2e2e2;
     }
   }
 }

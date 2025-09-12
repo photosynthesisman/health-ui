@@ -9,25 +9,11 @@
     class="pb-60"
   >
     <client-only>
-      <div class="mt-24 pb-32">
-        <h1 class="c-tit">
-          <span class="text"> 소속 보험사 또는 GA를<br />선택해 주세요 </span>
-        </h1>
-      </div>
+      <TitleSection title="소속 보험사 또는 GA를<br />선택해 주세요" class="mt-24 mb-32" />
       <LineTabs :tabs="tabs" class="mb-20" />
-
       <InputText inp-type="search" :placeholder="'GA명이나 주소를 검색해 주세요.'" />
+      <SubroInsuranceList :insurance-list="insuranceList" @click-agency="clickAgency" />
 
-      <div class="wrap-total-count">총 <strong>4</strong>건을 찾았어요.</div>
-      <div class="wrap-insurance-list">
-        <button v-for="item in insuranceList" :key="item.id" class="item" @click="clickAgency(item)">
-          <div class="wrap-info">
-            <div class="name-insurance">{{ item.label }}</div>
-            <div class="address-insurance">{{ item.address }}</div>
-          </div>
-          <img src="/assets/images/insu/icon-arrow-right.svg" alt="화살표 아이콘" class="icon-arrow" />
-        </button>
-      </div>
       <ButtonGroup class="is-fixed">
         <Button
           btn-type="primary"
@@ -47,7 +33,8 @@ import BaseBody from '~/components/layout/BaseBody.vue'
 import LineTabs, { type Tab } from '~/components/tabbar/LineTabs.vue'
 import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
-
+import TitleSection from '~/components/insu/TitleSection.vue'
+import SubroInsuranceList from '~/components/insu/SubroInsuranceList.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
 // import { useAsyncData } from '#app'
 
@@ -72,7 +59,7 @@ const insuranceList = ref([
   {
     id: 2,
     label: '가가효효 크로스플랜',
-    type: 'ga',
+    type: '보험사',
     address: '서울 영등포구 국제금융로 6길 33 여의도동'
   },
   {
@@ -97,9 +84,7 @@ const clickTab = (type: 'ga' | 'insuranceCompany') => {
 const clickAgency = async (item: any) => {
   const modalContent = `
     <div>
-      <div>
-        <i class="ri-information-line"></i>
-      </div>
+    <strong>${item.label}</strong>
       <div>보험설계사용 서비스에 가입하시겠어요?</div>
     </div>`
   const signupModalRes = await ConfirmModal.open({
@@ -122,7 +107,7 @@ const clickRegisterInsuComp = async (item?: any) => {
   })
 
   if (!res) return
-  navigateTo('/insu/claim/subrogation/serviceNotInUse/successSubrogation')
+  navigateTo('/insu/claim/subrogation/serviceNotInUse/registGA')
 }
 
 onMounted(() => {
@@ -131,42 +116,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped lang="scss">
-.wrap-total-count {
-  padding: 2.1rem 0;
-  font-weight: 500;
-  strong {
-    font-weight: 700;
-  }
-}
-.wrap-insurance-list {
-  border-top: 0.1rem solid #eeeeee;
-  margin: 0 -2rem;
-  padding: 0 2rem;
-  .item {
-    padding: 2rem 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    &:not(:first-child) {
-      border-top: 0.1rem solid #eeeeee;
-    }
-    .wrap-info {
-      margin-left: 0.4rem;
-      .name-insurance {
-        text-align: left;
-        font-weight: 700;
-      }
-      .address-insurance {
-        margin-top: 0.1rem;
-        font-size: 1.4rem;
-        color: #555555;
-      }
-    }
-    .icon-arrow {
-      margin-right: 0.4rem;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

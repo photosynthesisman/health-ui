@@ -9,12 +9,7 @@
     :has-tel-btn="true"
     class="pb-36"
   >
-    <div class="agree-wrap flex flex-col gap-10 pb-32 mt-24">
-      <h1 class="c-tit">
-        <span class="text"> 주민등록번호를 입력해 주세요 </span>
-      </h1>
-    </div>
-
+    <TitleSection title="주민등록번호를 입력해 주세요" class="mt-24 pb-32" />
     <InputRRN
       v-model="residentIdFront"
       label="주민등록번호"
@@ -23,7 +18,6 @@
       :readonly-back="false"
       @update:back-value="residentIdBack = $event"
     />
-
     <!-- 비대칭 버튼 레이아웃 asymmetric  -->
     <ButtonGroup class="is-fixed">
       <Button
@@ -34,24 +28,26 @@
         @click="clickAgreeTerm"
       />
     </ButtonGroup>
+    <Teleport to="body">
+      <BottomModal
+        :is-visible="isShowAgreeModal"
+        title="자동청구 가능 병원을 찾기 위해 동의가 필요해요."
+        :is-show-cancel-button="false"
+        confirm-button-text="동의하고 다음"
+        @close="isShowAgreeModal = false"
+        @confirm="clickNext"
+      >
+        <template #content>
+          <AgreeToTerms v-model="terms" :terms-list="termsList" @show-detail-term="showDetailTerm"
+        /></template>
+      </BottomModal>
+    </Teleport>
   </BaseBody>
-  <BottomModal
-    :is-visible="isShowAgreeModal"
-    title="자동청구 가능 병원을 찾기 위해
-동의가 필요해요."
-    :is-show-cancel-button="false"
-    confirm-button-text="동의하고 다음"
-    @close="isShowAgreeModal = false"
-    @confirm="clickNext"
-  >
-    <template #content>
-      <AgreeToTerms v-model="terms" :terms-list="termsList" @show-detail-term="showDetailTerm"
-    /></template>
-  </BottomModal>
 </template>
 
 <script setup lang="ts">
 import BaseBody from '~/components/layout/BaseBody.vue'
+import TitleSection from '~/components/insu/TitleSection.vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'

@@ -49,6 +49,7 @@ const displayText = computed(() => {
   gap: 1.6rem;
   overflow: hidden;
   flex-direction: column;
+  justify-content: space-between;
   padding: 1.6rem 2rem 2rem;
   border-radius: 2rem;
   background: #f4f4f4;
@@ -75,6 +76,7 @@ const displayText = computed(() => {
   }
   .record-number {
     color: #4c7ff7;
+    text-align: right;
   }
 }
 </style>

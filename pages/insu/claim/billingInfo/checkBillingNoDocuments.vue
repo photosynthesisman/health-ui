@@ -6,198 +6,59 @@
     :has-notification="true"
     :has-reward="false"
     :has-add-text-left="true"
-    class="pb-36"
   >
-    <h1 class="c-tit mt-24 mb-24">
-      <span class="text"> 보험금 청구 내역을<br />확인할 수 있어요 </span>
-    </h1>
+    <TitleSection title="보험금 청구 내역을<br />확인할 수 있어요" class="mt-24 mb-24" />
     <Button btn-type="line" element-type="button" aria-label="처방전 조회" />
     <hr class="hr-section ml-n20 mr-n20 mb-8" />
-    <LineTabsStyle :tabs="lineTabs" :active-index="lineActiveIndex" @tab-click="handleLineTabClick" class="" />
-    <div class="total-claim">
-      <div class="total">총 <strong>3</strong>건</div>
-      <div class="sort-insurance">
-        <button class="item">전체</button>
-        <button class="item">6개월</button>
-        <button class="item" @click="clickSort">최신순<i class="icon-arrow-down"></i></button>
-      </div>
-    </div>
-
+    <LineTabsStyle :tabs="lineTabs" :active-index="lineActiveIndex" class="" @tab-click="handleLineTabClick" />
+    <TotalItemSort :total="claimItems.length" :buttons="sortButtons" @button-click="clickSort" />
     <!-- ToDo: 기간 내, 청구내역이 없을때 활성화 -->
-    <!-- <div class="wrap-empty">
-      <img src="/assets/images/insu/icon-empty.svg" alt="아이콘:검색없음" />
-      <div class="text">조회한 기간 내에<br />청구한 내역이 없어요.</div>
-    </div> -->
-
-    <div class="wrap-claim-list">
-      <div class="item">
-        <div class="wrap-status">
-          <div class="wrap-label">
-            <label for="status" class="label out">통원</label>
-            <label for="status" class="label done">청구완료</label>
-            <label for="status" class="label">자동청구</label>
-          </div>
-          <div class="date">2025.03.25</div>
-        </div>
-        <div class="wrap-insurance-company">
-          <div class="wrap-insurance-info">
-            <img src="/assets/images/insu/logo_kbbank.svg" alt="KB보험회사" />
-            <span class="text">KB손해보험</span>
-          </div>
-          <i class="icon-arrow-right"></i>
-        </div>
-        <div class="claim-desc-list">
-          <div class="claim-item">
-            <div class="tit">설계사(비서)</div>
-            <div class="desc">박미란</div>
-          </div>
-          <div class="claim-item">
-            <div class="tit">피보험자(치료 받은 분)</div>
-            <div class="desc">김레몬</div>
-          </div>
-          <div class="claim-item">
-            <div class="tit">수익자(보험 수령인)</div>
-            <div class="desc">이헬스</div>
-          </div>
-          <div class="claim-item">
-            <div class="tit">청구사유</div>
-            <div class="desc">[일반상해] 운동중 발목 접질림</div>
-          </div>
-        </div>
-        <div class="wrap-detail">
-          <div class="detail-item">
-            <div class="tit">안과</div>
-            <div class="desc">2025.03.29</div>
-          </div>
-          <div class="detail-item">
-            <div class="tit">안과</div>
-            <div class="desc">2025.03.18</div>
-          </div>
-        </div>
-      </div>
-      <div class="item">
-        <div class="wrap-status">
-          <div class="wrap-label">
-            <label for="status" class="label in">입원</label>
-            <label for="status" class="label able">재청구가능</label>
-            <label for="status" class="label">자동청구</label>
-          </div>
-          <div class="date">2025.03.25</div>
-        </div>
-        <div class="wrap-insurance-company">
-          <div class="wrap-insurance-info">
-            <img src="/assets/images/insu/logo_kbbank.svg" alt="KB보험회사" />
-            <span class="text">KB손해보험</span>
-          </div>
-          <i class="icon-arrow-right"></i>
-        </div>
-        <div class="claim-desc-list">
-          <div class="claim-item">
-            <div class="tit">설계사(비서)</div>
-            <div class="desc">박미란</div>
-          </div>
-          <div class="claim-item">
-            <div class="tit">피보험자(치료 받은 분)</div>
-            <div class="desc">김레몬</div>
-          </div>
-          <div class="claim-item">
-            <div class="tit">수익자(보험 수령인)</div>
-            <div class="desc">이헬스</div>
-          </div>
-          <div class="claim-item">
-            <div class="tit">청구사유</div>
-            <div class="desc">[일반상해] 운동중 발목 접질림</div>
-          </div>
-        </div>
-        <div class="wrap-detail">
-          <div class="detail-item">
-            <div class="tit">안과</div>
-            <div class="desc">2025.03.29</div>
-          </div>
-        </div>
-      </div>
-      <div class="item">
-        <div class="wrap-status">
-          <div class="wrap-label">
-            <label for="status" class="label out">통원</label>
-            <label for="status" class="label fail">청구실패</label>
-          </div>
-          <div class="date">2025.03.25</div>
-        </div>
-        <div class="wrap-insurance-company">
-          <div class="wrap-insurance-info">
-            <img src="/assets/images/insu/logo_kbbank.svg" alt="KB보험회사" />
-            <span class="text">KB손해보험</span>
-          </div>
-          <i class="icon-arrow-right"></i>
-        </div>
-        <div class="claim-desc-list">
-          <div class="claim-item">
-            <div class="tit">설계사(비서)</div>
-            <div class="desc">박미란</div>
-          </div>
-          <div class="claim-item">
-            <div class="tit">피보험자(치료 받은 분)</div>
-            <div class="desc">김레몬</div>
-          </div>
-          <div class="claim-item">
-            <div class="tit">수익자(보험 수령인)</div>
-            <div class="desc">이헬스</div>
-          </div>
-          <div class="claim-item">
-            <div class="tit">청구사유</div>
-            <div class="desc">[일반상해] 운동중 발목 접질림</div>
-          </div>
-        </div>
-        <div class="wrap-detail">
-          <div class="detail-item">
-            <div class="tit">안과</div>
-            <div class="desc">2025.03.29</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <BottomModal
-      :is-visible="isShowSortModal"
-      title="조회 조건 설정"
-      :is-show-cancel-button="false"
-      confirm-button-text="조회하기"
-      @close="isShowSortModal = false"
-    >
-      <template #content>
-        <NoticeBox :text="'청구내역은 최대 3년전까지 가능해요'" />
-        <FlexSection class="gap-12 mt-16">
-          <FlexColDiv class="gap-6">
-            <InputLabelText label="조회기간" />
-            <SegmentedTabs
-              :tabs="segmentedTabs1"
-              :active-key="activeSegmentedTab1"
-              @tab-change="onSegmentedTabChange1"
-            />
-          </FlexColDiv>
-          <FlexColDiv class="gap-6">
-            <InputLabelText label="조회기간" />
-            <SegmentedTabs
-              :tabs="segmentedTabs2"
-              :active-key="activeSegmentedTab2"
-              @tab-change="onSegmentedTabChange2"
-            />
-          </FlexColDiv>
-          <FlexColDiv class="gap-6">
-            <InputLabelText label="정렬순서" />
-            <SegmentedTabsStyle
-              :tabs="segmentedTabsSort"
-              :active-index="segmentedActiveIndex"
-              @tab-click="handleSegmentedTabClick"
-            />
-          </FlexColDiv>
-        </FlexSection>
-      </template>
-    </BottomModal>
+    <InsuEmpty v-if="!claimItems || claimItems.length === 0" title="조회한 기간 내에<br />청구한 내역이 없어요." />
+    <CheckBillingItem v-else :items="claimItems" />
+    <Teleport to="body">
+      <BottomModal
+        :is-visible="isShowSortModal"
+        title="조회 조건 설정"
+        :is-show-cancel-button="false"
+        confirm-button-text="조회하기"
+        @close="isShowSortModal = false"
+      >
+        <template #content>
+          <NoticeBox :text="'청구내역은 최대 3년전까지 가능해요'" />
+          <FlexSection class="gap-12 mt-16">
+            <FlexColDiv class="gap-6">
+              <InputLabelText label="조회기간" />
+              <SegmentedTabs
+                :tabs="segmentedTabs1"
+                :active-key="activeSegmentedTab1"
+                @tab-change="onSegmentedTabChange1"
+              />
+            </FlexColDiv>
+            <FlexColDiv class="gap-6">
+              <InputLabelText label="조회기간" />
+              <SegmentedTabs
+                :tabs="segmentedTabs2"
+                :active-key="activeSegmentedTab2"
+                @tab-change="onSegmentedTabChange2"
+              />
+            </FlexColDiv>
+            <FlexColDiv class="gap-6">
+              <InputLabelText label="정렬순서" />
+              <SegmentedTabsStyle
+                :tabs="segmentedTabsSort"
+                :active-index="segmentedActiveIndex"
+                @tab-click="handleSegmentedTabClick"
+              />
+            </FlexColDiv>
+          </FlexSection>
+        </template>
+      </BottomModal>
+    </Teleport>
   </BaseBody>
 </template>
 
 <script setup lang="ts">
+import TitleSection from '~/components/insu/TitleSection.vue'
 import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
 import SegmentedTabs from '~/components/tabbar/SegmentedTabs.vue'
 import SegmentedTabsStyle from '~/components/common/tab/SegmentedTabs.vue'
@@ -209,6 +70,10 @@ import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import Button from '~/components/publishing/button/Button.vue'
 import LineTabsStyle, { type Tab } from '~/components/common/tab/LineTabs.vue'
 import type { BaseModalProps } from '~/types/common/modal.type'
+import TotalItemSort from '~/components/publishing/insu/billingInfo/TotalItemSort.vue'
+import InsuEmpty from '~/components/insu/InsuEmpty.vue'
+import CheckBillingItem from '~/components/publishing/insu/billingInfo/CheckBillingItem.vue'
+
 // LineTabs 데이터
 const lineTabs: Tab[] = [
   { name: '서류없이 청구', code: 'no-docs' },
@@ -282,10 +147,19 @@ const props = withDefaults(defineProps<DateRangeModalProps>(), {
   initialPeriodType1: 'segment1',
   initialPeriodType2: 'segment5'
 })
+
 const isShowSortModal = ref(false)
 const clickSort = () => {
   isShowSortModal.value = !isShowSortModal.value
 }
+
+// Sort 버튼명 배열
+const sortButtons = [
+  { label: '전체', value: 'all' },
+  { label: '6개월', value: '6months' },
+  { label: '최신순', value: 'latest', icon: true }
+]
+
 // SegmentedTabs 설정
 const segmentedTabs1 = ref([
   { title: '전체', key: 'segment1' },
@@ -318,139 +192,57 @@ const onSegmentedTabChange2 = (key: string) => {
 // 반응형 상태
 const activeSegmentedTab1 = ref(props.initialPeriodType1 || 'segment1')
 const activeSegmentedTab2 = ref(props.initialPeriodType2 || 'segment5')
+
+// 청구내역 데아터
+const claimItems = [
+  {
+    id: 1,
+    treatmentType: 'out',
+    claimStatus: 'done',
+    autoBilling: true,
+    date: '2025.03.25',
+    insuranceLogo: '/_nuxt/assets/images/insu/logo_kbbank.svg',
+    insuranceName: 'KB손해보험',
+    designer: '박미란',
+    insurant: '김레몬',
+    beneficiary: '이헬스',
+    billingReason: '[일반상해] 운동중 발목 접질림',
+    details: [
+      { department: '안과', visitDate: '2025.03.29' },
+      { department: '정형외과', visitDate: '2025.03.18' }
+    ]
+  },
+  {
+    id: 2,
+    treatmentType: 'in',
+    claimStatus: 'able',
+    autoBilling: true,
+    date: '2025.03.25',
+    insuranceLogo: '/_nuxt/assets/images/insu/logo_kbbank.svg',
+    insuranceName: 'KB손해보험',
+    designer: '박미란',
+    insurant: '김레몬',
+    beneficiary: '이헬스',
+    billingReason: '[일반상해] 운동중 발목 접질림',
+    details: [{ department: '안과', visitDate: '2025.03.29' }]
+  },
+  {
+    id: 3,
+    treatmentType: 'out',
+    claimStatus: 'fail',
+    autoBilling: false,
+    date: '2025.03.25',
+    insuranceLogo: '/_nuxt/assets/images/insu/logo_kbbank.svg',
+    insuranceName: 'KB손해보험',
+    designer: '박미란',
+    insurant: '김레몬',
+    beneficiary: '이헬스',
+    billingReason: '[일반상해] 운동중 발목 접질림',
+    details: [{ department: '피부과', visitDate: '2025.03.29' }]
+  }
+]
 </script>
 <style scoped lang="scss">
-// 청구내역
-.wrap-claim-list {
-  margin: 0 -2rem;
-  padding: 2rem;
-  background-color: #f4f4f4;
-  .item {
-    padding: 2rem;
-    background-color: #fff;
-    border-radius: 1.2rem;
-    &:not(:first-child) {
-      margin-top: 1.2rem;
-    }
-    .wrap-status {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .wrap-label {
-        @include mixin.flex-container(items-center);
-        gap: 0.4rem;
-        .label {
-          padding: 0.3rem 0.6rem;
-          border-radius: 0.4rem;
-          font-size: 1.2rem;
-          font-weight: 500;
-          line-height: 130%;
-          color: #555555;
-          background-color: #eeeeee;
-          // 동의대기
-          &.ready {
-            background-color: #bd9600;
-            color: #fff;
-          }
-          // 청구완료
-          &.done {
-            background-color: #629105;
-            color: #fff;
-          }
-          // 통원
-          &.out {
-            background-color: #fef4cc;
-            color: #8d7000;
-          }
-          // 입원
-          &.in {
-            background-color: #eaf2cc;
-            color: #506a1d;
-          }
-          // 실패
-          &.fail {
-            background-color: #c82626;
-            color: #fff;
-          }
-          // 가능
-          &.able {
-            background-color: #c36f00;
-            color: #fff;
-          }
-        }
-      }
-      .date {
-        font-size: 1.4rem;
-        color: #555555;
-      }
-    }
-    .wrap-insurance-company {
-      margin-top: 1.6rem;
-      @include mixin.flex-container(justify-between items-center);
-      .wrap-insurance-info {
-        display: flex;
-        align-items: center;
-        gap: 1.6rem;
-        img {
-          width: 4.8rem;
-          height: auto;
-        }
-        .text {
-          font-weight: 700;
-        }
-      }
-      .icon-arrow-right {
-        display: inline-block;
-        width: 2.4rem;
-        height: 2.4rem;
-        background: url('/assets/images/insu/icon-arrow-right.svg') no-repeat center center;
-        background-size: 100%;
-      }
-    }
-    .claim-desc-list {
-      margin-top: 1.6rem;
-      .claim-item {
-        padding: 0 0.4rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        &:not(:first-child) {
-          margin-top: 1.2rem;
-        }
-        .tit {
-          font-size: 1.3rem;
-          font-weight: 500;
-          color: #959595;
-        }
-        .desc {
-          font-size: 1.4rem;
-          font-weight: 600;
-        }
-      }
-    }
-    .wrap-detail {
-      margin-top: 1.2rem;
-      padding: 1.6rem 2rem;
-      border-radius: 1.2rem;
-      background-color: #f4f4f4;
-      .detail-item {
-        @include mixin.flex-container(justify-between items-center);
-        &:not(:first-child) {
-          margin-top: 1.2rem;
-        }
-        .tit {
-          color: #959595;
-        }
-        .tit,
-        .desc {
-          font-size: 1.3rem;
-          font-weight: 500;
-        }
-      }
-    }
-  }
-}
-
 // .custom-select-options {
 //   margin: 0 -2rem;
 //   .custom-option-item {
@@ -487,77 +279,4 @@ const activeSegmentedTab2 = ref(props.initialPeriodType2 || 'segment5')
 //     }
 //   }
 // }
-.total-claim {
-  width: 100%;
-  padding: 2.1rem 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  .total {
-    font-size: 1.6rem;
-    font-weight: 500;
-    line-height: 140%;
-    color: #2b2b2b;
-    strong {
-      font-weight: 700;
-    }
-  }
-  .sort-insurance {
-    .item {
-      position: relative;
-      padding: 0 1.2rem;
-      font-weight: 500;
-      color: #555555;
-      i.icon-arrow-down {
-        margin-left: 0.4rem;
-        display: inline-block;
-        width: 2rem;
-        height: 2rem;
-        background: url('/assets/images/insu/icon-arrow-down.svg') no-repeat center center;
-        background-size: 100%;
-        transition: transform 0.3s ease;
-        transform-origin: center center;
-
-        &.rotated {
-          transform: rotate(180deg);
-        }
-      }
-      &:not(:first-child) {
-        &::before {
-          content: '';
-          width: 0.1rem;
-          height: 1.2rem;
-          position: absolute;
-          top: 50%;
-          left: 0;
-          transform: translateY(-50%);
-          background-color: #e2e2e2;
-        }
-      }
-      &:last-child {
-        padding-right: 0;
-      }
-    }
-  }
-}
-
-// 조회기간 내 청구 내역 없음
-.wrap-empty {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 20rem);
-  img {
-    width: 8rem;
-    height: 8rem;
-  }
-  .text {
-    margin-top: 1.6rem;
-    font-size: 1.8rem;
-    font-weight: 500;
-    color: #555555;
-    text-align: center;
-  }
-}
 </style>

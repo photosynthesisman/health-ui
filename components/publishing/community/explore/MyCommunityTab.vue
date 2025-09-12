@@ -6,14 +6,17 @@
         <Button
           btn-type="line"
           element-type="button"
-          aria-label="커뮤니티 탈퇴하기"
+          :aria-label="isEditing ? '완료' : '커뮤니티 탈퇴하기'"
           class="xxs"
           :width="11.4"
           :border-radius="14"
           @click="toggleEditMode"
-        />
+        >
+          {{ isEditing ? '완료' : '커뮤니티 탈퇴하기' }}
+        </Button>
       </FlexRowDiv>
       <div class="community-list">
+        <!-- 커뮤니티 삭제 버튼 노출 -->
         <CommunityLink
           v-for="(community, index) in displayedCommunities"
           :key="community.id"
@@ -24,7 +27,7 @@
           :community-title="community.communityTitle"
           :community-text="community.communityText"
           :community-member="community.communityMember"
-          :is-editing="isEditing"
+          :is-editing="community.isEditing"
           @remove-community="removeCommunity(community, index)"
         />
 
@@ -50,27 +53,30 @@
         <img src="~/assets/images/community/img-no-community.svg" alt="" />
       </div>
     </div>
+    <Teleport to="body">
+      <AlertModal
+        :is-visible="isShowAlertModal"
+        :content="alertModalContent"
+        confirm-button-text="확인"
+        @close="toggleAlertModal"
+        @confirm="toggleAlertModal"
+      />
+      <ConfirmModal
+        :is-visible="showConfirmModal"
+        :is-show-close-button="false"
+        :html="ConfirmModalContent"
+        confirm-button-text="탈퇴하기"
+        cancel-button-text="취소하기"
+        @confirm="handleRemoveConfirm"
+        @cancel="closeConfirmModal"
+        @close="closeConfirmModal"
+      />
+    </Teleport>
   </section>
-  <AlertModal
-    :is-visible="isShowAlertModal"
-    :content="alertModalContent"
-    confirm-button-text="확인"
-    @close="toggleAlertModal"
-    @confirm="toggleAlertModal"
-  />
-  <ConfirmModal
-    :is-visible="showConfirmModal"
-    :is-show-close-button="false"
-    :html="ConfirmModalContent"
-    confirm-button-text="탈퇴하기"
-    cancel-button-text="취소하기"
-    @confirm="handleRemoveConfirm"
-    @cancel="closeConfirmModal"
-    @close="closeConfirmModal"
-  />
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, watch, onUnmounted } from 'vue'
 import ConfirmModal from '~/components/common/modal/ConfirmModal.vue'
 import TitleBox from '~/components/common/TitleBox.vue'
 import CommunityLink from '~/components/publishing/community/home/CommunityLink.vue'
@@ -86,6 +92,7 @@ interface CommunityType {
   communityText: string
   communityMember: number
   hasNewPosts: boolean
+  isEditing: boolean // 삭제(탈퇴)버튼 노출
 }
 // 더미 데이터 (실제로는 API에서 가져옴)
 const dummyData = [
@@ -123,7 +130,6 @@ const dummyData = [
     communityTitle: '걷기왕 챌린지',
     communityText: '챌린지 함께하면 리워드가 팡팡!',
     communityMember: 23,
-
     hasNewPosts: true
   },
   {
@@ -151,7 +157,6 @@ const dummyData = [
     communityTitle: '걷기왕 챌린지',
     communityText: '챌린지 함께하면 리워드가 팡팡!',
     communityMember: 23,
-
     hasNewPosts: true
   },
   {
@@ -179,7 +184,6 @@ const dummyData = [
     communityTitle: '걷기왕 챌린지',
     communityText: '챌린지 함께하면 리워드가 팡팡!',
     communityMember: 23,
-
     hasNewPosts: true
   },
   {
@@ -209,11 +213,16 @@ const hasMoreData = ref(true)
 const currentPage = ref(0)
 const itemsPerPage = 10
 const scrollTrigger = ref(null)
-const isEditing = ref(false)
+const isEditing = ref(false) // 삭제(탈퇴)버튼 노출 여부
 
 //  '탈퇴하기' 버튼 클릭 시 호출
 const toggleEditMode = () => {
   isEditing.value = !isEditing.value
+  // 모든 커뮤니티 아이템의 isEditing 상태 업데이트
+  displayedCommunities.value = displayedCommunities.value.map(community => ({
+    ...community,
+    isEditing: isEditing.value
+  }))
 }
 // 초기 데이터 로드
 onMounted(() => {
@@ -224,7 +233,10 @@ onMounted(() => {
 // 초기 10개 커뮤니티 로드
 const loadInitialCommunities = () => {
   if (allCommunities.value.length > 0) {
-    const initialItems = allCommunities.value.slice(0, itemsPerPage)
+    const initialItems = allCommunities.value.slice(0, itemsPerPage).map(item => ({
+      ...item,
+      isEditing: false // 초기값 설정
+    }))
     displayedCommunities.value = initialItems
     currentPage.value = 1
 
@@ -245,7 +257,10 @@ const loadMoreCommunities = async () => {
 
     const startIndex = currentPage.value * itemsPerPage
     const endIndex = startIndex + itemsPerPage
-    const newItems = allCommunities.value.slice(startIndex, endIndex)
+    const newItems = allCommunities.value.slice(startIndex, endIndex).map(item => ({
+      ...item,
+      isEditing: isEditing.value // 현재 편집 모드 상태 적용
+    }))
 
     if (newItems.length > 0) {
       displayedCommunities.value.push(...newItems)
@@ -328,6 +343,20 @@ const openExpertMemberModal = () => {
 const closeConfirmModal = () => {
   showConfirmModal.value = false
 }
+
+// emit 정의
+const emit = defineEmits<{
+  'update:count': [count: number]
+}>()
+
+// 커뮤니티 개수가 변경될 때마다 부모로 전달
+watch(
+  () => allCommunities.value.length,
+  (newCount) => {
+    emit('update:count', newCount)
+  },
+  { immediate: true }
+)
 
 // 커뮤니티 항목 제거 함수
 const removeCommunity = (community: CommunityType, index: number) => {

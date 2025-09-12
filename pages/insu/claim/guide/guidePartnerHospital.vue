@@ -10,12 +10,11 @@
         <Checkbox id="checkBox2" v-model="checkbox2" :aria-label="'MY병원'" />
       </FlexRowDiv>
       <PartnerHospitalItem :hospitals="hospitals1" />
-      <EmptyResult v-if="hospitals1 && hospitals1.length === 0" :title="'검색 결과가 없어요.'" :is-absolute="true">
-        <div class="text-center mt-8" style="color: #555">
-          병원 이름을 잘못 입력했거나<br />
-          아직 제휴 전인 병원이예요.
-        </div>
-      </EmptyResult>
+      <InsuEmpty
+        v-if="hospitals1 && hospitals1.length === 0"
+        title="검색 결과가 없어요."
+        sub-title="병원 이름을 잘못 입력했거나<br />아직 제휴 전인 병원이예요."
+      />
     </FlexSection>
 
     <!-- 입원 -->
@@ -35,46 +34,46 @@
         <Checkbox id="checkBox4" v-model="checkbox4" :aria-label="'MY병원'" />
       </FlexRowDiv>
       <PartnerHospitalItem :hospitals="hospitals2" />
-      <EmptyResult v-if="hospitals2 && hospitals2.length === 0" :title="'검색 결과가 없어요.'" :is-absolute="true">
-        <div class="text-center mt-8" style="color: #555">
-          병원 이름을 잘못 입력했거나<br />
-          아직 제휴 전인 병원이예요.
-        </div>
-      </EmptyResult>
+      <InsuEmpty
+        v-if="hospitals2 && hospitals2.length === 0"
+        title="검색 결과가 없어요."
+        sub-title="병원 이름을 잘못 입력했거나<br />아직 제휴 전인 병원이예요."
+      />
     </FlexSection>
 
     <!-- 의료영상공유 -->
     <FlexSection v-if="lineActiveIndex === 2" class="mt-20 flex-1">
       <InputText inp-type="search" :placeholder="'병원 이름 검색'" />
       <PartnerHospitalItem :hospitals="hospitals3" :has-btn="false" :has-line="false" />
-      <EmptyResult v-if="hospitals3 && hospitals3.length === 0" :title="'검색 결과가 없어요.'" :is-absolute="true">
-        <div class="text-center mt-8" style="color: #555">
-          병원 이름을 잘못 입력했거나<br />
-          아직 제휴 전인 병원이예요.
-        </div>
-      </EmptyResult>
+      <InsuEmpty
+        v-if="hospitals3 && hospitals3.length === 0"
+        title="검색 결과가 없어요."
+        sub-title="병원 이름을 잘못 입력했거나<br />아직 제휴 전인 병원이예요."
+      />
     </FlexSection>
+    <Teleport to="body">
+      <!-- 보험사 선택 모달 -->
+      <BottomModal
+        :is-visible="isShowInsuranceModal"
+        title="보험사를 선택해 주세요."
+        :is-show-cancel-button="false"
+        :is-show-confirm-button="true"
+        confirm-button-text="확인"
+        @close="closeInsuranceModal"
+        @confirm="selectInsurance"
+      >
+        <template #content>
+          <InsuranceSelectionModal
+            :round-tabs="roundTabs"
+            :active-round-tab="activeRoundTab"
+            :insurance-companies="insuranceCompanies"
+            :selected-insurance="selectedInsurance"
+            @tab-change="onRoundTabChange"
+            @select-option="selectInsuranceOption"
+        /></template>
+      </BottomModal>
+    </Teleport>
   </BaseBody>
-  <!-- 보험사 선택 모달 -->
-  <BottomModal
-    :is-visible="isShowInsuranceModal"
-    title="보험사를 선택해 주세요."
-    :is-show-cancel-button="false"
-    :is-show-confirm-button="true"
-    confirm-button-text="확인"
-    @close="closeInsuranceModal"
-    @confirm="selectInsurance"
-  >
-    <template #content>
-      <InsuranceSelectionModal
-        :round-tabs="roundTabs"
-        :active-round-tab="activeRoundTab"
-        :insurance-companies="insuranceCompanies"
-        :selected-insurance="selectedInsurance"
-        @tab-change="onRoundTabChange"
-        @select-option="selectInsuranceOption"
-    /></template>
-  </BottomModal>
 </template>
 
 <script setup lang="ts">
@@ -91,6 +90,7 @@ import InsuranceSelectionModal from '~/components/insu/InsuranceSelectionModal.v
 import Select from '~/components/publishing/input/Select.vue'
 import BottomModal from '~/components/common/modal/BottomModal.vue'
 import InfoText from '~/components/insu/InfoText.vue'
+import InsuEmpty from '~/components/insu/InsuEmpty.vue'
 import EmptyResult from '~/components/publishing/wholeMenu/EmptyResult.vue'
 // LineTabs 데이터
 const lineTabs: Tab[] = [

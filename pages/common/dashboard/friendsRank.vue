@@ -6,107 +6,64 @@
     :has-add-text="true"
     :add-text-click-enabled="true"
     :add-text="addTextDisplay"
+    class="space-between"
   >
-    <ChallengeRankingBox
-      rank="1"
-      changed="up"
-      changed-rank="1"
-      userName="곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이"
-      userLocation="서울 금천 금천"
-      totalNum="3"
-    />
-    <ChallengeRankingBox
-      rank="2"
-      changed="up"
-      changed-rank="1"
-      userName="곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이"
-      userLocation="서울 금천 금천"
-      totalNum="3"
-    />
-    <ChallengeRankingBox
-      rank="3"
-      changed="up"
-      changed-rank="1"
-      userName="곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이"
-      userLocation="서울 금천 금천"
-      totalNum="3"
-    />
-    <ChallengeRankingBoxMe rank="4" changed="up" changed-rank="2" />
-    <ChallengeRankingBox
-      rank="5"
-      changed="up"
-      changed-rank="1"
-      userName="곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이"
-      userLocation="서울 금천 금천"
-      totalNum="3"
-    />
-    <ChallengeRankingBox
-      rank="6"
-      changed="up"
-      changed-rank="1"
-      userName="곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이"
-      userLocation="서울 금천 금천"
-      totalNum="3"
-    />
-    <ChallengeRankingBox
-      rank="7"
-      changed="up"
-      changed-rank="1"
-      userName="곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이"
-      userLocation="서울 금천 금천"
-      totalNum="3"
-    />
-    <ChallengeRankingBox
-      rank="8"
-      changed="up"
-      changed-rank="1"
-      userName="곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이"
-      userLocation="서울 금천 금천"
-      totalNum="3"
-    />
-    <ChallengeRankingBox
-      rank="9"
-      changed="down"
-      changed-rank="7"
-      userName="곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이"
-      userLocation="서울 금천 금천"
-      totalNum="3"
-    />
-    <ChallengeRankingBox
-      rank="10"
-      changed="up"
-      changed-rank="1"
-      userName="곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이"
-      userLocation="서울 금천 금천"
-      totalNum="3"
-    />
-
-    <InviteFriendBox class="mt-16" />
-
-    <BottomModal
-      :is-visible="isShowRankingModal"
-      title="랭킹 기준 선택"
-      :is-show-cancel-button="true"
-      :is-show-confirm-button="true"
-      :is-show-close-button="true"
-      @close="cancelRankingSelection"
-      @cancel="cancelRankingSelection"
-      @confirm="confirmRankingSelection"
-    >
-      <template #content>
-        <div class="ranking-options">
-          <div
-            v-for="option in rankingOptions"
-            :key="option.value"
-            :class="['option-item', { selected: tempSelectedRanking === option.value }]"
-            @click="selectRankingOption(option)"
-          >
-            <span class="option-label">{{ option.label }}</span>
-            <i v-if="tempSelectedRanking === option.value" class="check-icon icon"></i>
-          </div>
-        </div>
+    <div class="rank-box-list flex flex-col">
+      <template v-for="(item, index) in rankingData" :key="item.rank">
+        <ChallengeRankingBoxMe
+          v-if="item.isMe"
+          :is-show-steps="false"
+          :is-show-distance="true"
+          :rank="item.rank"
+          :changed="item.changed"
+          :changed-rank="item.changedRank"
+          :total-num-steps="item.totalNumSteps"
+        />
+        <ChallengeRankingBox
+          v-else
+          :rank="item.rank"
+          :changed="item.changed"
+          :changed-rank="item.changedRank"
+          :user-nick-name="item.userNickName"
+          :user-name="item.userName"
+          :user-location="item.userLocation"
+          :total-num-steps="item.totalNumSteps"
+          :is-show-steps="false"
+          :is-show-distance="true"
+        />
       </template>
-    </BottomModal>
+    </div>
+    <!-- 친구 리스트 없을때 -->
+    <NoFreindsList v-if="rankingData.length === 0" />
+    <!-- 친구 초대 배너 (친구 length = rankingData.length - (본인)) -->
+    <InviteFriendBox :friend-count="rankingData.length - 1" />
+
+    <Teleport to="body">
+      <BottomModal
+        :is-visible="isShowRankingModal"
+        title="랭킹 기준 선택"
+        :is-show-cancel-button="true"
+        :is-show-confirm-button="true"
+        :is-show-close-button="true"
+        @close="cancelRankingSelection"
+        @cancel="cancelRankingSelection"
+        @confirm="confirmRankingSelection"
+      >
+        <template #content>
+          <div class="ranking-options">
+            <div
+              v-for="option in rankingOptions"
+              :key="option.value"
+              :class="['option-item', { selected: tempSelectedRanking === option.value }]"
+              @click="selectRankingOption(option)"
+            >
+              <span class="option-label">{{ option.label }}</span>
+              <i v-if="tempSelectedRanking === option.value" class="check-icon icon"></i>
+            </div>
+          </div>
+        </template>
+      </BottomModal>
+    </Teleport>
   </BaseBody>
 </template>
 
@@ -116,6 +73,8 @@ import BaseBody from '~/components/layout/BaseBody.vue'
 import ChallengeRankingBox from '~/components/publishing/walkking/ChallengeRankingBox.vue'
 import ChallengeRankingBoxMe from '~/components/publishing/walkking/ChallengeRankingBoxMe.vue'
 import InviteFriendBox from '~/components/publishing/dashboard/InviteFriendBox.vue'
+
+import NoFreindsList from '~/components/publishing/dashboard/NoFreindsList.vue'
 import BottomModal from '~/components/common/modal/BottomModal.vue'
 
 interface RankingOption {
@@ -123,11 +82,114 @@ interface RankingOption {
   label: string
 }
 
+interface RankingItem {
+  rank: string
+  changed: 'up' | 'down' | 'same'
+  changedRank: string
+  userNickName?: string
+  userName?: string
+  userLocation?: string
+  totalNumSteps: string
+  isMe?: boolean
+}
+
 // 랭킹 옵션 데이터
 const rankingOptions: RankingOption[] = [
   { value: 'steps_daily', label: '걸음수/일' },
   { value: 'steps_total', label: '누적걸음수' }
 ]
+
+// 랭킹 데이터
+const rankingData = ref<RankingItem[]>([
+  {
+    rank: '1',
+    changed: 'up',
+    changedRank: '1',
+    userNickName: '곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이',
+    userName: '김기',
+    userLocation: '서울 금천 금천',
+    totalNumSteps: '123123123'
+  },
+  {
+    rank: '2',
+    changed: 'up',
+    changedRank: '1',
+    userNickName: '곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이',
+    userName: '김뭐시기',
+    userLocation: '서울 금천 금천',
+    totalNumSteps: '123123123'
+  },
+  {
+    rank: '3',
+    changed: 'up',
+    changedRank: '1',
+    userNickName: '곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이',
+    userName: '김뭐시기',
+    userLocation: '서울 금천 금천',
+    totalNumSteps: '30000'
+  },
+  {
+    rank: '4',
+    changed: 'up',
+    changedRank: '2',
+    totalNumSteps: '50000',
+    isMe: true
+  },
+  {
+    rank: '5',
+    changed: 'up',
+    changedRank: '1',
+    userNickName: '곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이',
+    userName: '홍길동',
+    userLocation: '서울 금천 금천',
+    totalNumSteps: '9999999'
+  },
+  {
+    rank: '6',
+    changed: 'up',
+    changedRank: '1',
+    userNickName: '곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이',
+    userName: '홍길동',
+    userLocation: '서울 금천 금천',
+    totalNumSteps: '123123123'
+  },
+  {
+    rank: '7',
+    changed: 'up',
+    changedRank: '1',
+    userNickName: '곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이',
+    userName: '홍길동',
+    userLocation: '서울 금천 금천',
+    totalNumSteps: '9999999'
+  },
+  {
+    rank: '8',
+    changed: 'up',
+    changedRank: '1',
+    userNickName: '곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이',
+    userName: '홍길동',
+    userLocation: '서울 금천 금천',
+    totalNumSteps: '9999999'
+  },
+  {
+    rank: '9',
+    changed: 'down',
+    changedRank: '7',
+    userNickName: '곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이',
+    userName: '홍길동',
+    userLocation: '서울 금천 금천',
+    totalNumSteps: '123123123'
+  },
+  {
+    rank: '10',
+    changed: 'up',
+    changedRank: '1',
+    userNickName: '곰탱이 곰탱이 곰탱이 곰탱이 곰탱이 곰탱이',
+    userName: '홍길동',
+    userLocation: '서울 금천 금천',
+    totalNumSteps: '9999999'
+  }
+])
 
 // 상태 관리
 const selectedRanking = ref('steps_daily') // 기본값: 걸음수/일

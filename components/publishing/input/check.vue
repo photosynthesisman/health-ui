@@ -272,6 +272,9 @@ function onChange(e: Event) {
       .c-label {
         height: 4.8rem;
         font-size: 1.4rem;
+        &::before {
+          line-height: 1;
+        }
       }
     }
 

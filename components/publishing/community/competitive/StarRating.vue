@@ -45,7 +45,9 @@ const averageRating = computed(() => {
 .star-rating-wrap {
   display: flex;
   gap: 4rem;
+  padding: 1.2rem 0.8rem 2.4rem 2.4rem;
   margin-bottom: 2rem;
+  border-bottom: 0.1rem solid #eee;
   .average {
     display: flex;
     gap: 0.4rem;
@@ -77,7 +79,7 @@ const averageRating = computed(() => {
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    margin-bottom: 0.6rem;
+
     p:has(> .bar-label) {
       font-weight: 500;
       line-height: 2rem;

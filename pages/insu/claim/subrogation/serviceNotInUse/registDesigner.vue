@@ -9,17 +9,21 @@
     :has-tel-btn="true"
     class="pb-60"
   >
-    <div class="flex flex-col gap-16 mt-24">
-      <h1 class="c-tit">
-        <span class="text">담당 보험설계사 이름을<br />입력해 주세요</span>
-        <!-- <span class="text">담당 보험설계사 코드를<br />입력해 주세요</span> -->
-        <!-- <span class="text">담당 설계사 휴대폰으로 발송한<br />인증번호를 입력해 주세요</span> -->
-      </h1>
-    </div>
-    <div class="flex flex-col mt-32">
-      <InputTimer label="인증번호 입력" class="require" error-message="인증번호를 다시 확인해 주세요." />
-      <div class="mt-16">
+    <TitleSection :title="dynamicTitle" class="mt-24 mb-32" />
+
+    <FlexSection class="gap-12">
+      <Transition name="fade-slide" mode="out-in">
+        <InputTimer
+          v-if="verify"
+          v-model="verifyCode"
+          label="인증번호 입력"
+          class="require"
+          error-message="인증번호를 다시 확인해 주세요."
+        />
+      </Transition>
+      <Transition name="fade-slide" mode="out-in">
         <InputPhone
+          v-if="birth"
           label="담당 설계사 휴대폰번호"
           :custom-opts="[
             { value: 'KT', label: 'KT' },
@@ -27,44 +31,74 @@
             { value: 'LG U+', label: 'LG U+' }
           ]"
           class="require"
+          @verify="clickVerify"
         />
-      </div>
-      <div class="input-tit">생년월일</div>
-      <InputText placeholder="생년월일을 입력해 주세요." />
-      <div class="input-tit">성별</div>
-      <FlexRowDiv class="gap-8">
-        <Radio id="rdo1" name="rdo1" custom-style="button small" aria-label="남성" class="w-full" />
-        <Radio id="rdo2" name="rdo1" custom-style="button small" aria-label="여성" class="w-full" />
-      </FlexRowDiv>
-      <div class="input-tit required">담당 설계사 코드</div>
-      <InputText placeholder="보험협회에 등록된 보험설계사 고유번호" />
-      <div class="input-tit required">담당 설계사 이름</div>
-      <InputText placeholder="이름을 입력해 주세요." />
-    </div>
+      </Transition>
+      <Transition name="fade-slide" mode="out-in">
+        <InputText v-if="genderSelect" v-model="birth" label="생년월일" placeholder="생년월일을 입력해 주세요." />
+      </Transition>
+      <Transition name="fade-slide" mode="out-in">
+        <FlexColDiv v-if="agentCode" class="gap-6">
+          <InputLabelText label="성별" />
+          <FlexRowDiv class="gap-8">
+            <Radio
+              id="rdo1"
+              v-model="genderSelect"
+              name="rdo1"
+              custom-style="button small"
+              aria-label="남성"
+              class="w-full"
+            />
+            <Radio
+              id="rdo2"
+              v-model="genderSelect"
+              name="rdo1"
+              custom-style="button small"
+              aria-label="여성"
+              class="w-full"
+            />
+          </FlexRowDiv>
+        </FlexColDiv>
+      </Transition>
+      <Transition name="fade-slide" mode="out-in">
+        <InputText
+          v-if="agentName"
+          v-model="agentCode"
+          label="담당 설계사 코드*"
+          placeholder="보험협회에 등록된 보험설계사 고유번호"
+        />
+      </Transition>
+      <InputText v-model="agentName" label="담당 설계사 이름*" placeholder="이름을 입력해 주세요." />
+    </FlexSection>
+    <ButtonGroup class="is-fixed">
+      <Button
+        btn-type="primary"
+        element-type="button"
+        aria-label="확인"
+        class="lg w-full medium btn-sticky"
+        :disabled="!verifyCode"
+        @click="clickConfirmModal"
+      >
+        확인
+      </Button>
+    </ButtonGroup>
+    <Teleport to="body">
+      <ConfirmModal
+        :is-visible="isShowConfirmModal"
+        title="안내"
+        :html="confirmModalContent"
+        :is-show-cancel-button="false"
+        :confirm-button-text="'가입하기'"
+        @close="isShowConfirmModal = false"
+      />
+    </Teleport>
   </BaseBody>
-  <ButtonGroup class="is-fixed">
-    <Button
-      btn-type="primary"
-      element-type="button"
-      aria-label="확인"
-      class="lg w-full medium btn-sticky"
-      @click="clickConfirmModal"
-    >
-      확인
-    </Button>
-  </ButtonGroup>
-  <ConfirmModal
-    :is-visible="isShowConfirmModal"
-    title="안내"
-    :html="confirmModalContent"
-    :is-show-cancel-button="false"
-    :is-show-confirm-button="false"
-    :is-show-footer="false"
-    @close="isShowConfirmModal = false"
-  />
 </template>
 
 <script setup lang="ts">
+import FlexSection from '~/components/page/FlexSection.vue'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
+import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
 import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import InputText from '~/components/publishing/input/InputText.vue'
@@ -74,6 +108,35 @@ import InputTimer from '~/components/publishing/input/InputTimer.vue'
 import InputPhone from '~/components/publishing/input/InputPhone.vue'
 import ConfirmModal from '~/components/common/modal/ConfirmModal.vue'
 import Radio from '~/components/publishing/input/radio.vue'
+import TitleSection from '~/components/insu/TitleSection.vue'
+import { ref } from 'vue'
+// 동적 타이틀
+// 동적 타이틀 로직 수정
+const dynamicTitle = computed(() => {
+  if (verify.value) {
+    return '담당 설계사 휴대폰으로 발송한<br />인증번호를 입력해 주세요.'
+  } else if (birth.value) {
+    return '담당 보험설계사 휴대폰번호를<br />입력해 주세요.'
+  } else if (genderSelect.value) {
+    return '담당 보험설계사 생년월일을<br />입력해 주세요.'
+  } else if (agentCode.value) {
+    return '담당 보험설계사 성별을<br />선택해 주세요.'
+  } else if (agentName.value) {
+    return '담당 보험설계사 코드를<br />입력해 주세요.'
+  } else {
+    return '담당 보험설계사 이름을<br />입력해 주세요.'
+  }
+})
+
+const agentName = ref('')
+const agentCode = ref('')
+const genderSelect = ref('')
+const birth = ref('')
+const verify = ref(false)
+const verifyCode = ref('')
+const clickVerify = () => {
+  verify.value = true
+}
 const isShowConfirmModal = ref(false)
 const confirmModalContent = ref('')
 // ToDo: 메시지 내용 - 상황에 따라 변경 필요
@@ -86,11 +149,7 @@ const clickConfirmModal = async () => {
       <div style="font-weight: 400;font-size: var(--num-16);text-align: left;color: #555555;margin-top:0.8rem;">보험설계사용 서비스에 가입하시겠어요?</div>
       <div style="font-weight: 400;font-size: var(--num-16);text-align: left;color: #555555;margin-top:0.8rem;">가입한 보험설계사 정보를 확인할 수 없어요. 
 가입하지 않은 보험설계사를 지정하려면 해당 설계사의 휴대폰 알림톡 인증 후 가입할 수 있어요.</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;">
-        <button type="button" class="c-btn btn-primary" style="height: 4.8rem; background-color: rgb(76, 127, 247); border-radius: 0.6rem; font-size: 1.6rem; font-weight: bold; display: inline-flex; justify-content: center; align-items: center; width: 100%; line-height: 1.5; color: white; border: none; cursor: pointer; margin-top: 2rem;">
-          <span class="text">가입하기</span>
-        </button>
-      </div>
+      
     </div>`
 
   isShowConfirmModal.value = true
@@ -98,22 +157,14 @@ const clickConfirmModal = async () => {
 </script>
 
 <style scoped lang="scss">
-.input-tit {
-  margin: 1.2rem 0 0.6rem;
-  font-size: 1.2rem;
-  font-weight: 400;
-  line-height: 1.3;
-  color: #555555;
-  position: relative;
-  &.required::after {
-    content: '*';
-    font-size: 1.2rem;
-    display: inline-block;
-    margin-left: 0.3rem;
-    color: #f14960;
-  }
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.8s ease;
 }
-.address {
-  margin-top: 1.2rem;
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-2rem);
 }
 </style>

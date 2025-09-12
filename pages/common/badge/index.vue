@@ -3,33 +3,35 @@
     page-title="MY배지"
     :show-back-button="true"
     :has-add-text="true"
-    :addTextClickEnabled="true"
+    :add-text-click-enabled="true"
     add-text="<span style='color:#555;font-size:1.4rem;font-weight:600'>MY배지 모아보기<span style='color: #4C7FF7'> 12</span></span>"
   >
     <!-- @badge-click="handleBadgeClick"  -->
-    <MyBadgeWrap title="걸음수" :badges-data="badges1"> </MyBadgeWrap>
-    <MyBadgeWrap title="목표걸음 연속달성" :badges-data="badges2"> </MyBadgeWrap>
-    <MyBadgeWrap title="건강미션 연속달성" :badges-data="badges3"> </MyBadgeWrap>
-    <MyBadgeWrap title="커뮤니티 활동" :badges-data="badges4"> </MyBadgeWrap>
-  </BaseBody>
+    <MyBadgeWrap title="걸음수" :badges-data="badges1" />
+    <MyBadgeWrap title="목표걸음 연속달성" :badges-data="badges2" />
+    <MyBadgeWrap title="건강미션 연속달성" :badges-data="badges3" />
+    <MyBadgeWrap title="커뮤니티 활동" :badges-data="badges4" />
 
-  <BottomModal
-    :is-visible="isShowBottomModal"
-    v-bind="bottomModalProps"
-    @confirm="clickConfirm"
-    @close="toggleBottomModal"
-  >
-    <template #content>
-      <div style="width: 11.2rem; margin: 0 auto 0.8rem">
-        <img :src="HealthBadgeImg" />
-      </div>
-      <div class="fz-16" style="font-weight: 700">목표걸음 {{ '목표걸음 2주 연속' }} 달성</div>
-      <p class="mt-4 fz-14">
-        목표걸음을 권장걸음수 이상 설정하시고<br />
-        2주동안 매일 목표를 달성해보세요.
-      </p>
-    </template>
-  </BottomModal>
+    <Teleport to="body">
+      <BottomModal
+        :is-visible="isShowBottomModal"
+        v-bind="bottomModalProps"
+        @confirm="clickConfirm"
+        @close="toggleBottomModal"
+      >
+        <template #content>
+          <div style="width: 11.2rem; margin: 0 auto 0.8rem">
+            <img :src="HealthBadgeImg" />
+          </div>
+          <div class="fz-16" style="font-weight: 700">목표걸음 {{ '목표걸음 2주 연속' }} 달성</div>
+          <p class="mt-4 fz-14">
+            목표걸음을 권장걸음수 이상 설정하시고<br />
+            2주동안 매일 목표를 달성해보세요.
+          </p>
+        </template>
+      </BottomModal>
+    </Teleport>
+  </BaseBody>
 </template>
 
 <script setup lang="ts">

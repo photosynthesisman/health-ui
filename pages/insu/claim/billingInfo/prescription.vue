@@ -6,18 +6,10 @@
     :has-notification="true"
     :has-reward="false"
     :has-add-text-left="true"
-    class="pb-60"
   >
-    <h1 class="c-tit mt-24">
-      <span class="text">
-        처방전을 확인해 주세요
-      </span>
-    </h1>
-    <div class="wrap-info-lists">
-      <div class="item">청구의신 ‘서류없이 청구’에서 실손 보험 청구가 완료된<br />진료내역에 한 해 처방전이 조회되어요</div>
-      <div class="item">진료일/청구일 기준 최근 3년까지 조회가 가능해요</div>
-    </div>
-    <div class="tit-form">병원 선택</div>
+    <TitleSection title="처방전을 확인해 주세요" class="mt-24" />
+    <DotInfoList :items="infoItems" />
+    <InputLabelText label="병원 선택" class="mt-12 mb-6" />
     <Select
       modal-title="병원"
       select-placeholder="병원을 선택해주세요"
@@ -26,115 +18,57 @@
       :custom-opts="hospitalOptions"
     />
     <hr class="hr-section mt-32 ml-n20 mr-n20" />
-    <div class="total-claim">
-      <div class="total">총 <strong>3</strong>건</div>
-      <div class="sort-insurance">
-        <button class="item">6개월</button>
-        <button class="item" @click="clickSort">진료일 기준<i class="icon-arrow-down"></i></button>
-      </div>
-    </div>
+    <TotalItemSort :total="prescriptionItems.length" :buttons="sortButtons" @button-click="clickSort" />
     <!-- ToDo: 조회가능한 처방전 없을때 활성화 -->
-    <!-- <div class="wrap-empty">
-      <img src="/assets/images/insu/icon-empty.svg" alt="병원 없음" class="img" />
-      <div class="tit">조회 가능한<br />처방전이 없어요.</div>
-    </div> -->
-    <div class="wrap-grey">
-      <div class="wrap-prescription-list">
-        <div class="item">
-          <div class="medical-info-head">
-            <div class="wrap-insurance-info">
-              <img src="/assets/images/insu/logo_KUMedicine.svg" alt="로고" class="logo" />
-              <div class="tit">강남성심병원 내분비대사내과</div>
+    <InsuEmpty v-if="!prescriptionItems || prescriptionItems.length === 0" title="조회 가능한<br />처방전이 없어요." />
+    <PrescriptionItem v-else :items="prescriptionItems" />
+    <Teleport to="body">
+      <BottomModal
+        :is-visible="isShowSortModal"
+        title="조회조건 설정"
+        :is-show-cancel-button="false"
+        confirm-button-text="확인"
+        @close="isShowSortModal = false"
+        @confirm="clickNext"
+      >
+        <template #content>
+          <div class="wrap-bottom-sort">
+            <div class="tit-sort">조회기간</div>
+            <!-- 기간 선택 탭 -->
+            <div class="date-range-tabs">
+              <SegmentedTabs
+                :tabs="segmentedTabs"
+                :active-key="activeSegmentedTab"
+                @tab-change="onSegmentedTabChange"
+              />
             </div>
-            <i class="icon-arrow-right"></i>
+            <div class="tit-sort">정렬순서</div>
+            <SegmentedTabsStyle
+              :tabs="segmentedTabsSort"
+              :active-index="segmentedActiveIndex"
+              @tab-click="handleSegmentedTabClick"
+            />
           </div>
-          <div class="item-detail-list">
-            <div class="detail-item">
-              <div class="tit">진료일</div>
-              <div class="desc">2025.03.25</div>
-            </div>
-            <div class="detail-item">
-              <div class="tit">청구일</div>
-              <div class="desc">2025.05.14</div>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="medical-info-head">
-            <div class="wrap-insurance-info">
-              <img src="/assets/images/insu/logo_KUMedicine.svg" alt="로고" class="logo" />
-              <div class="tit">강남성심병원 내분비대사내과</div>
-            </div>
-            <i class="icon-arrow-right"></i>
-          </div>
-          <div class="item-detail-list">
-            <div class="detail-item">
-              <div class="tit">진료일</div>
-              <div class="desc">2025.03.25</div>
-            </div>
-            <div class="detail-item">
-              <div class="tit">청구일</div>
-              <div class="desc">2025.05.14</div>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="medical-info-head">
-            <div class="wrap-insurance-info">
-              <img src="/assets/images/insu/logo_KUMedicine.svg" alt="로고" class="logo" />
-              <div class="tit">강남성심병원 내분비대사내과</div>
-            </div>
-            <i class="icon-arrow-right"></i>
-          </div>
-          <div class="item-detail-list">
-            <div class="detail-item">
-              <div class="tit">진료일</div>
-              <div class="desc">2025.03.25</div>
-            </div>
-            <div class="detail-item">
-              <div class="tit">청구일</div>
-              <div class="desc">2025.05.14</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        </template>
+      </BottomModal>
+    </Teleport>
   </BaseBody>
-  <BottomModal
-    :is-visible="isShowSortModal"
-    title="조회조건 설정"
-    :is-show-cancel-button="false"
-    confirm-button-text="확인"
-    @close="isShowSortModal = false"
-    @confirm="clickNext"
-  >
-    <template #content>
-      <div class="wrap-bottom-sort">
-        <div class="tit-sort">조회기간</div>
-        <!-- 기간 선택 탭 -->
-        <div class="date-range-tabs">
-          <SegmentedTabs :tabs="segmentedTabs" :active-key="activeSegmentedTab" @tab-change="onSegmentedTabChange" />
-        </div>
-        <div class="tit-sort">정렬순서</div>
-        <SegmentedTabsStyle
-          :tabs="segmentedTabsSort"
-          :active-index="segmentedActiveIndex"
-          @tab-click="handleSegmentedTabClick"
-        />
-      </div>
-    </template>
-  </BottomModal>
 </template>
 
 <script setup lang="ts">
 // 타입지정 필요
 import BaseBody from '~/components/layout/BaseBody.vue'
+import TitleSection from '~/components/insu/TitleSection.vue'
+import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
 import Select from '~/components/publishing/input/Select.vue'
+import TotalItemSort from '~/components/publishing/insu/billingInfo/TotalItemSort.vue'
+import InsuEmpty from '~/components/insu/InsuEmpty.vue'
+import PrescriptionItem from '~/components/publishing/insu/billingInfo/PrescriptionItem.vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import type { BaseModalProps, ModalEmitEvent } from '~/types/common/modal.type'
 import SegmentedTabs, { type SegmentTab } from '~/components/tabbar/SegmentedTabs.vue'
 import SegmentedTabsStyle, { type SegmentTabSort } from '~/components/common/tab/SegmentedTabs.vue'
-
+import DotInfoList from '~/components/publishing/insu/billingInfo/DotInfoList.vue'
 
 definePageMeta({
   // isShowHeader: false
@@ -150,6 +84,12 @@ const hospitalOptions = [
   { value: '서울아산병원', label: '서울아산병원' },
   { value: '세브란스병원', label: '세브란스병원' },
   { value: '한양대병원', label: '한양대병원' }
+]
+
+// Sort 버튼명 배열
+const sortButtons = [
+  { label: '6개월', value: '6months' },
+  { label: '진료일 기준', value: 'medicalDate', icon: true }
 ]
 
 const segmentedTabsSort: SegmentTab[] = [
@@ -316,18 +256,26 @@ const handleFilterChange = () => {
     selectedFilters.value.extinct = false
     selectedFilters.value.cancel = false
   }
-  
+
   // 개별 옵션들이 모두 선택되면 전체도 선택
-  if (selectedFilters.value.normal && selectedFilters.value.expired && 
-      selectedFilters.value.maturity && selectedFilters.value.extinct && 
-      selectedFilters.value.cancel) {
+  if (
+    selectedFilters.value.normal &&
+    selectedFilters.value.expired &&
+    selectedFilters.value.maturity &&
+    selectedFilters.value.extinct &&
+    selectedFilters.value.cancel
+  ) {
     selectedFilters.value.all = true
   }
-  
+
   // 개별 옵션 중 하나라도 해제되면 전체도 해제
-  if (!selectedFilters.value.normal || !selectedFilters.value.expired || 
-      !selectedFilters.value.maturity || !selectedFilters.value.extinct || 
-      !selectedFilters.value.cancel) {
+  if (
+    !selectedFilters.value.normal ||
+    !selectedFilters.value.expired ||
+    !selectedFilters.value.maturity ||
+    !selectedFilters.value.extinct ||
+    !selectedFilters.value.cancel
+  ) {
     selectedFilters.value.all = false
   }
 }
@@ -337,9 +285,13 @@ const handleIndividualFilterChange = (filterName: string) => {
   // 개별 옵션 변경 시 전체 상태 업데이트
   if (filterName !== 'all') {
     // 개별 옵션들이 모두 선택되면 전체도 선택
-    if (selectedFilters.value.normal && selectedFilters.value.expired && 
-        selectedFilters.value.maturity && selectedFilters.value.extinct && 
-        selectedFilters.value.cancel) {
+    if (
+      selectedFilters.value.normal &&
+      selectedFilters.value.expired &&
+      selectedFilters.value.maturity &&
+      selectedFilters.value.extinct &&
+      selectedFilters.value.cancel
+    ) {
       selectedFilters.value.all = true
     } else {
       selectedFilters.value.all = false
@@ -354,7 +306,7 @@ const clickSort = () => {
 const onSegmentedTabChange = (key: string) => {
   activeSegmentedTab.value = key
   updatePredefinedDates()
-  
+
   console.log(`📅 기간 탭 변경: ${getPeriodLabel()}`)
 }
 
@@ -363,34 +315,40 @@ const clickNext = () => {
   console.log('다음 버튼 클릭')
   // 여기에 다음 페이지로 이동하는 로직을 추가할 수 있습니다
 }
+
+// 상단 유의사항 데이터
+const infoItems = [
+  '청구의신 ‘서류없이 청구’에서 실손 보험 청구가 완료된 <br />진료내역에 한 해 처방전이 조회되어요',
+  '진료일/청구일 기준 최근 3년까지 조회가 가능해요'
+]
+
+// 처방전 내역 데이터
+const prescriptionItems = [
+  {
+    id: 1,
+    insuranceLogo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
+    insuranceName: '강남성심병원 내분비대사내과',
+    medicalDate: '2025.03.25',
+    claimDate: '2025.05.14'
+  },
+  {
+    id: 2,
+    insuranceLogo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
+    insuranceName: '강남성심병원 내분비대사내과',
+    medicalDate: '2025.03.25',
+    claimDate: '2025.05.14'
+  },
+  {
+    id: 3,
+    insuranceLogo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
+    insuranceName: '강남성심병원 내분비대사내과',
+    medicalDate: '2025.03.25',
+    claimDate: '2025.05.14'
+  }
+]
 </script>
 
 <style scoped lang="scss">
-.wrap-info-lists {
-  padding: 2rem 0;
-  .item {
-    text-align: left;
-    position: relative;
-    padding-left: 1rem;
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: #555555;
-    margin-top: 0.8rem;
-    & > span {
-      color: #4C7FF7;
-    }
-    &::before {
-      content: '';
-      display: inline-block;
-      width: 0.3rem;
-      height: 0.3rem;
-      background-color: #959595;
-      position: absolute;
-      top: 0.8rem;
-      left: 0;
-    }
-  }
-}
 // sort 관련
 .total-claim {
   width: 100%;
@@ -402,7 +360,7 @@ const clickNext = () => {
     font-size: 1.6rem;
     font-weight: 500;
     line-height: 140%;
-    color: #2B2B2B;
+    color: #2b2b2b;
     strong {
       font-weight: 700;
     }
@@ -422,7 +380,7 @@ const clickNext = () => {
         background-size: 100%;
         transition: transform 0.3s ease;
         transform-origin: center center;
-        
+
         &.rotated {
           transform: rotate(180deg);
         }
@@ -436,7 +394,7 @@ const clickNext = () => {
           top: 50%;
           left: 0;
           transform: translateY(-50%);
-          background-color: #E2E2E2;
+          background-color: #e2e2e2;
         }
       }
       &:last-child {
@@ -453,65 +411,6 @@ const clickNext = () => {
     line-height: 130%;
     color: #555555;
     text-align: left;
-  }
-}
-.wrap-grey {
-  position: relative;
-  margin: 0 -2rem 0;
-  padding: 2.4rem 2rem 4rem;
-  background-color: #F4F4F4;
-  .tit-sub {
-    font-size: 1.8rem;
-    font-weight: 700;
-  }
-}
-.wrap-prescription-list {
-  .item {
-    border-radius: 1.2rem;
-    padding: 2rem;
-    background-color: #fff;
-    &:not(:first-child) {
-      margin-top: 1.2rem;
-    }
-    .medical-info-head {
-      @include mixin.flex-container(justify-between items-center);
-      .wrap-insurance-info {
-        @include mixin.flex-container(items-center);
-        gap: 1.6rem;
-        .logo {
-          width: 4.8rem;
-        }
-        .tit {
-          font-weight: 700;
-        }
-      }
-      .icon-arrow-right {
-        background: url('/assets/images/insu/icon-arrow-right.svg') no-repeat center center;
-        background-size: 100%;
-        width: 2.4rem;
-        height: 2.4rem;
-      }
-    }
-    .item-detail-list {
-      margin-top: 2rem;
-      .detail-item {
-        @include mixin.flex-container(justify-between items-center);
-        &:not(:first-child) {
-          margin-top: 1.2rem;
-        }
-        .tit {
-          margin-left: 0.4rem;
-          font-size: 1.3rem;
-          font-weight: 500;
-          color: #959595;
-        }
-        .desc {
-          margin-right: 0.4rem;
-          font-size: 1.4rem;
-          font-weight: 600;
-        }
-      }
-    }
   }
 }
 .wrap-empty {

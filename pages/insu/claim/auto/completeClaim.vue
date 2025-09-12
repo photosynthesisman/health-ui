@@ -1,16 +1,16 @@
 <template>
   <BaseBody logo-type="text" class="pb-36">
     <CompleteTitleSection :title="'자동청구 신청을<br/>완료했어요.'" />
-    <InfoText :text="'실손보험 자동청구 내역은 청구의신 앱에서 확인 가능해요.'" />
+    <InfoText :text="'실손보험 자동청구 내역은 청구의신 앱에서 확인 가능해요.'" class="pb-16" />
+    <ButtonGroup class="is-fixed">
+      <Button
+        btn-type="primary"
+        element-type="button"
+        aria-label="청구의신 앱 설치하기"
+        class="lg w-full medium btn-sticky"
+      />
+    </ButtonGroup>
   </BaseBody>
-  <ButtonGroup class="is-fixed">
-    <Button
-      btn-type="primary"
-      element-type="button"
-      aria-label="청구의신 앱 설치하기"
-      class="lg w-full medium btn-sticky"
-    />
-  </ButtonGroup>
 </template>
 
 <script setup lang="ts">

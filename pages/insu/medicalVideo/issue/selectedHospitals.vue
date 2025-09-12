@@ -30,7 +30,7 @@
       <hr class="hr-section ml-n20 mr-n20" />
       <TotalCountSelectType :count="count" :select="false" />
       <div class="wrap-list">
-        <HospitalItem v-for="hospital in hospitals" :key="hospital.id" :hospital="hospital" />
+        <PartnerHospitalItem :hospitals="hospitals" :has-btn="false" :has-line="false" />
       </div>
     </section>
     <ButtonGroup class="is-fixed">
@@ -53,8 +53,7 @@ import TitleSection from '~/components/insu/TitleSection.vue'
 import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import TotalCountSelectType from '~/components/publishing/common/temp/TotalCountSelectType.vue'
-import HospitalItem from '~/components/insu/HospitalItem.vue'
-
+import PartnerHospitalItem, { type Hospital } from '~/components/insu/PartnerHospitalItem.vue'
 const router = useRouter()
 
 // 툴팁 상태
@@ -66,10 +65,9 @@ const toggleTooltip = () => {
 }
 
 // 병원 데이터
-const hospitals = ref([
+const hospitals = ref<Hospital[]>([
   {
     id: 1,
-    href: '#',
     logo: 'insu/logo_KUMedicine.svg',
     name: '고려대학교 안암병원',
     address: '서울특별시 성북구 안암로 100'

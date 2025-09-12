@@ -111,6 +111,16 @@ const badgeClasses = computed(() => {
     }
   }
 
+  &.badge-dark-green {
+    color: #629105;
+    background: #eaf2cc;
+
+    &.badge-solid {
+      color: white;
+      background: #629105;
+    }
+  }
+
   &.badge-blue {
     color: #4c7ff7;
     background: #e5edff;

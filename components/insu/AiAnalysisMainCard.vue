@@ -25,7 +25,17 @@
     <button v-if="!props.connected" class="btn-c-insurance-count" @click.stop="toMyInsurance">
       <div class="wrap-insurance-text">
         <img src="/assets/images/insu/icon-insurance.svg" alt="아이콘 보험계약" />
-        <span class="text">총 보험계약 <strong>5건</strong> 중 정상계약 <strong>4건</strong></span>
+        <span class="text"
+          >총 보험계약 <strong>5건</strong> 중 정상계약 <strong>4건</strong
+          ><i v-if="subTooltip" class="icon ico-info" @click.stop="toggleMoreInfo2"></i
+        ></span>
+        <div class="wrap-more-info" :class="{ active: isMoreInfo2Active }">
+          <div class="text">
+            조회가 안되는 보험이 있나요?<br />➀ 보험 가입자가 계약자 본인이 아닌 경우<br />➁ 계약 상태가 만기이며 5년이
+            경과한 경우 보험 조회가 어려워요.
+          </div>
+          <i class="icon ico-cancel-white" @click.stop="closeMoreInfo2"></i>
+        </div>
       </div>
       <img src="/assets/images/insu/icon-arrow-right-white.svg" alt="화살표" />
     </button>
@@ -49,15 +59,20 @@ const emit = defineEmits<{
 }>()
 
 const isMoreInfoActive = ref(false)
-
+const isMoreInfo2Active = ref(false)
 const toggleMoreInfo = () => {
   isMoreInfoActive.value = !isMoreInfoActive.value
   emit('toggleMoreInfo')
 }
-
+const toggleMoreInfo2 = () => {
+  isMoreInfo2Active.value = !isMoreInfo2Active.value
+}
 const closeMoreInfo = () => {
   isMoreInfoActive.value = false
   emit('closeMoreInfo')
+}
+const closeMoreInfo2 = () => {
+  isMoreInfo2Active.value = false
 }
 const clickReload = () => {
   emit('reload')
@@ -66,8 +81,9 @@ const toMyInsurance = () => {
   emit('toMyInsurance')
 }
 const props = defineProps<{
-  connected: boolean
-  cost: number
+  connected?: boolean
+  cost?: number
+  subTooltip?: boolean
 }>()
 </script>
 
@@ -178,7 +194,6 @@ h2.tit {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    @include mixin.rippleEffectWhite;
     .wrap-insurance-text {
       display: flex;
       align-items: center;
@@ -189,6 +204,14 @@ h2.tit {
         strong {
           font-weight: 600;
           color: #ffffff;
+        }
+        .ico-info {
+          margin-left: 0.6rem;
+          background: url('/assets/images/insu/icon-info-white.svg') no-repeat center center;
+          background-size: contain;
+          width: 2rem;
+          height: 2rem;
+          display: inline-block;
         }
       }
       img {
@@ -202,6 +225,36 @@ h2.tit {
       color: #4c7ff7;
       text-align: center;
       display: block;
+    }
+    .wrap-more-info {
+      position: absolute;
+      z-index: 1;
+      top: 80%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 100%;
+      background-color: #4f5561;
+      padding: 2rem;
+      border-radius: 0.8rem;
+      display: none;
+      &.active {
+        display: flex;
+      }
+      .text {
+        font-size: 1.4rem;
+        color: #ffffff;
+        word-break: keep-all;
+        text-align: left;
+        flex: 1 1;
+      }
+      .ico-cancel-white {
+        background: url('/assets/images/insu/icon-cancel-white.svg') no-repeat center center;
+        background-size: contain;
+        width: 2rem;
+        height: 2rem;
+        display: block;
+        cursor: pointer;
+      }
     }
   }
   .wrap-btn-more {

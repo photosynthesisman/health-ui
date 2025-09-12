@@ -2,7 +2,7 @@
   <BaseBody page-title="의료영상공유" :has-notification="true" :show-back-button="true">
     <section class="issue-history">
       <TitleSection
-        title="제휴병원 찾기로<br/>총 3개의 병원을 찾았어요."
+        :title="`제휴병원 찾기로<br/>총 ${hospitals.length}개의 병원을 찾았어요.`"
         description="아래 병원을 연결하면 의료영상을<br/>공유할 수 있어요."
       />
     </section>

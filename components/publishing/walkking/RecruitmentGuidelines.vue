@@ -34,7 +34,12 @@ const props = defineProps({
     font-weight: 600;
   }
   dd {
-    font-weight: 700;
+    font-size: 1.4rem;
+    font-weight: 600;
+    @media (max-width: 375px) {
+      font-size: 1.3rem;
+      letter-spacing: -0.03rem;
+    }
   }
 }
 .ico {

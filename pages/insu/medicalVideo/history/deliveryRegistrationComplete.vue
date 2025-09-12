@@ -1,7 +1,7 @@
 <template>
   <BaseBody>
     <CompleteTitleSection :title="'배송 신청이 완료되었어요.'" />
-    <HistoryDetail :details-list="detailInfos" :total-price="13000" />
+    <HistoryDetail :details-list="detailInfos" :total-price="totalPrice" />
     <MedicalHistoryAccordion
       :medical-history="medicalInfos"
       :is-label-title="true"
@@ -22,7 +22,7 @@ import HistoryDetail from '~/components/insu/HistoryDetail.vue'
 import MedicalHistoryAccordion from '~/components/insu/MedicalHistoryAccordion.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import Button from '~/components/publishing/button/Button.vue'
-const detailInfos = [
+const detailInfos = ref([
   {
     id: 1,
     title: '배송지 주소',
@@ -45,15 +45,20 @@ const detailInfos = [
   },
   {
     id: 5,
-    title: '배송 전달사항',
-    price: 10000
+    title: '상품결제금액',
+    price: 20000
   },
   {
     id: 6,
     title: '배송 수수료',
-    price: 3000
+    price: 4000
   }
-]
+])
+const totalPrice = computed(() => {
+  const payment = detailInfos.value.find(item => item.id === 5)?.price ?? 0
+  const shipping = detailInfos.value.find(item => item.id === 6)?.price ?? 0
+  return payment + shipping
+})
 const medicalInfos = [
   {
     id: 1,

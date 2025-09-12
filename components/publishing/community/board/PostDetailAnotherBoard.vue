@@ -6,7 +6,7 @@
     <CommonSwiper
       :slides="communitySlides"
       slide-type="custom"
-      :slides-per-view="1.75"
+      :slides-per-view="1.5"
       :space-between="12"
       :navigation="false"
       :pagination="false"
@@ -20,10 +20,6 @@
       <template #default="{ slide, index }">
         <div class="community-box">
           <div class="content-area">
-            <div v-if="slide.image" class="img-wrap">
-              <img :src="slide.image" :alt="slide.title" />
-              <div v-if="slide.imageCount > 1" class="img-length">+{{ slide.imageCount }}</div>
-            </div>
             <div class="tit">{{ slide.title }}</div>
             <div class="detail-info">
               <span class="like-num">{{ slide.likes }}</span>
@@ -40,8 +36,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
-
-import communityImg01 from '~/assets/images/img-community-01.png'
 
 const props = defineProps({
   src: { type: String, default: 'img-profile.svg' },
@@ -62,9 +56,7 @@ const communitySlides = ref([
     content: '몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음',
     likes: 131,
     views: 70,
-    replies: 2,
-    image: communityImg01,
-    imageCount: 3
+    replies: 2
   },
   {
     category: '헬스케어',
@@ -72,9 +64,7 @@ const communitySlides = ref([
     content: '매일 꾸준히 하는 것이 중요해요. 작은 변화부터 시작하세요!',
     likes: 89,
     views: 45,
-    replies: 5,
-    image: communityImg01,
-    imageCount: 2
+    replies: 5
   },
   {
     category: '운동',
@@ -82,9 +72,7 @@ const communitySlides = ref([
     content: '집에서도 충분히 효과적인 운동이 가능합니다. 지금 바로 시작해보세요!',
     likes: 205,
     views: 152,
-    replies: 12,
-    image: communityImg01,
-    imageCount: 4
+    replies: 12
   },
   {
     category: '식단',
@@ -92,9 +80,7 @@ const communitySlides = ref([
     content: '건강하고 맛있는 도시락으로 다이어트 성공하기! 레시피 공유해요',
     likes: 67,
     views: 89,
-    replies: 8,
-    image: communityImg01,
-    imageCount: 1
+    replies: 8
   }
 ])
 </script>
@@ -135,15 +121,20 @@ const communitySlides = ref([
       border-bottom: none;
     }
     .content-area {
-      gap: 1.2rem;
+      gap: 2.4rem;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       flex: 1;
+      min-height: 13.4rem;
+      padding: 2rem;
+      border-radius: 1.2rem;
+      border: 0.1rem solid #e2e2e2;
     }
     .tit {
       font-weight: 500;
       line-height: 2.2rem;
-      @include mixin.multi-ellipsis($clamp: 2);
+      @include mixin.multi-ellipsis($clamp: 1);
     }
     .detail-info {
       font-size: 1.4rem;

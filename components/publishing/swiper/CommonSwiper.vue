@@ -120,6 +120,11 @@ const props = defineProps({
   showCustomButtons: {
     type: Boolean,
     default: false
+  },
+  // 슬라이드 아이템 그림자 잘려보이는 현상 수정
+  overflowVisible: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -165,6 +170,50 @@ const onSwiperInit = event => {
   swiper.value = event.detail[0]
   isAutoplayActive.value = !!props.autoplay
   emit('swiper-init', event.detail[0])
+
+  // overflowVisible prop이 true인 경우에만 Shadow DOM 스타일 적용
+  if (props.overflowVisible) {
+    setTimeout(() => {
+      if (swiperContainerRef.value) {
+        // Shadow DOM 직접 접근
+        const shadowRoot = swiperContainerRef.value.shadowRoot
+        if (shadowRoot) {
+          console.log('Applying overflow visible to Shadow DOM')
+
+          // 기존 스타일 태그가 있는지 확인
+          let styleTag = shadowRoot.querySelector('#custom-swiper-styles')
+          if (!styleTag) {
+            styleTag = document.createElement('style')
+            styleTag.id = 'custom-swiper-styles'
+            shadowRoot.appendChild(styleTag)
+          }
+
+          // 스타일 적용
+          styleTag.textContent = `
+            .swiper {
+              overflow: visible !important;
+            }
+            .swiper-wrapper {
+              overflow: visible !important;
+            }
+          `
+
+          // 직접 요소에도 스타일 적용
+          const swiperEl = shadowRoot.querySelector('.swiper')
+          if (swiperEl) {
+            swiperEl.style.overflow = 'visible'
+            console.log('Direct style applied to .swiper')
+          }
+
+          const wrapperEl = shadowRoot.querySelector('.swiper-wrapper')
+          if (wrapperEl) {
+            wrapperEl.style.overflow = 'visible'
+            console.log('Direct style applied to .swiper-wrapper')
+          }
+        }
+      }
+    }, 100) // 초기화 완료 후 실행
+  }
 
   // Swiper 인스턴스에 직접 이벤트 리스너 추가
   if (swiper.value) {

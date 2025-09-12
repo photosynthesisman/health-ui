@@ -1,8 +1,19 @@
 <template>
   <div class="walking-challenge-item">
-    <div class="challenge-date-limit" :class="{ inactivity: isInactivity, openSoon: isOpenSoon }">
+    <div
+      class="challenge-date-limit"
+      :class="{
+        inactivity: isInactivity,
+        openSoon: isOpenSoon,
+        recruitEnd: isRecruitEnd,
+        recruiting: isRecruiting,
+        upComing: isUpComing,
+        challengeEnd: isEnded
+      }"
+    >
       <span v-html="flagTit"></span>
     </div>
+    <!--      -->
     <div class="flex flex-row gap-4">
       <CommonBadge color="blue">개인전</CommonBadge>
       <CommonBadge color="yellow">3,000P</CommonBadge>
@@ -48,7 +59,11 @@ const props = defineProps({
   isInactivity: { type: Boolean, default: false },
   haveRank: { type: Boolean, default: false },
   flagTit: { type: String, default: '챌린지 진행중' },
-  isOpenSoon: { type: Boolean, default: false }
+  isOpenSoon: { type: Boolean, default: false },
+  isRecruitEnd: { type: Boolean, default: false },
+  isRecruiting: { type: Boolean, default: false },
+  isUpComing: { type: Boolean, default: false },
+  isEnded: { type: Boolean, default: false }
 })
 // 프로그레스 바 애니메이션을 위한 반응형 데이터
 const progressWidth = ref(0)
@@ -107,6 +122,7 @@ function startCountingAnimation() {
 
 <style lang="scss" scoped>
 .walking-challenge-item {
+  width: 100%;
   background-color: #fff;
   border: 0.1rem solid #eee;
   border-radius: 2rem;
@@ -195,6 +211,11 @@ function startCountingAnimation() {
   justify-content: center;
   text-align: center;
   background: #fddd66;
+  span {
+    :deep(strong) {
+      font-size: 1.3rem;
+    }
+  }
   &.openSoon {
     background-color: #eee;
     &:after {
@@ -205,6 +226,36 @@ function startCountingAnimation() {
     background: var(--blue-primary);
     &:after {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='18' viewBox='0 0 48 18' fill='none'%3E%3Cpath d='M25.5606 17.6276C24.6288 18.1241 23.3711 18.1241 22.4394 17.6276L1.07785e-06 5.67085L1.2619e-06 3.5656C1.37995e-06 2.21521 1.41123 -2.58222e-07 3.99894 -3.19979e-08L44.6679 3.5234e-06C47.2556 3.74962e-06 47.3333 1.72297 47.9988 3.5656L48 5.67085L25.5606 17.6276Z' fill='%234C7FF7'/%3E%3C/svg%3E");
+    }
+    span {
+      color: #fff;
+    }
+  }
+  &.recruitEnd {
+    background: #d7e1f7;
+    &:after {
+      background-image: url("data:image/svg+xml,%0A%3Csvg width='48' height='18' viewBox='0 0 48 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25.5606 17.6276C24.6288 18.1241 23.3711 18.1241 22.4394 17.6276L1.07785e-06 5.67085L1.2619e-06 3.5656C1.37995e-06 2.21521 1.41123 -2.58222e-07 3.99894 -3.19979e-08L44.6679 3.5234e-06C47.2556 3.74962e-06 47.3333 1.72297 47.9988 3.5656L48 5.67085L25.5606 17.6276Z' fill='%23D7E1F7'/%3E%3C/svg%3E%0A");
+    }
+    span {
+      color: #959595;
+    }
+  }
+  &.recruiting {
+    background: #b7ccfc;
+    &:after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='18' viewBox='0 0 48 18' fill='none'%3E%3Cpath d='M25.5606 17.6276C24.6288 18.1241 23.3711 18.1241 22.4394 17.6276L1.07785e-06 5.67085L1.2619e-06 3.5656C1.37995e-06 2.21521 1.41123 -2.58222e-07 3.99894 -3.19979e-08L44.6679 3.5234e-06C47.2556 3.74962e-06 47.3333 1.72297 47.9988 3.5656L48 5.67085L25.5606 17.6276Z' fill='%23B7CCFC'/%3E%3C/svg%3E");
+    }
+  }
+  &.upComing {
+    background: #bcdc85;
+    &:after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='18' viewBox='0 0 48 18' fill='none'%3E%3Cpath d='M25.5606 17.6276C24.6288 18.1241 23.3711 18.1241 22.4394 17.6276L1.07785e-06 5.67085L1.2619e-06 3.5656C1.37995e-06 2.21521 1.41123 -2.58222e-07 3.99894 -3.19979e-08L44.6679 3.5234e-06C47.2556 3.74962e-06 47.3333 1.72297 47.9988 3.5656L48 5.67085L25.5606 17.6276Z' fill='%23BCDC85'/%3E%3C/svg%3E");
+    }
+  }
+  &.challengeEnd {
+    background: #4f5561;
+    &:after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='18' viewBox='0 0 48 18' fill='none'%3E%3Cpath d='M25.5606 17.6276C24.6288 18.1241 23.3711 18.1241 22.4394 17.6276L1.07785e-06 5.67085L1.2619e-06 3.5656C1.37995e-06 2.21521 1.41123 -2.58222e-07 3.99894 -3.19979e-08L44.6679 3.5234e-06C47.2556 3.74962e-06 47.3333 1.72297 47.9988 3.5656L48 5.67085L25.5606 17.6276Z' fill='%234f5561'/%3E%3C/svg%3E");
     }
     span {
       color: #fff;

@@ -10,10 +10,35 @@
         :meal-title="meal.title"
         :foods="meal.foods"
         :icon-class="meal.iconClass"
-        @add-food="handleAddFood"
+        @add-food="clickBottomModal"
         @delete-food="handleDeleteFood"
       />
     </FlexColDiv>
+    <BottomModal
+      :is-visible="isShowBottomModal"
+      v-bind="bottomModalProps"
+      @confirm="clickConfirm"
+      @close="clickBottomModal"
+    >
+      <template #content>
+        <div class="rdo-flex">
+          <RadioImg
+            id="rdo1"
+            name="addMeal"
+            custom-style="button has-icon"
+            text="검색해서 등록"
+            :icon-src="iconAddMealSearchImg"
+          />
+          <RadioImg
+            id="rdo2"
+            name="addMeal"
+            custom-style="button has-icon"
+            text="직접 등록"
+            :icon-src="iconAddMealDirectlyImg"
+          />
+        </div>
+      </template>
+    </BottomModal>
   </div>
 </template>
 
@@ -22,6 +47,12 @@ import { ref } from 'vue'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import MealPlanItem from '~/components/publishing/calorieIntake/MealPlanItem.vue'
 import type { FoodItem, MealType, MealPlan } from '~/types/meal'
+import { BottomModal } from '@lemonhc/fo-ui/components/modal'
+import RadioImg from '~/components/publishing/input/radioImg.vue'
+
+import iconAddMealSearchImg from '~/assets/images/calorieIntake/icon-addmeal-search.svg'
+import iconAddMealDirectlyImg from '~/assets/images/calorieIntake/icon-addmeal-directly.svg'
+console.log(iconAddMealSearchImg)
 
 // 식단 데이터
 const mealPlans = ref<MealPlan[]>([
@@ -115,6 +146,25 @@ defineExpose({
   getTotalDailyCalories,
   mealPlans
 })
+
+// 바텀 모달 핸들러
+const isShowBottomModal = ref(false)
+const clickBottomModal = () => {
+  isShowBottomModal.value = !isShowBottomModal.value
+}
+const clickConfirm = () => {
+  console.log('모달 확인 클릭')
+  clickBottomModal()
+}
+
+// 바텀 모달 props
+const bottomModalProps = ref({
+  title: '식사기록하기',
+  isShowCloseButton: true,
+  isShowConfirmButton: true,
+  isShowCancelButton: false,
+  confirmButtonText: '확인'
+})
 </script>
 
 <style lang="scss" scoped>
@@ -154,6 +204,27 @@ defineExpose({
       width: 14rem;
       height: 14rem;
       top: -8.5rem;
+    }
+  }
+}
+
+.rdo-flex {
+  width: 100%;
+  position: relative;
+  padding-top: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  &:deep(.c-radiotype) {
+    .c-label {
+      .radio-text {
+        flex: none !important;
+      }
+    }
+    &:first-child {
+      i {
+        background-image: url('~/assets/images/calorieIntake/icon-addmeal-search.svg');
+      }
     }
   }
 }

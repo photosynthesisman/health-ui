@@ -18,7 +18,7 @@
             </div>
           </div>
           <div v-else key="collapsed" class="collapsed-content">
-            <strong class="only-title">스마트링 커뮤니티 소개<i class="icon ico-info2"></i></strong>
+            <strong class="only-title">스마트링 커뮤니티 소개</strong>
           </div>
         </transition>
       </div>

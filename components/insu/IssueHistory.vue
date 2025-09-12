@@ -1,13 +1,14 @@
 <template>
   <div class="ml-n20 mr-n20">
     <!-- 총 건수 -->
-    <TotalCountSelectType :count="props.medicalInfos.length || 0" />
-
+    <!-- <TotalCountSelectType :count="props.medicalInfos.length || 0" /> -->
+    <div class="mg-20x">
+      <TotalItemSort :total="props.medicalInfos.length || 0" :buttons="sortButtons" @button-click="clickSort" />
+    </div>
     <div class="list">
-      <MedicalHistoryAccordion
+      <!-- 신규 영상 내역 컴포넌트 -->
+      <MedicalVideoHistoryAccordion
         :medical-history="props.medicalInfos"
-        :is-label-title="false"
-        :show-status="true"
         :is-share-date="true"
         @status-click="handleStatusClick"
         @history-click="handleHistoryClick"
@@ -18,9 +19,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import TotalCountSelectType from '~/components/publishing/common/temp/TotalCountSelectType.vue'
-import MedicalHistoryAccordion from '~/components/insu/MedicalHistoryAccordion.vue'
-
+import TotalItemSort from '~/components/publishing/insu/billingInfo/TotalItemSort.vue'
+import MedicalVideoHistoryAccordion from '~/components/insu/MedicalVideoHistoryAccordion.vue'
+// Sort 버튼명 배열
+const sortButtons = [
+  { label: '전체', value: 'all' },
+  { label: '3개월 ', value: '6months', icon: true }
+]
 interface Examination {
   id: number
   name: string
@@ -52,7 +57,11 @@ const emit = defineEmits<{
   'status-click': [hospital: MedicalHistory]
   'share-click': [hospital: MedicalHistory]
   'cd-click': [hospital: MedicalHistory]
+  'click-sort': []
 }>()
+const clickSort = () => {
+  emit('click-sort')
+}
 const handleStatusClick = (hospital: MedicalHistory) => {
   emit('status-click', hospital)
 }

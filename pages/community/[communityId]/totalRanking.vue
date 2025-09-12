@@ -1,0 +1,179 @@
+<template>
+  <BaseBody page-title="이번달 커뮤니티 활동 종합 랭킹" :show-back-button="true">
+    <div class="mt-8">
+      <ChallengeRankingBox
+        v-for="(user, index) in rankingList"
+        :key="index"
+        :rank="user.rank"
+        :is-show-change="user.isShowChange"
+        :is-show-steps="user.isShowSteps"
+        :user-name="user.userName"
+        :total-num-steps="user.totalNumb"
+        :is-joint="user.isJoint"
+        :is-me="user.isMe"
+        :board="user.board"
+        :empathy="user.empathy"
+        :comment="user.comment"
+        :connect="user.connect"
+        :is-show-com-activity="true"
+      />
+    </div>
+  </BaseBody>
+</template>
+<script setup lang="ts">
+import BaseBody from '~/components/layout/BaseBody.vue'
+import StickyTabsContainer from '~/components/common/StickyTabsContainer.vue'
+import BoxedTabs, { type BoxTab } from '~/components/tabbar/BoxedTabs.vue'
+import ChallengeRankingBox from '~/components/publishing/walkking/ChallengeRankingBox.vue'
+
+const boxTabsA = ref<BoxTab[]>([
+  { title: '스트레스점수', key: 'option0' },
+  { title: '수면점수', key: 'option1' },
+  { title: '칼로리소모량', key: 'option2' }
+])
+const activeBoxTabA = ref('option0')
+
+const onBoxTabChangeA = (key: string) => {
+  activeBoxTabA.value = key
+  console.log('A 탭 선택됨:', key)
+}
+
+interface RankingUser {
+  rank: string
+  isShowChange: boolean
+  isShowSteps: boolean
+  userName: string
+  totalNumb: number
+  isJoint?: boolean
+  isMe?: boolean
+  board?: number
+  empathy?: number
+  comment?: number
+  connect?: number
+}
+
+const rankingList: RankingUser[] = [
+  {
+    rank: '4',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '유교맨',
+    totalNumb: 950,
+    isMe: true,
+    board: 5,
+    empathy: 10,
+    comment: 2,
+    connect: 20
+  },
+  {
+    rank: '1',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '곰탱이',
+    totalNumb: 1000,
+    board: 5,
+    empathy: 10,
+    comment: 2,
+    connect: 20
+  },
+  {
+    rank: '2',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '유교맨',
+    totalNumb: 1000,
+    board: 5,
+    empathy: 10,
+    comment: 2,
+    connect: 20
+  },
+  {
+    rank: '3',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '곰탱이',
+    totalNumb: 960,
+    empathy: 10,
+    comment: 2,
+    connect: 20
+  },
+  {
+    rank: '3',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '곰탱이',
+    totalNumb: 960,
+    comment: 2,
+    connect: 20
+  },
+  {
+    rank: '4',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '곰탱이',
+    totalNumb: 960,
+    comment: 2,
+    connect: 20
+  },
+  {
+    rank: '5',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '곰탱이',
+    totalNumb: 960,
+    comment: 2,
+    connect: 20
+  },
+  {
+    rank: '6',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '곰탱이',
+    totalNumb: 960,
+    comment: 2,
+    connect: 20
+  },
+  {
+    rank: '7',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '곰탱이',
+    totalNumb: 960,
+    comment: 2,
+    connect: 20
+  },
+  {
+    rank: '8',
+    isShowChange: false,
+    isShowSteps: false,
+    userName: '곰탱이',
+    totalNumb: 960,
+    comment: 2,
+    connect: 20
+  }
+]
+
+// rank별 카운트 세기
+const counts = rankingList.reduce((acc: Record<string, number>, cur) => {
+  acc[cur.rank] = (acc[cur.rank] || 0) + 1
+  return acc
+}, {})
+
+// 공동 여부 추가
+rankingList.forEach(user => {
+  user.isJoint = counts[user.rank] > 1
+})
+</script>
+<style scoped lang="scss">
+.ranking-wrap {
+  &:last-child {
+    border-bottom: 0;
+  }
+  &:deep {
+    padding-inline: 0.8rem;
+  }
+  &:deep(.rangking) {
+    width: 100%;
+  }
+}
+</style>

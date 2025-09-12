@@ -44,14 +44,7 @@
         </div>
       </template>
     </BottomModal> -->
-
-    <div class="total-claim">
-      <div class="total">총 <strong>2</strong>건</div>
-      <div class="sort-insurance">
-        <button class="item">전체</button>
-        <button class="item" @click="clickSort">최근 7일<i class="icon-arrow-down"></i></button>
-      </div>
-    </div>
+    <TotalItemSort :total="3" :buttons="sortButtons" @button-click="clickSort" />
 
     <!-- ToDo: 기간 내, 청구내역이 없을때 활성화 -->
     <!-- <div class="wrap-empty">
@@ -171,6 +164,11 @@ import SegmentedTabsStyle from '~/components/common/tab/SegmentedTabs.vue'
 import NoticeBox from '~/components/insu/NoticeBox.vue'
 import FlexSection from '~/components/page/FlexSection.vue'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
+import TotalItemSort from '~/components/publishing/insu/billingInfo/TotalItemSort.vue'
+const sortButtons = ref([
+  { label: '전체', value: 'all' },
+  { label: '최근 7일', value: '최근 7일', icon: true }
+])
 const agentList = ref([
   { id: 'all', label: '전체', value: 'all' },
   { id: '1', label: '설계사1', value: 1 },
@@ -247,10 +245,10 @@ const clickSort = () => {
 const segmentedTabs1 = ref([
   { title: '전체', key: 'segment1' },
   { title: '통원', key: 'segment2' },
-  { title: '입원', key: 'segment3' },
-  { title: '자동청구', key: 'segment4' }
+  { title: '입원', key: 'segment3' }
 ])
 const segmentedTabs2 = ref([
+  { title: '7일', key: 'segment4' },
   { title: '6개월', key: 'segment5' },
   { title: '1년', key: 'segment6' },
   { title: '2년', key: 'segment7' },

@@ -1,6 +1,11 @@
 <template>
   <div class="comment-wrap">
-    <FieldSetVariable class="commentBox" :count-area="false" @input-text-changed="handleTextChange" />
+    <FieldSetVariable
+      class="commentBox"
+      :count-area="false"
+      :placeholder="placeholder"
+      @input-text-changed="handleTextChange"
+    />
     <button class="comment-btn" type="button" :class="{ active: isButtonActive }"></button>
   </div>
 </template>
@@ -17,16 +22,28 @@ const handleTextChange = (textLength: number) => {
   // 텍스트 길이가 0보다 크면 (한 글자 이상) active 상태로 설정
   isButtonActive.value = textLength > 0
 }
+
+const props = defineProps({
+  placeholder: {
+    type: String,
+    default: '텍스트를 입력해주세요.'
+  }
+})
 </script>
 
 <style scoped lang="scss">
 .comment-wrap {
-  position: relative;
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   margin: 2.4rem -0.4rem 0;
-  padding: 1.6rem 0;
+  padding: 1.6rem;
   gap: 1.6rem;
+  background-color: #fff;
   &::before {
     content: '';
     position: absolute;

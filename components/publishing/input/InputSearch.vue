@@ -11,6 +11,7 @@
             :select-placeholder="selectPlaceholder"
             :modal-title="modalTitle"
             :custom-opts="searchOptions"
+            :is-show-cancel-btn="showCancelBtn"
             :transparent="true"
             :inp-type="'search'"
             @change="handleOptionChange"
@@ -64,6 +65,7 @@ const props = defineProps({
   selectPlaceholder: { type: String, default: '검색 옵션' },
   placeholder: { type: String, default: '이름, 휴대폰 뒷자리' },
   modalTitle: { type: String, default: '이름, 휴대폰 뒷자리' },
+  showCancelBtn: { type: Boolean, default: true },
   modelValue: { type: String, default: '' },
   readonly: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },

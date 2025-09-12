@@ -2,11 +2,11 @@
   <BaseBody :show-back-button="true" page-title="의료영상공유" :has-notification="true">
     <section class="issue-history">
       <TitleSection
-        title="검사기간 및 진료과 / 검사종류를<br/>선택해 주세요."
-        description="진료기간 및 진료과, 검사종류를 선택한 후<br/>영상을 발급 받을 수 있어요."
+        title="공유할 의료영상 내역을<br/>확인해주세요"
+        description="공유 진행 시 아래 공유내역을 전송할 수 있어요."
       />
     </section>
-    <HospitalInfoField :name="hospitalName" :logo-src="logoSrc" />
+    <HospitalInfoField :name="hospitalName" :logo-src="logoSrc" label="공유 병원명" />
     <MedicalHistoryAccordion
       :medical-history="medicalInfos"
       :is-label-title="true"

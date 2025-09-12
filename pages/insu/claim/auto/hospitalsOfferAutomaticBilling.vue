@@ -9,23 +9,13 @@
     :has-add-text-left="true"
     class="pb-36"
   >
-    <div class="wrap-insurance-list">
-      <button 
-        v-for="(insurance, index) in insuranceList" 
-        :key="index"
-        class="item" 
-        :class="{ checked: insurance.checked }"
-        @click="clickInsurance(index)"
-      >
-        <img src="/assets/images/insu/icon_bank_whitebg.svg" alt="로고:보험사" class="logo-insurance" />
-        <div class="name-insurance">{{ insurance.name }}</div>
-      </button>
-    </div>
+    <AutoClaimAvailableItem v-model:items="insuranceList" />
   </BaseBody>
 </template>
 
 <script setup lang="ts">
 import BaseBody from '~/components/layout/BaseBody.vue'
+import AutoClaimAvailableItem from '~/components/publishing/insu/auto/AutoClaimAvailableItem.vue'
 
 // 보험사 목록 데이터
 const insuranceList = ref([
@@ -58,7 +48,7 @@ const clickInsurance = (index: number) => {
   margin-top: 1.2rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-	grid-auto-columns: auto;
+  grid-auto-columns: auto;
   gap: 0.8rem;
   .item {
     padding: 1.8rem 1.6rem 1.4rem;
@@ -67,8 +57,8 @@ const clickInsurance = (index: number) => {
     gap: 0.4rem;
     align-items: center;
     border-radius: 0.8rem;
-    background-color: #F9F9F9;
-    border: 0.1rem solid #F9F9F9;
+    background-color: #f9f9f9;
+    border: 0.1rem solid #f9f9f9;
     &:active,
     &.checked {
       border: 0.1rem solid #555555;
@@ -80,7 +70,7 @@ const clickInsurance = (index: number) => {
     .name-insurance {
       font-size: 1.4rem;
       font-weight: 500;
-      color: #2B2B2B;
+      color: #2b2b2b;
     }
   }
 }

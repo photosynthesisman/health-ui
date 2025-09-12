@@ -33,6 +33,12 @@ defineProps<{
     font-size: 2.4rem;
     font-weight: 700;
     line-height: 3.1rem;
+    ::v-deep(.blue) {
+      color: var(--Primary_Y, #4c7ff7);
+    }
+    :deep(.thin) {
+      font-weight: 400;
+    }
   }
   .description {
     font-size: 1.8rem;

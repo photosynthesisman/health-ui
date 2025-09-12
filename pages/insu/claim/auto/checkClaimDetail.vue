@@ -7,27 +7,25 @@
     :has-tel-btn="true"
     class="pb-60"
   >
-    <h1 class="c-tit mt-24">
-      <span class="text"> 자동청구 신청 내용을<br />확인해 주세요. </span>
-    </h1>
-
+    <TitleSection title="자동청구 신청 내용을<br />확인해 주세요." class="mt-24" />
     <HospitalListAccordion :hospital-list="hospitalList" />
     <AutoClaimDetail :claim-details="details" />
+    <ButtonGroup class="is-fixed">
+      <Button
+        btn-type="primary"
+        element-type="button"
+        aria-label="자동청구 신청하기"
+        class="lg w-full medium btn-sticky"
+        @click="clickNext()"
+      />
+    </ButtonGroup>
   </BaseBody>
-  <ButtonGroup class="is-fixed">
-    <Button
-      btn-type="primary"
-      element-type="button"
-      aria-label="자동청구 신청하기"
-      class="lg w-full medium btn-sticky"
-      @click="clickNext()"
-    />
-  </ButtonGroup>
 </template>
 
 <script setup lang="ts">
 // 타입지정 필요
 import BaseBody from '~/components/layout/BaseBody.vue'
+import TitleSection from '~/components/insu/TitleSection.vue'
 import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import HospitalListAccordion from '~/components/insu/HospitalListAccordion.vue'

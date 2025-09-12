@@ -195,6 +195,7 @@ const clickConfirm = () => {
     font-weight: 700;
     line-height: 1.4;
     color: #2b2b2b;
+    text-align: center;
   }
   .wrap-hide-num {
     display: flex;
@@ -240,6 +241,7 @@ const clickConfirm = () => {
     font-size: 1.3rem;
     line-height: 1.4;
     color: #f14960;
+    text-align: center;
   }
 }
 

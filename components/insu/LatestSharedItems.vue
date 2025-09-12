@@ -57,7 +57,7 @@ const emit = defineEmits(['select-hospital', 'remove-hospital', 'remove-all'])
   padding: 2.1rem 0;
   p {
     font-size: 1.6rem;
-    font-weight: 500;
+    font-weight: 700;
     line-height: 2.2rem;
   }
 }

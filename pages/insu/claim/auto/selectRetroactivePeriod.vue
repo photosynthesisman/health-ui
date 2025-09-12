@@ -7,65 +7,40 @@
     :has-tel-btn="true"
     class="pb-60"
   >
-    <h1 class="c-tit mt-24">
-      <span class="text"> 자동청구 소급기간을<br />선택해 주세요. </span>
-    </h1>
-    <div class="wrap-info-text">
-      <i class="info" alt="info"></i>
-      <div class="text">설정한 금액 미만은 자동청구 진행하지 않아요</div>
-    </div>
+    <TitleSection title="자동청구 소급기간을<br />선택해 주세요." class="mt-24" />
+    <InfoText text="설정한 금액 미만은 자동청구 진행하지 않아요" class="mt-16 mb-32" />
     <FlexColDiv class="gap-12">
       <Radio
-        id="rdo1"
+        v-for="option in radioOptions"
+        :id="option.id"
+        :key="option.id"
         name="rdo1"
         custom-style="button"
-        aria-label="3년전 진료까지 자동청구"
+        :aria-label="option.label"
         icon="check"
         icon-type="check"
         class="w-full text-left"
-      />
-      <Radio
-        id="rdo2"
-        name="rdo1"
-        custom-style="button"
-        aria-label="타이틀 텍스트"
-        icon="check"
-        icon-type="check"
-        class="w-full text-left"
-      />
-      <Radio
-        id="rdo3"
-        name="rdo1"
-        custom-style="button"
-        aria-label="타이틀 텍스트"
-        icon="check"
-        icon-type="check"
-        class="w-full text-left"
-      />
-      <Radio
-        id="rdo4"
-        name="rdo1"
-        custom-style="button"
-        aria-label="타이틀 텍스트"
-        icon="check"
-        icon-type="check"
-        class="w-full text-left"
-      />
+        :value="option.id"
+      >
+        {{ option.label }}
+      </Radio>
     </FlexColDiv>
+    <ButtonGroup class="is-fixed">
+      <Button
+        btn-type="primary"
+        element-type="button"
+        aria-label="다음"
+        class="lg w-full medium btn-sticky"
+        @click="clickNext"
+      />
+    </ButtonGroup>
   </BaseBody>
-  <ButtonGroup class="is-fixed">
-    <Button
-      btn-type="primary"
-      element-type="button"
-      aria-label="다음"
-      class="lg w-full medium btn-sticky"
-      @click="clickNext"
-    />
-  </ButtonGroup>
 </template>
 
 <script setup lang="ts">
 // 타입지정 필요
+import TitleSection from '~/components/insu/TitleSection.vue'
+import InfoText from '~/components/insu/InfoText.vue'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
@@ -77,6 +52,14 @@ const checkbox1 = ref(false)
 const checkbox2 = ref(false)
 const checkbox3 = ref(false)
 const checkbox4 = ref(false)
+
+// 라디오 옵션 배열
+const radioOptions = [
+  { id: 'rdo1', label: '3년전 진료까지 자동청구' },
+  { id: 'rdo2', label: '타이틀 텍스트' },
+  { id: 'rdo3', label: '타이틀 텍스트' },
+  { id: 'rdo4', label: '타이틀 텍스트' }
+]
 
 // 전체선택 상태
 const selectAll = ref<boolean>(false)

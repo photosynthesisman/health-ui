@@ -20,11 +20,11 @@
     <div class="editor-container">
       <EditorToolbarCustom
         v-if="editor"
-        :editor="editor as any"
+        :editor="editor"
         :hashtag="hashtags"
         :star="star"
         :health-data="healthData"
-        :image-count="uploadedImages.length"
+        :image-count="uploadedFiles.length"
         @image-upload="triggerImageUpload"
         @hashtag="triggerHashtag"
         @star="triggerStar"
@@ -32,23 +32,22 @@
       />
 
       <!-- 건강데이터 섹션 -->
-      <div v-if="isHealthDataActive" class="health-section">
-        <div class="health-header">
-          <h3 class="health-title">건강 데이터</h3>
-          <!-- 건강데이터 섹션 닫기 버튼 -->
-          <button class="health-close" @click="closeHealthData">×</button>
-        </div>
-        <div class="health-container">
-          <p class="health-placeholder">건강 데이터 요소들</p>
+      <div v-if="isHealthDataActive && currentHealthItem" class="health-data-wrap">
+        <div class="health-data-item">
+          <div class="item-info">
+            <strong class="health-cate">{{ currentHealthItem.optionLabel }}</strong>
+            <span class="health-detail">{{ currentHealthItem.data }}</span>
+          </div>
+          <button class="health-info-del" @click="removeHealthData(currentHealthItem.value)"></button>
         </div>
       </div>
 
       <!-- TipTap 에디터 텍스트 영역 (TipTap 제공 컴포넌트 사용) -->
       <div class="editor-content-wrapper">
         <div class="editor-main">
-          <EditorContent :editor="editor as any" />
-          <!-- 숨겨진 파일 입력: 이미지 업로드용 -->
-          <input ref="fileInputRef" type="file" accept="image/*" multiple class="hidden" @change="handleImageUpload" />
+          <EditorContent :editor="editor" />
+          <!-- 숨겨진 파일 입력: 파일 업로드용 -->
+          <input ref="fileInputRef" type="file" multiple class="hidden" @change="handleImageUpload" />
         </div>
       </div>
     </div>
@@ -81,46 +80,33 @@
         </div>
       </div>
     </div>
-    <!-- 별점 섹션 -->
-    <div v-if="isStarActive" class="star-section">
-      <div class="star-header">
-        <h3 class="star-title">별점</h3>
-        <!-- 07-17 star-close에 클래스 추가, x 텍스트 제거 -->
-        <button class="star-close icon close" @click="closeStarRating"></button>
-      </div>
-      <div class="star-container">
-        <div class="star-rating">
-          <div
-            v-for="starIndex in 5"
-            :key="starIndex"
-            class="star-wrapper"
-            @mousemove="handleStarMove($event, starIndex)"
-            @mouseleave="handleStarLeave"
-            @touchmove="handleStarTouch($event, starIndex)"
-            @touchend="handleTouchEnd"
-            @click="setStarRating(starIndex)"
-          >
-            <!-- 07-17 별 이모지 제거 -->
-            <div class="star-bg"></div>
-            <div class="star-fill" :style="{ width: getStarFillWidth(starIndex) }"></div>
-          </div>
-        </div>
-        <div class="star-score">{{ star.toFixed(1) }}</div>
-      </div>
-    </div>
 
-    <!-- 이미지 섹션 -->
-    <div v-if="uploadedImages.length > 0" class="image-sidebar">
-      <div class="image-container">
+    <!-- 별점 섹션 -->
+    <StarRatingSection class="mt-24 ml-20 mr-20" v-if="isStarActive" @close="closeStarRating" />
+
+    <!-- 파일 섹션 -->
+    <div v-if="uploadedFiles.length > 0" class="image-sidebar">
+      <!-- 이미지 파일 컨테이너 -->
+      <div v-if="imageFiles.length > 0" class="image-container">
         <div class="image-container">
-          <div v-for="(img, index) in uploadedImages" :key="index" class="image-item">
+          <div v-for="(file, index) in imageFiles" :key="`img-${index}`" class="image-item">
             <div class="image-wrapper">
-              <img :src="img" :alt="`업로드된 이미지 ${index + 1}`" class="uploaded-image" />
-              <button class="image-delete-btn" @click="deleteImage(index)">
+              <img :src="file.url" :alt="`업로드된 이미지 ${index + 1}`" class="uploaded-image" />
+              <button class="image-delete-btn" @click="deleteFile(file)">
                 <i class="ri-close-fill"></i>
               </button>
             </div>
           </div>
+        </div>
+      </div>
+      <!-- 이미지가 아닌 파일 컨테이너 -->
+      <div v-if="otherFiles.length > 0" class="otherFile-container">
+        <div v-for="(file, index) in otherFiles" :key="`file-${index}`" class="other-item">
+          <div class="file-name">
+            <span class="name">{{ getFileNameAndExtension(file.name).name }}</span
+            ><span>{{ getFileNameAndExtension(file.name).extension }}</span>
+          </div>
+          <button class="file-delete-btn" @click="deleteFile(file)"></button>
         </div>
       </div>
     </div>
@@ -128,15 +114,59 @@
 </template>
 
 <script setup lang="ts">
-// import { watch } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import EditorToolbarCustom from '~/components/publishing/community/board/EditorToolbarCustom.vue'
 import { EditorContent } from '@tiptap/vue-3'
 import { useEditor } from '~/composables/common/editor/useEditor'
+import StarRatingSection from '~/components/publishing/community/board/StarRatingSection.vue'
+
 const { editor, jsonContent } = useEditor()
 
-// 이미지 업로드
+// emit 정의
+const emit = defineEmits<{
+  'open-health-modal': []
+  'remove-health-data': [value: string]
+}>()
+
+// props 정의
+interface SelectedHealthData {
+  categoryName: string
+  optionLabel: string
+  combinedLabel: string
+  value: string
+  data: string
+}
+
+const props = defineProps<{
+  selectedHealthData?: SelectedHealthData[]
+}>()
+
+// 파일 업로드
+interface UploadedFile {
+  url: string
+  name: string
+  type: string
+  isImage: boolean
+}
 const fileInputRef = ref<HTMLInputElement | null>(null) // 숨겨진 파일 입력 참조
-const uploadedImages = ref<string[]>([]) // 업로드된 이미지 URL 배열 (최대 5개)
+const uploadedFiles = ref<UploadedFile[]>([]) // 업로드된 파일 배열 (최대 5개)
+
+// 이미지 파일과 기타 파일 분리
+const imageFiles = computed(() => uploadedFiles.value.filter(file => file.isImage))
+const otherFiles = computed(() => uploadedFiles.value.filter(file => !file.isImage))
+
+// 파일명과 확장자 분리 헬퍼 함수
+const getFileNameAndExtension = (fileName: string) => {
+  const lastDotIndex = fileName.lastIndexOf('.')
+  if (lastDotIndex === -1 || lastDotIndex === 0) {
+    // 확장자가 없거나 파일명이 .으로 시작하는 경우
+    return { name: fileName, extension: '' }
+  }
+  return {
+    name: fileName.substring(0, lastDotIndex),
+    extension: fileName.substring(lastDotIndex)
+  }
+}
 
 // 해시태그
 const hashtagInputRef = ref<HTMLInputElement | null>(null) // 해시태그 입력 필드 참조
@@ -147,13 +177,14 @@ const isHashtagActive = ref<boolean>(false) // 해시태그 섹션 활성화 상
 
 // 별점
 const star = ref<number>(0) // 최종 별점 (0-5, 0.5 단위)
-const showStarRating = ref<boolean>(false) // 별점 입력 모드 상태
-const hoverStar = ref<number>(0) // 마우스 호버 시 임시 별점
 const isStarActive = ref<boolean>(false) // 별점 섹션 활성화 상태 (토글용)
 
 // 건강 데이터
 const healthData = ref<any>({})
-const isHealthDataActive = ref<boolean>(false) // 건강데이터 섹션 활성화 상태 (토글용)
+const isHealthDataActive = computed(() => props.selectedHealthData && props.selectedHealthData.length > 0) // 선택된 건강데이터가 있을 때 활성화
+const currentHealthItem = computed(() =>
+  props.selectedHealthData && props.selectedHealthData.length > 0 ? props.selectedHealthData[0] : null
+) // 현재 선택된 건강데이터 (1개만)
 
 //* 이미지 관련 함수들
 
@@ -162,31 +193,39 @@ const isHealthDataActive = ref<boolean>(false) // 건강데이터 섹션 활성�
  * 최대 5개 제한, 초과 시 경고 표시
  */
 const triggerImageUpload = () => {
-  if (uploadedImages.value.length >= 5) {
-    alert('최대 5개의 이미지까지 업로드할 수 있습니다.')
+  if (uploadedFiles.value.length >= 5) {
+    alert('최대 5개의 파일까지 업로드할 수 있습니다.')
     return
   }
   fileInputRef.value?.click() // 숨겨진 파일 입력 클릭
 }
 
-// TODO: 추후 이미지 삭제, 이미지 ID값으로 삭제할 예정
+// TODO: 추후 파일 삭제, 파일 ID값으로 삭제할 예정
 const deleteImage = (index: number) => {
-  uploadedImages.value.splice(index, 1)
+  uploadedFiles.value.splice(index, 1)
+}
+
+// 파일 객체로 삭제
+const deleteFile = (file: UploadedFile) => {
+  const index = uploadedFiles.value.findIndex(f => f === file)
+  if (index !== -1) {
+    uploadedFiles.value.splice(index, 1)
+  }
 }
 
 /**
  * 파일 입력 변경 이벤트 핸들러
- * 선택된 이미지들을 Base64로 변환하여 배열에 추가
+ * 선택된 파일들을 Base64로 변환하여 배열에 추가
  */
 const handleImageUpload = (event: Event) => {
   const files = (event.target as HTMLInputElement).files
   if (!files || files.length === 0) return
 
-  const currentCount = uploadedImages.value.length
+  const currentCount = uploadedFiles.value.length
   const remainingSlots = 5 - currentCount
 
   if (remainingSlots <= 0) {
-    alert('최대 5개의 이미지까지 업로드할 수 있습니다.')
+    alert('최대 5개의 파일까지 업로드할 수 있습니다.')
     return
   }
 
@@ -194,7 +233,7 @@ const handleImageUpload = (event: Event) => {
   const filesToProcess = Array.from(files).slice(0, remainingSlots)
 
   if (files.length > filesToProcess.length) {
-    alert(`${filesToProcess.length}개의 이미지만 업로드됩니다. (최대 5개 제한)`)
+    alert(`${filesToProcess.length}개의 파일만 업로드됩니다. (최대 5개 제한)`)
   }
 
   // 각 파일을 Base64로 변환하여 배열에 추가
@@ -202,7 +241,13 @@ const handleImageUpload = (event: Event) => {
     const reader = new FileReader()
     reader.onload = () => {
       const result = reader.result as string
-      uploadedImages.value.push(result)
+      const isImage = file.type.startsWith('image/')
+      uploadedFiles.value.push({
+        url: result,
+        name: file.name,
+        type: file.type,
+        isImage
+      })
     }
     reader.readAsDataURL(file)
   })
@@ -376,14 +421,9 @@ const deleteHashtag = (index: number) => {
 const triggerStar = () => {
   isStarActive.value = !isStarActive.value
 
-  if (isStarActive.value) {
-    // 활성화 시 별점 입력 모드 진입
-    showStarRating.value = true
-  } else {
+  if (!isStarActive.value) {
     // 비활성화 시 데이터 초기화
     star.value = 0
-    showStarRating.value = false
-    hoverStar.value = 0
   }
 }
 
@@ -393,94 +433,22 @@ const triggerStar = () => {
 const closeStarRating = () => {
   isStarActive.value = false
   star.value = 0
-  showStarRating.value = false
-  hoverStar.value = 0
-}
-
-/**
- * 마우스 이동 시 별점 미리보기
- * 별의 왼쪽/오른쪽 절반에 따라 0.5점 단위 계산
- */
-const handleStarMove = (event: MouseEvent, starIndex: number) => {
-  const rect = (event.target as HTMLElement).getBoundingClientRect()
-  const x = event.clientX - rect.left
-  const width = rect.width
-  const isHalfStar = x < width / 2
-  hoverStar.value = isHalfStar ? starIndex - 0.5 : starIndex
-}
-
-/**
- * 마우스가 별점 영역을 벗어날 때
- */
-const handleStarLeave = () => {
-  hoverStar.value = 0
-}
-
-/**
- * 터치 이동 시 별점 미리보기 (모바일)
- */
-const handleStarTouch = (event: TouchEvent, starIndex: number) => {
-  event.preventDefault()
-  const touch = event.touches[0]
-  const rect = (event.target as HTMLElement).getBoundingClientRect()
-  const x = touch.clientX - rect.left
-  const width = rect.width
-  const isHalfStar = x < width / 2
-  hoverStar.value = isHalfStar ? starIndex - 0.5 : starIndex
-}
-
-/**
- * 터치 종료 시 별점 확정 (모바일)
- */
-const handleTouchEnd = () => {
-  if (hoverStar.value > 0) {
-    star.value = hoverStar.value
-  }
-}
-
-/**
- * 별점 클릭 시 별점 설정
- */
-const setStarRating = (starIndex: number) => {
-  star.value = hoverStar.value > 0 ? hoverStar.value : starIndex
-}
-
-/**
- * 별의 채움 너비 계산 (0.5점 단위 표현)
- * @param starIndex 별의 인덱스 (1-5)
- * @returns CSS width 값 (0%, 50%, 100%)
- */
-const getStarFillWidth = (starIndex: number): string => {
-  const currentRating = hoverStar.value > 0 ? hoverStar.value : star.value
-  if (starIndex <= currentRating) {
-    return '100%' // 완전히 채움
-  } else if (starIndex - 0.5 <= currentRating) {
-    return '50%' // 절반 채움
-  }
-  return '0%' // 비어있음
 }
 
 //* 건강 데이터 관련 (미구현)
 
 /**
- * 건강데이터 토글 (활성화/비활성화)
- * 비활성화 시 데이터 초기화
+ * 건강데이터 모달 팝업
  */
 const triggerHealthData = () => {
-  isHealthDataActive.value = !isHealthDataActive.value
-
-  if (!isHealthDataActive.value) {
-    // 비활성화 시 데이터 초기화
-    healthData.value = {}
-  }
+  emit('open-health-modal')
 }
 
 /**
- * 건강데이터 입력 모드 종료 (X 버튼용)
+ * 건강데이터 아이템 제거 (X 버튼용)
  */
-const closeHealthData = () => {
-  isHealthDataActive.value = false
-  healthData.value = {}
+const removeHealthData = (value: string) => {
+  emit('remove-health-data', value)
 }
 
 // 파일 입력 변화 감지
@@ -597,123 +565,58 @@ const closeHealthData = () => {
   }
 }
 
-/* 별점 섹션 */
-.star-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  margin: 2.4rem 2rem 0;
-  padding: 1.5rem;
-  border-radius: 0.8rem;
-  border: 0.1rem solid #eee;
-}
-.star-header {
-  position: relative;
-  .star-title {
-    font-size: 1.6rem;
-    font-weight: 500;
-    line-height: 2.2rem;
-    color: #555;
-    text-align: center;
-  }
-  .star-close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 1.6rem;
-    height: 1.6rem;
-    background-size: 1.6rem;
-    background-repeat: no-repeat;
-  }
-}
-.star-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.8rem;
-}
-.star-rating {
-  display: flex;
-  gap: 0.8rem;
-}
-.star-wrapper {
-  position: relative;
-  cursor: pointer;
-  user-select: none;
-}
-.star-bg {
-  width: 3.2rem;
-  height: 3.2rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cpath d='M15.8268 3.6185C16.1022 3.06044 16.898 3.06044 17.1734 3.6185L20.7387 10.8427C20.8481 11.0643 21.0595 11.2179 21.3041 11.2534L29.2764 12.4119C29.8923 12.5013 30.1382 13.2582 29.6926 13.6926L23.9237 19.3158C23.7467 19.4883 23.666 19.7368 23.7078 19.9804L25.0696 27.9205C25.1748 28.5339 24.531 29.0016 23.9802 28.712L16.8495 24.9632C16.6308 24.8482 16.3694 24.8482 16.1507 24.9632L9.02002 28.712C8.46918 29.0016 7.82538 28.5339 7.93059 27.9205L9.29242 19.9804C9.3342 19.7368 9.25345 19.4883 9.07648 19.3158L3.30764 13.6926C2.86201 13.2582 3.10792 12.5013 3.72377 12.4119L11.6961 11.2534C11.9407 11.2179 12.1521 11.0643 12.2615 10.8427L15.8268 3.6185Z' fill='%23F4F4F4' stroke='%23E2E2E2' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-.star-fill {
-  width: 3.2rem;
-  height: 3.2rem;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cpath d='M15.8268 3.6185C16.1022 3.06044 16.898 3.06044 17.1734 3.6185L20.7387 10.8427C20.8481 11.0643 21.0595 11.2179 21.3041 11.2534L29.2764 12.4119C29.8923 12.5013 30.1382 13.2582 29.6926 13.6926L23.9237 19.3158C23.7467 19.4883 23.666 19.7368 23.7078 19.9804L25.0696 27.9205C25.1748 28.5339 24.531 29.0016 23.9802 28.712L16.8495 24.9632C16.6308 24.8482 16.3694 24.8482 16.1507 24.9632L9.02002 28.712C8.46918 29.0016 7.82538 28.5339 7.93059 27.9205L9.29242 19.9804C9.3342 19.7368 9.25345 19.4883 9.07648 19.3158L3.30764 13.6926C2.86201 13.2582 3.10792 12.5013 3.72377 12.4119L11.6961 11.2534C11.9407 11.2179 12.1521 11.0643 12.2615 10.8427L15.8268 3.6185Z' fill='%23FCD233' stroke='%23FBC700' stroke-linejoin='round'/%3E%3C/svg%3E");
-  overflow: hidden;
-  transition: width 0.1s ease;
-}
-.star-score {
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 2.6rem;
-}
+// /* 건강 데이터 섹션 */
+// .health-section {
+//   margin: 2rem;
+//   margin-bottom: 0;
+//   padding: 16px;
+//   background: #f0f9ff;
+//   border-radius: 8px;
+//   border: 1px solid #e0f2fe;
+// }
 
-/* 건강 데이터 섹션 */
-.health-section {
-  margin: 2rem;
-  margin-bottom: 0;
-  padding: 16px;
-  background: #f0f9ff;
-  border-radius: 8px;
-  border: 1px solid #e0f2fe;
-}
+// .health-header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 16px;
+// }
 
-.health-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
+// .health-title {
+//   font-size: 16px;
+//   font-weight: 600;
+//   color: #374151;
+//   margin: 0 auto;
+// }
 
-.health-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #374151;
-  margin: 0 auto;
-}
+// .health-close {
+//   background: none;
+//   border: none;
+//   color: #6b7280;
+//   cursor: pointer;
+//   font-size: 18px;
+//   padding: 0;
+//   width: 24px;
+//   height: 24px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
 
-.health-close {
-  background: none;
-  border: none;
-  color: #6b7280;
-  cursor: pointer;
-  font-size: 18px;
-  padding: 0;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+// .health-container {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   gap: 12px;
+// }
 
-.health-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.health-placeholder {
-  color: #6b7280;
-  font-size: 14px;
-  text-align: center;
-  margin: 0;
-  padding: 20px;
-}
+// .health-placeholder {
+//   color: #6b7280;
+//   font-size: 14px;
+//   text-align: center;
+//   margin: 0;
+//   padding: 20px;
+// }
 
 .hidden {
   display: none;
@@ -754,6 +657,38 @@ const closeHealthData = () => {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.uploaded-file {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border-radius: 0.4rem;
+  padding: 0.8rem;
+  gap: 0.4rem;
+}
+
+.file-icon {
+  font-size: 2.4rem;
+  color: #6b7280;
+}
+
+.file-name {
+  font-size: 1rem;
+  color: #374151;
+  text-align: center;
+  word-break: break-all;
+  line-height: 1.2;
+  max-height: 2.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .image-delete-btn {
@@ -823,6 +758,82 @@ const closeHealthData = () => {
   margin: 0;
   font-weight: 500;
 }
+/* 이미지가 아닌 파일 컨테이너 스타일 */
+.otherFile-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 2.4rem 2rem;
+}
+.health-data-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.2rem 2rem 2.4rem;
+  .item-info {
+    display: flex;
+    // flex-wrap: wrap;
+    gap: 0.8rem;
+    font-size: 1.4rem;
+    .health-cate,
+    .health-detail {
+      font-size: 1.4rem;
+      color: #555;
+      font-weight: 400;
+      &.health-cate {
+        font-weight: 600;
+        flex: 0 0 auto;
+      }
+    }
+  }
+}
+
+.health-data-item,
+.other-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 1.8rem;
+  height: 4.8rem;
+  background: #f4f4f4;
+  border-radius: 1.2rem;
+  transition: background 0.2s ease;
+  &.health-data-item {
+    height: auto;
+  }
+  .file-name {
+    font-size: 1.4rem;
+    line-height: 1;
+    color: #555;
+    text-align: left;
+    flex: 1;
+    margin-right: 1rem;
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    .name {
+      word-break: break-all;
+      @include mixin.ellipsis;
+    }
+  }
+}
+
+.health-info-del,
+.file-delete-btn {
+  width: 2.4rem;
+  height: 2.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-size: 2.4rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M16 8L8 16M16 16L8 8' stroke='%232B2B2B' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+}
 
 /* Swiper 가로 스크롤 커스텀 스타일 */
 :deep(.swiper-pagination) {
@@ -891,81 +902,4 @@ const closeHealthData = () => {
   background: #3b82f6 !important;
   border-radius: 10px !important;
 }
-
-/* ================================ */
-/* 📱 모바일 반응형 스타일 */
-/* ================================ */
-
-/* 태블릿 크기 (768px 이하) */
-// @media (max-width: 768px) {
-//   /* 에디터 콘텐츠를 세로 배치 */
-//   .editor-content-wrapper {
-//     flex-direction: column;
-//   }
-
-//   /* 이미지 사이드바 조정 */
-//   .image-sidebar {
-//     margin-top: 16px;
-//     max-height: 220px;
-//   }
-
-//   /* 업로드된 이미지 크기 조정 */
-//   .uploaded-image {
-//     height: 80px;
-//   }
-
-//   /* 정적 이미지 아이템 크기 조정 */
-//   .static-image-item {
-//     flex: 0 0 45%; /* 모바일에서는 45% 너비 */
-//     min-width: 80px;
-//     max-width: 120px;
-//   }
-
-//   /* 이미지 간격 줄이기 */
-//   .static-image-container {
-//     gap: 8px;
-//   }
-
-//   :deep(.swiper-button-next),
-//   :deep(.swiper-button-prev) {
-//     width: 20px !important;
-//     height: 20px !important;
-//   }
-
-//   :deep(.swiper-button-next:after),
-//   :deep(.swiper-button-prev:after) {
-//     font-size: 12px !important;
-//   }
-// }
-
-// /* 모바일 크기 (640px 이하) */
-// @media (max-width: 640px) {
-//   /* 이미지 사이드바 더 작게 조정 */
-//   .image-sidebar {
-//     padding: 12px;
-//     max-height: 180px;
-//   }
-
-//   /* 이미지 제목 더 작게 */
-//   .image-title {
-//     font-size: 12px;
-//   }
-
-//   /* 업로드된 이미지 더 작게 */
-//   .uploaded-image {
-//     height: 60px;
-//   }
-
-//   /* 정적 이미지 아이템 더 작게 */
-//   .static-image-item {
-//     flex: 0 0 40%; /* 작은 모바일에서는 40% 너비 */
-//     min-width: 60px;
-//     max-width: 90px;
-//   }
-
-//   /* 이미지 간격 더 줄이기 */
-//   .static-image-container {
-//     gap: 6px;
-//   }
-// }
 </style>

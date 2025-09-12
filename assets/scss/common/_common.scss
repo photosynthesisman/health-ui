@@ -378,6 +378,7 @@ article {
   padding-bottom: 0;
   position: relative;
   background-color: rgb(var(--white));
+
   &:has(.termsview) {
     .title_headline {
       padding: 1rem 0;
@@ -754,13 +755,14 @@ article {
     --cfoot-padding-bottom: 6.8rem;
 
     display: flex;
+    overflow-x: hidden;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
     min-height: 100dvh;
     margin: auto;
-    padding: vars.$header-height 0 0;
+    padding: vars.$header-height 0 2rem;
     > .cbody:has(.btn-group.is-fixed) {
       padding-bottom: 6.8rem; // cfoot이 없을때
     }
@@ -830,7 +832,8 @@ article {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    min-height: 100dvh;
+    // height: 100dvh;
+    overscroll-behavior: none; /* 기본 브라우저 오버스크롤 제어 */
   }
 }
 /* E : Layout */
@@ -864,6 +867,7 @@ article {
     font-size: 5.55556vw;
   }
 }
+
 /* 출석체크  */
 .l-page[data-page='Attendance'] {
   padding-bottom: 0;
@@ -895,16 +899,7 @@ article {
     background: #f9f9f9;
   }
 }
-.l-page[data-page='InsuredManagement'],
-.l-page[data-page='InsuredManagementByGeneral'],
-.l-page[data-page='InsuredManagementSearch'] {
-  background: #f4f4f4;
-  &.l-page[data-page='InsuredManagementSearch'] {
-    .cbody {
-      background: #f4f4f4;
-    }
-  }
-}
+
 .l-page[page-type='dark-bg'] {
   padding-top: 0;
   .cbody {
@@ -962,37 +957,38 @@ article {
     align-items: center;
     flex-shrink: 0;
     cursor: pointer;
-    margin-top: 0.2rem;
+    // margin-top: 0.2rem;
   }
-  .tooltip {
-    width: auto;
-    padding: 1.2rem 4.8rem 1.2rem 2rem;
-    border-radius: 0.8rem;
-    background-color: #4f5561;
-    position: absolute;
-    left: -1rem;
-    right: -1rem;
-    top: 3rem;
-    box-shadow: 0 0.4rem 1rem 0 rgba(0, 0, 0, 0.04);
-    backdrop-filter: blur(1rem);
-    z-index: 1;
-    .text {
-      color: #ffffff;
-      font-size: 1.4rem;
-      font-weight: 400;
-      line-height: 1.8rem;
-    }
+}
+
+.tooltip {
+  width: auto;
+  padding: 1.2rem 4.8rem 1.2rem 2rem;
+  border-radius: 0.8rem;
+  background-color: #4f5561;
+  position: absolute;
+  left: -1rem;
+  right: -1rem;
+  top: 3rem;
+  box-shadow: 0 0.4rem 1rem 0 rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(1rem);
+  z-index: 1;
+  .text {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.8rem;
   }
-  .c-tooltip-close-btn {
-    position: absolute;
-    right: 1.2rem;
-    top: 1rem;
-    cursor: pointer;
-    z-index: 1;
-    width: 2.4rem;
-    height: 2.4rem;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M18 6L6 18M18 18L6 6' stroke='%23FFFFFF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  }
+}
+.c-tooltip-close-btn {
+  position: absolute;
+  right: 1.2rem;
+  top: 1rem;
+  cursor: pointer;
+  z-index: 1;
+  width: 2.4rem;
+  height: 2.4rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M18 6L6 18M18 18L6 6' stroke='%23FFFFFF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 .c-tit .icon {
   margin-bottom: 0.5rem;

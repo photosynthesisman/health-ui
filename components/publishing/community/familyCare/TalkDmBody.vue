@@ -92,8 +92,10 @@
 
     <!-- 비대칭 버튼 레이아웃 asymmetric  -->
     <ButtonGroup gap="0" asymmetric class="is-fixed talk-btns">
-      <InputImage />
-      <BtnEmoji />
+      <FlexRowDiv class="gap-12">
+        <InputImage />
+        <BtnEmoji />
+      </FlexRowDiv>
       <InputMessage v-model="messageText" placeholder="하고싶은 말을 자유롭게 남겨주세요" />
       <ButtonSend />
     </ButtonGroup>
@@ -107,7 +109,7 @@ import ButtonSend from '~/components/publishing/button/ButtonSend.vue'
 import InputMessage from '~/components/publishing/input/InputMessage.vue'
 import InputImage from '~/components/publishing/input/InputImage.vue'
 import BtnEmoji from '~/components/publishing/input/BtnEmoji.vue'
-
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 // Props 정의 개선
 interface Props {
   conversationId?: string
@@ -296,7 +298,7 @@ onMounted(() => {
   background: vars.$white;
   display: flex;
   align-items: center;
-  gap: 0 1.2rem;
+  gap: 0 1.6rem;
   .c-inpType .c-inp-el .c-inp {
     line-height: 3.8rem;
     height: 3.8rem;

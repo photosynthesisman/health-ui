@@ -1,23 +1,25 @@
 <template>
   <BaseBody>
     <div>보험사에 청구 가능 여부를 조회하고 있어요</div>
+    <!-- 피보험자/수익자 같은지 확인하는 모달 -->
+    <Teleport to="body">
+      <SelectInsuredOrBeneficiaryModal
+        :is-visible="isShowModal"
+        @close="isShowModal = false"
+        @click-diff="clickModalButton"
+        @click-same="clickModalButton"
+      />
+    </Teleport>
+    <!-- 피보험자/수익자 같은지 확인하는 모달 -->
+    <!-- <Teleport to="body">
+      <SelectInsuredOrBeneficiaryModal
+        :is-visible="isShowModal"
+        @close="isShowModal = false"
+        @click-diff="clickModalButton"
+        @click-same="clickModalButton"
+      />
+    </Teleport> -->
   </BaseBody>
-
-  <!-- 피보험자/수익자 같은지 확인하는 모달 -->
-  <SelectInsuredOrBeneficiaryModal
-    :is-visible="isShowModal"
-    @close="isShowModal = false"
-    @click-diff="clickModalButton"
-    @click-same="clickModalButton"
-  />
-
-  <!-- 피보험자/수익자 같은지 확인하는 모달 -->
-  <!--  <SelectInsuredOrBeneficiaryModal-->
-  <!--    :is-visible="isShowModal"-->
-  <!--    @close="isShowModal = false"-->
-  <!--    @click-diff="clickModalButton"-->
-  <!--    @click-same="clickModalButton"-->
-  <!--  />-->
 </template>
 
 <script setup lang="ts">

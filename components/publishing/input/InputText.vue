@@ -16,7 +16,7 @@
         <span v-if="unitL" class="input-unit left">{{ unitL }}</span>
         <input
           :id="inputId"
-          :type="type"
+          :type="inputType"
           :inpType="inpType"
           :name="name"
           :placeholder="placeholder"
@@ -42,6 +42,13 @@
           type="button"
           aria-label="검색"
           @click="onSearchClick"
+        ></button>
+        <button
+          v-if="inpType === 'masking'"
+          class="icon ml-12 ico-masking"
+          type="button"
+          aria-label="검색"
+          @click="onMaskingClick"
         ></button>
         <Button
           v-if="inpType === 'hasBtn'"
@@ -132,6 +139,22 @@ const opened = ref(false)
 const selected = ref('')
 const inputValue = ref(props.modelValue || '')
 
+const isPasswordVisible = ref(false)
+
+// **computed 속성으로 input의 type을 동적으로 결정**
+const inputType = computed(() => {
+  if (props.type === 'number') {
+    return 'number'
+  }
+  if (props.inpType === 'masking') {
+    return isPasswordVisible.value ? 'text' : 'password'
+  }
+  if (props.type === 'password') {
+    return 'password'
+  }
+  return 'text'
+})
+
 // 라벨에 * 표시가 있는지 확인
 const hasRequiredMark = computed(() => {
   return props.label.includes('*')
@@ -201,6 +224,9 @@ function onButtonClick() {
 // 검색 버튼 클릭 핸들러
 function onSearchClick() {
   emit('search', inputValue.value)
+}
+function onMaskingClick() {
+  isPasswordVisible.value = !isPasswordVisible.value
 }
 </script>
 
@@ -288,7 +314,7 @@ function onSearchClick() {
       padding: 2.1rem 0.8rem 2.1rem 0;
       border: none;
       border-bottom: 0.1rem solid #eee;
-
+      border-radius: 0;
       &:hover,
       &:focus-within {
         background: #fff;
@@ -307,7 +333,7 @@ function onSearchClick() {
       font-weight: 500;
       background-color: transparent;
       min-width: 0;
-
+      @include mixin.ellipsis;
       &::placeholder {
         color: #959595;
       }
@@ -377,7 +403,7 @@ function onSearchClick() {
   }
 }
 
-.ico-magnifying-glass {
+.icon {
   width: 2.4rem;
   height: 2.4rem;
   flex: 0 0 auto;

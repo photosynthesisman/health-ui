@@ -8,8 +8,6 @@
     :has-add-text-left="true"
   >
     <AiAnalysisMainCard
-      :connected="isConnected"
-      :cost="32"
       @toggle-more-info="toggleMoreInfo"
       @close-more-info="closeMoreInfo"
       @reload="handleReload"

@@ -65,6 +65,7 @@ const togglePasswordVisibility = (id: number) => {
     display: flex;
     justify-content: space-between;
     .tit {
+      flex-shrink: 0;
       font-size: 1.3rem;
       font-weight: 500;
       line-height: 1.8rem;
@@ -74,6 +75,7 @@ const togglePasswordVisibility = (id: number) => {
       font-size: 1.4rem;
       font-weight: 600;
       line-height: 2rem;
+      text-align: right;
       &:has(.icon-show-password) {
         display: flex;
         align-items: center;

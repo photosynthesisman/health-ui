@@ -24,8 +24,11 @@
       <img :src="fullImagePath" alt="프로필 이미지" />
     </div>
     <div class="profile-detail-box">
-      <p class="user-name">곰탱이</p>
-      <span class="user-location">서울금천</span>
+      <p class="user-name">
+        <strong>{{ userName }}</strong>
+        <span class="name">{{ maskedUserName }}</span>
+      </p>
+      <span class="user-location">{{ userLocation }}</span>
     </div>
 
     <div class="steps-box">
@@ -34,11 +37,14 @@
         <span v-if="totalClass === 'cases'">건</span>
       </p>
       <p v-if="isShowSteps" class="use-item-steps">26,300 걸음</p>
+      <!-- 걸은 거리 -->
+      <p v-if="isShowDistance" class="use-item-distance">4.8km</p>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 // Props 정의
+import { computed } from 'vue'
 
 const IMAGE_BASE_PATH = '/_nuxt/assets/images/'
 
@@ -57,8 +63,12 @@ const props = withDefaults(
     totalSteps?: string
     itemSteps?: string
     isShowSteps?: boolean
+    isShowDistance?: boolean
     totalClass?: string
-    totalNum?: string
+    totalNumSteps?: number
+    userNickName?: string
+    userName?: string
+    userLocation?: string
   }>(),
   {
     src: 'img-profile.svg',
@@ -68,13 +78,29 @@ const props = withDefaults(
     itemSteps: '26,360',
     isShowSteps: true,
     totalClass: '',
-    totalNum: ''
+    userNickName: '장동건',
+    userName: '홍길동',
+    userLocation: '서울금천',
+    totalNumSteps: 0
   }
 )
 
 const totalNumFormat = computed(() => {
-  const num = Number(props.totalNum)
+  const num = Number(props.totalNumSteps)
   return isNaN(num) ? '0' : num.toLocaleString()
+})
+
+const maskedUserName = computed(() => {
+  if (!props.userName || props.userName.length === 1) {
+    return props.userName
+  }
+  if (props.userName.length === 2) {
+    return props.userName[0] + '*'
+  }
+  const first = props.userName[0]
+  const last = props.userName[props.userName.length - 1]
+  const middle = '*'.repeat(props.userName.length - 2)
+  return first + middle + last
 })
 </script>
 
@@ -161,6 +187,12 @@ const totalNumFormat = computed(() => {
   border: 0.3rem solid var(--blue-primary);
   border-radius: 50%;
   flex: 0 0 4.8rem;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
   @media (max-width: 375px) {
     width: 4rem;
     height: 4rem;
@@ -191,9 +223,18 @@ const totalNumFormat = computed(() => {
   text-align: left;
   .user-name {
     margin-bottom: 0.4rem;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 2.2rem;
-    @include mixin.ellipsis;
+    display: flex;
+    color: #2b2b2b;
+    gap: 0 0.2rem;
+    .name {
+      flex: 0 0 auto;
+    }
+    strong {
+      font-weight: 700;
+      @include mixin.ellipsis;
+    }
   }
   .user-location {
     font-size: 1.3rem;

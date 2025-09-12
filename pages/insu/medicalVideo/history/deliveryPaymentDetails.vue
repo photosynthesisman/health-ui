@@ -4,9 +4,10 @@
       <TitleSection
         title="배송내역을<br/>확인한 후 결제해주세요."
         description="결제 후 배송내역에서 배송 진행사항을<br/>확인할 수 있어요."
+        class="mt-24 mb-32"
       />
     </section>
-    <HistoryDetail :details-list="detailInfos" :total-price="13000" />
+    <HistoryDetail :details-list="detailInfos" :total-price="totalPrice" />
     <MedicalHistoryAccordion
       :medical-history="medicalInfos"
       :is-label-title="true"
@@ -22,13 +23,15 @@
   </BaseBody>
 </template>
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
 import TitleSection from '~/components/insu/TitleSection.vue'
 import HistoryDetail from '~/components/insu/HistoryDetail.vue'
 import MedicalHistoryAccordion from '~/components/insu/MedicalHistoryAccordion.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import Button from '~/components/publishing/button/Button.vue'
-const detailInfos = [
+
+const detailInfos = ref([
   {
     id: 1,
     title: '배송지 주소',
@@ -51,15 +54,21 @@ const detailInfos = [
   },
   {
     id: 5,
-    title: '배송 전달사항',
-    price: 10000
+    title: '상품결제금액',
+    price: 20000
   },
   {
     id: 6,
     title: '배송 수수료',
-    price: 3000
+    price: 4000
   }
-]
+])
+const totalPrice = computed(() => {
+  const payment = detailInfos.value.find(item => item.id === 5)?.price ?? 0
+  const shipping = detailInfos.value.find(item => item.id === 6)?.price ?? 0
+  return payment + shipping
+})
+
 const medicalInfos = [
   {
     id: 1,
@@ -101,8 +110,4 @@ const medicalInfos = [
   }
 ]
 </script>
-<style scoped>
-.issue-history {
-  padding: 2.4rem 0 3.2rem;
-}
-</style>
+<style scoped></style>

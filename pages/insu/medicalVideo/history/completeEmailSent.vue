@@ -43,8 +43,9 @@ const medicalInfos = [
     title: '공유 병원명',
     hospitalName: '고려대학병원',
     logo: '/_nuxt/assets/images/insu/logo_KUMedicine.svg',
-    issueDate: '2025.06.25',
-    accessDate: '2025.06.25~2025.08.31',
+    accessDate: '2025.06.25',
+    shareFrom: '2025.06.25',
+    shareTo: '2025.08.31',
     departments: [
       {
         id: 101,

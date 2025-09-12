@@ -50,7 +50,7 @@ defineProps({
 
 <style scoped lang="scss">
 .wrap-claim-detail {
-  margin-top: 1.2rem;
+  margin-block: 1.2rem;
   border-radius: 1.2rem;
   border: 0.1rem solid #e2e2e2;
   padding: 2rem;

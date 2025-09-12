@@ -12,7 +12,7 @@
     <div class="editor-container">
       <EditorToolbar
         v-if="editor"
-        :editor="editor as any"
+        :editor="editor"
         :hashtag="hashtags"
         :star="star"
         :health-data="healthData"
@@ -38,7 +38,7 @@
       <!-- TipTap 에디터 텍스트 영역 (TipTap 제공 컴포넌트 사용) -->
       <div class="editor-content-wrapper">
         <div class="editor-main">
-          <EditorContent :editor="editor as any" />
+          <EditorContent :editor="editor" />
           <!-- 숨겨진 파일 입력: 이미지 업로드용 -->
           <input ref="fileInputRef" type="file" accept="image/*" multiple class="hidden" @change="handleImageUpload" />
         </div>
@@ -117,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-// import { watch } from 'vue'
+import { ref, nextTick } from 'vue'
 import EditorToolbar from '~/components/common/editor/EditorToolbar.vue'
 import { EditorContent } from '@tiptap/vue-3'
 import { useEditor } from '~/composables/common/editor/useEditor'

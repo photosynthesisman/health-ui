@@ -11,6 +11,7 @@
       :class="{ disabled: typeConfig.disabled }"
       @click="typeConfig.action"
     />
+    <img src="~/assets/images/community/home/img-ai-character.svg" alt="캐릭터 이미지" class="ch-img" />
   </div>
 </template>
 <script setup lang="ts">
@@ -71,20 +72,20 @@ const handleCompleted = () => {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  position:relative;
+  position: relative;
   overflow: hidden;
   padding: 2.4rem 2rem 2rem;
   border-radius: 2rem;
   background: #f4f4f4;
   &:after {
-    display:block;
-    content:'';
-    position:absolute;
-    top:2.4rem;
-    right:2rem;
-    width:6.75rem;
-    height:7.5rem;
-    background:url()
+    display: block;
+    content: '';
+    position: absolute;
+    top: 2.4rem;
+    right: 2rem;
+    width: 6.75rem;
+    height: 7.5rem;
+    background: url();
   }
   .title {
     font-size: 1.8rem;
@@ -118,6 +119,18 @@ const handleCompleted = () => {
       :deep(.icon) {
         opacity: 0.3;
       }
+    }
+  }
+  .ch-img {
+    width: 8rem;
+    height: 8rem;
+    position: absolute;
+    top: 2.4rem;
+    right: 2rem;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
   }
   &.no-diary {

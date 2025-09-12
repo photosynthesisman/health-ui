@@ -1,6 +1,7 @@
 <template>
   <div class="main-sector">
     <MainTopGraph
+      ref="mainTopGraphRef"
       :current-status="currentStatus"
       :is-profile-set="healthCondition !== 'noProfileSet'"
       :is-smart-ring-connect="vitalityCondition !== 'noSmartRingConnect'"
@@ -23,22 +24,6 @@
         }
       ]"
     >
-      <div
-        class="swipe-animation"
-        aria-hidden="true"
-        :style="{
-          transform: `translateX(${dragOffset}px)`,
-          transition: isTransitioning
-            ? 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease'
-            : 'none',
-          opacity: isDragging
-            ? Math.max(
-                0.7,
-                1 - Math.abs(dragOffset) / (typeof window !== 'undefined' ? window.innerWidth * 0.5 : 187.5)
-              )
-            : 1
-        }"
-      ></div>
       <div class="charactor">
         <span
           class="sector-swiper-area"
@@ -50,7 +35,7 @@
           @mouseup="handleMouseUp"
           @mouseleave="handleMouseUp"
         ></span>
-        <span class="charctor-txt" v-html="characterText"></span>
+        <span class="charctor-txt" :class="{ 'animate-txt': !isTransitioning }" v-html="characterText"></span>
         <LottieAnimation
           :src="animationSrc"
           width="100%"
@@ -68,7 +53,7 @@
 
         <div v-if="currentStatus === 'health-status'" class="charctor-option">
           <button v-if="healthCondition !== 'noProfileSet'" type="button" class="cbtn btn-white">자세히보기</button>
-          <div v-if="healthCondition === 'noProfileSet'" class="info-text">
+          <div v-if="healthCondition === 'noProfileSet'" class="info-text" :class="{ 'animate-txt': !isTransitioning }">
             건강 프로필 정보 AI분석을 통해<br />
             레몬건강지수가 산정됩니다.
           </div>
@@ -78,7 +63,11 @@
           <button v-if="vitalityCondition !== 'noSmartRingConnect'" type="button" class="cbtn btn-white">
             자세히보기
           </button>
-          <div v-if="vitalityCondition === 'noSmartRingConnect'" class="info-text">
+          <div
+            v-if="vitalityCondition === 'noSmartRingConnect'"
+            class="info-text"
+            :class="{ 'animate-txt': !isTransitioning }"
+          >
             생체데이터를 종합적으로 분석하여<br />
             Aura Vival Score를 제공합니다.
           </div>
@@ -129,6 +118,7 @@ import VitalityStatus from '~/components/publishing/home/VitalityStatus.vue'
 const statusList = ['walking-status', 'vitality-status', 'health-status']
 const currentIndex = ref(0)
 const currentStatus = ref(statusList[0])
+const mainTopGraphRef = ref<InstanceType<typeof MainTopGraph> | null>(null)
 
 // 애니메이션 소스 맵핑
 const animationMap = {
@@ -214,11 +204,14 @@ const characterText = computed(() => {
 // 터치/마우스 이벤트 관리
 const startX = ref(0)
 const currentX = ref(0)
+const startTime = ref(0) // 스와이프 시작 시간
 const isDragging = ref(false)
 const isMouseDragging = ref(false) // 마우스 드래그 상태 추가
-const minSwipeDistance = 50 // 최소 스와이프 거리
+const minSwipeDistance = 30 // 최소 스와이프 거리 (50 -> 30으로 감소)
+const minSwipeVelocity = 0.5 // 최소 스와이프 속도 (px/ms)
 const dragOffset = ref(0) // 드래그 오프셋
 const isTransitioning = ref(false) // 전환 중 상태
+const swipeDirection = ref('') // 스와이프 방향 ('left', 'right', '')
 
 // 조건부 상태 전역 상태 관리
 // health 상태: 'good', 'careful', 'warning', 'noProfileSet'
@@ -229,7 +222,13 @@ const healthCondition = ref('noProfileSet') // 기본값을 noProfileSet로 설�
 // 터치 이벤트 핸들러
 const handleTouchStart = (e: TouchEvent) => {
   startX.value = e.touches[0].clientX
+  startTime.value = Date.now()
   isDragging.value = true
+  isTransitioning.value = false
+  swipeDirection.value = ''
+
+  // 가벼운 햄틱 피드백
+  triggerHapticFeedback('light')
 
   // 기본 스와이프 동작 방지
   e.preventDefault()
@@ -239,13 +238,25 @@ const handleTouchMove = (e: TouchEvent) => {
   if (!isDragging.value) return
   currentX.value = e.touches[0].clientX
 
-  // 드래그 오프셋 계산 (화면 너비의 30%로 제한)
   const deltaX = currentX.value - startX.value
-  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375 // 기본값 설정
-  const maxOffset = screenWidth * 0.3
-  dragOffset.value = Math.max(-maxOffset, Math.min(maxOffset, deltaX))
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375
+  const maxOffset = screenWidth * 0.4 // 30% -> 40%로 증가
 
-  // 기본 스와이프 동작 방지
+  // 탄성 효과 적용 (경계에서 저항 증가)
+  const resistance = 0.3
+  if (Math.abs(deltaX) > maxOffset) {
+    const overflow = Math.abs(deltaX) - maxOffset
+    const resistedOverflow = overflow * resistance
+    dragOffset.value = deltaX > 0 ? maxOffset + resistedOverflow : -(maxOffset + resistedOverflow)
+  } else {
+    dragOffset.value = deltaX
+  }
+
+  // 스와이프 방향 업데이트
+  if (Math.abs(deltaX) > 10) {
+    swipeDirection.value = deltaX > 0 ? 'right' : 'left'
+  }
+
   e.preventDefault()
 }
 
@@ -253,53 +264,74 @@ const handleTouchEnd = () => {
   if (!isDragging.value) return
 
   const deltaX = currentX.value - startX.value
+  const deltaTime = Date.now() - startTime.value
+  const velocity = Math.abs(deltaX) / Math.max(deltaTime, 1) // 속도 계산
+
   isTransitioning.value = true
 
-  if (Math.abs(deltaX) > minSwipeDistance) {
+  // 속도 기반 또는 거리 기반 전환 결정
+  const shouldSwipe = Math.abs(deltaX) > minSwipeDistance || velocity > minSwipeVelocity
+
+  if (shouldSwipe && deltaX !== 0) {
     if (deltaX > 0) {
-      // 오른쪽 스와이프 - 이전 상태
       goToPrevious()
     } else {
-      // 왼쪽 스와이프 - 다음 상태
       goToNext()
     }
   } else {
-    // 스와이프 거리가 부족하면 원래 위치로 복귀
+    // 스와이프 조건 미충족 시 스프링 백 애니메이션
     dragOffset.value = 0
     setTimeout(() => {
       isTransitioning.value = false
+      swipeDirection.value = ''
     }, 300)
   }
 
   isDragging.value = false
+  swipeDirection.value = ''
 }
 
 // 마우스 이벤트 핸들러 (데스크톱 지원)
 const handleMouseDown = (e: MouseEvent) => {
   startX.value = e.clientX
-  currentX.value = e.clientX // 초기값 설정
+  currentX.value = e.clientX
+  startTime.value = Date.now()
   isDragging.value = true
-  isMouseDragging.value = false // 실제 드래그 여부 초기화
+  isMouseDragging.value = false
+  isTransitioning.value = false
+  swipeDirection.value = ''
   e.preventDefault()
 }
 
 const handleMouseMove = (e: MouseEvent) => {
   if (!isDragging.value) return
 
-  const deltaX = Math.abs(e.clientX - startX.value)
-  if (deltaX > 10) {
-    // 10px 이상 움직이면 실제 드래그로 간주
+  const deltaX = e.clientX - startX.value
+  if (Math.abs(deltaX) > 5) {
+    // 10px -> 5px로 감소
     isMouseDragging.value = true
   }
 
   currentX.value = e.clientX
 
-  // 마우스 드래그 오프셋 계산
   if (isMouseDragging.value) {
-    const dragDelta = currentX.value - startX.value
-    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375 // 기본값 설정
-    const maxOffset = screenWidth * 0.3
-    dragOffset.value = Math.max(-maxOffset, Math.min(maxOffset, dragDelta))
+    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375
+    const maxOffset = screenWidth * 0.4
+
+    // 탄성 효과 적용
+    const resistance = 0.3
+    if (Math.abs(deltaX) > maxOffset) {
+      const overflow = Math.abs(deltaX) - maxOffset
+      const resistedOverflow = overflow * resistance
+      dragOffset.value = deltaX > 0 ? maxOffset + resistedOverflow : -(maxOffset + resistedOverflow)
+    } else {
+      dragOffset.value = deltaX
+    }
+
+    // 스와이프 방향 업데이트
+    if (Math.abs(deltaX) > 10) {
+      swipeDirection.value = deltaX > 0 ? 'right' : 'left'
+    }
   }
 
   e.preventDefault()
@@ -308,59 +340,99 @@ const handleMouseMove = (e: MouseEvent) => {
 const handleMouseUp = () => {
   if (!isDragging.value) return
 
-  isTransitioning.value = true
-
-  // 실제로 드래그한 경우에만 스와이프 로직 실행
   if (isMouseDragging.value) {
     const deltaX = currentX.value - startX.value
+    const deltaTime = Date.now() - startTime.value
+    const velocity = Math.abs(deltaX) / Math.max(deltaTime, 1)
 
-    if (Math.abs(deltaX) > minSwipeDistance) {
+    isTransitioning.value = true
+
+    // 속도 기반 또는 거리 기반 전환
+    const shouldSwipe = Math.abs(deltaX) > minSwipeDistance || velocity > minSwipeVelocity
+
+    if (shouldSwipe && deltaX !== 0) {
       if (deltaX > 0) {
-        // 오른쪽 드래그 - 이전 상태
         goToPrevious()
       } else {
-        // 왼쪽 드래그 - 다음 상태
         goToNext()
       }
     } else {
-      // 스와이프 거리가 부족하면 원래 위치로 복귀
       dragOffset.value = 0
       setTimeout(() => {
         isTransitioning.value = false
+        swipeDirection.value = ''
       }, 300)
     }
   } else {
-    // 드래그하지 않았다면 전환 상태 해제
     isTransitioning.value = false
   }
 
   isDragging.value = false
   isMouseDragging.value = false
+  swipeDirection.value = ''
 }
 
 // 상태 변경 함수
 const goToNext = () => {
-  const oldStatus = currentStatus.value
-  currentIndex.value = (currentIndex.value + 1) % statusList.length
-  currentStatus.value = statusList[currentIndex.value]
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375
 
-  // 애니메이션 처리
-  dragOffset.value = 0
+  // MainTopGraph 셔플 애니메이션 트리거
+  if (mainTopGraphRef.value) {
+    mainTopGraphRef.value.triggerShuffle('left')
+  }
+
+  // 1단계: 현재 화면을 완전히 밀어내기
+  dragOffset.value = -screenWidth * 1.2 // 더 멀리 밀어내기
+  isTransitioning.value = true
+
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 300)
+    // 햄틱 피드백
+    triggerHapticFeedback('medium')
+
+    // 2단계: 상태 변경 후 반대편에서 슬라이드 인
+    currentIndex.value = (currentIndex.value + 1) % statusList.length
+    currentStatus.value = statusList[currentIndex.value]
+    dragOffset.value = screenWidth * 0.8 // 오른쪽에서 시작
+
+    setTimeout(() => {
+      // 3단계: 제자리로 슬라이드 인
+      dragOffset.value = 0
+      setTimeout(() => {
+        isTransitioning.value = false
+      }, 400)
+    }, 20)
+  }, 200)
 }
 
 const goToPrevious = () => {
-  const oldStatus = currentStatus.value
-  currentIndex.value = (currentIndex.value - 1 + statusList.length) % statusList.length
-  currentStatus.value = statusList[currentIndex.value]
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375
 
-  // 애니메이션 처리
-  dragOffset.value = 0
+  // MainTopGraph 셔플 애니메이션 트리거
+  if (mainTopGraphRef.value) {
+    mainTopGraphRef.value.triggerShuffle('right')
+  }
+
+  // 1단계: 현재 화면을 완전히 밀어내기
+  dragOffset.value = screenWidth * 1.2 // 더 멀리 밀어내기
+  isTransitioning.value = true
+
   setTimeout(() => {
-    isTransitioning.value = false
-  }, 300)
+    // 햄틱 피드백
+    triggerHapticFeedback('medium')
+
+    // 2단계: 상태 변경 후 반대편에서 슬라이드 인
+    currentIndex.value = (currentIndex.value - 1 + statusList.length) % statusList.length
+    currentStatus.value = statusList[currentIndex.value]
+    dragOffset.value = -screenWidth * 0.8 // 왼쪽에서 시작
+
+    setTimeout(() => {
+      // 3단계: 제자리로 슬라이드 인
+      dragOffset.value = 0
+      setTimeout(() => {
+        isTransitioning.value = false
+      }, 400)
+    }, 20)
+  }, 200)
 }
 
 // 조건 상태 변경 함수(건강)
@@ -393,6 +465,13 @@ onMounted(() => {
   // 터치 동작 제어 (모든 브라우저)
   document.body.style.touchAction = 'pan-y pinch-zoom'
 
+  // 모바일 최적화 추가 설정
+  document.body.style.webkitTapHighlightColor = 'transparent'
+  document.body.style.webkitTouchCallout = 'none'
+  document.body.style.webkitUserSelect = 'none'
+  document.body.style.msUserSelect = 'none'
+  document.body.style.userSelect = 'none'
+
   // iOS에서 메타 브이포트 추가 설정
   const viewport = document.querySelector('meta[name="viewport"]')
   if (viewport && /iPhone|iPad|iPod|iOS/i.test(navigator.userAgent)) {
@@ -401,10 +480,36 @@ onMounted(() => {
       viewport.setAttribute('content', currentContent + ', user-scalable=no')
     }
   }
+
+  // 다크 모드 대응을 위한 컬러 스키마 감지
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  const handleColorSchemeChange = () => {
+    // 필요시 다크 모드 처리 로직 추가
+  }
+  mediaQuery.addEventListener('change', handleColorSchemeChange)
 })
+// 햄틱 피드백 함수 (지원되는 디바이스에서만 동작)
+const triggerHapticFeedback = (type: 'light' | 'medium' | 'heavy' = 'light') => {
+  if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+    const patterns = {
+      light: [10],
+      medium: [20],
+      heavy: [30]
+    }
+    navigator.vibrate(patterns[type])
+  }
+
+  // iOS Safari 햄틱 지원 (추후 지원 예정)
+  // if ('HapticFeedback' in window) {
+  //   window.HapticFeedback.impactOccurred(type)
+  // }
+}
+
 const handleAllowAccessClick = () => {
+  triggerHapticFeedback('light')
   console.log()
 }
+
 onUnmounted(() => {
   // 정리 시 스타일 복원
   document.body.style.overscrollBehaviorX = ''
@@ -412,6 +517,15 @@ onUnmounted(() => {
   document.body.style.webkitOverflowScrolling = ''
   document.documentElement.style.webkitOverflowScrolling = ''
   document.body.style.touchAction = ''
+  document.body.style.webkitTapHighlightColor = ''
+  document.body.style.webkitTouchCallout = ''
+  document.body.style.webkitUserSelect = ''
+  document.body.style.msUserSelect = ''
+  document.body.style.userSelect = ''
+
+  // 브라우저 이벤트 리스너 정리
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  mediaQuery.removeEventListener('change', () => {})
 })
 </script>
 
@@ -445,76 +559,119 @@ onUnmounted(() => {
     user-select: none;
     will-change: transform, opacity; // GPU 가속 최적화
 
-    // 드래그 중일 때 스케일 효과
+    // 드래그 중일 때 시각적 효과
     &.dragging {
       transform-origin: center;
+
+      .swipe-animation {
+        &::after {
+          opacity: 1;
+        }
+
+        &::before {
+          background: radial-gradient(
+            ellipse at center,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            transparent 80%
+          );
+        }
+      }
+
+      .charactor {
+        &::before,
+        &::after {
+          animation-play-state: paused;
+          opacity: 0.6;
+          filter: brightness(1.2);
+        }
+      }
     }
 
-    // 터치 및 스크롤 동작 제어
+    // 터치 및 스크롤 동작 제어 (모바일 최적화)
     touch-action: pan-y pinch-zoom;
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
-    .swipe-animation {
-      display: block;
-      bottom: 0;
-      position: absolute;
-      left: -10%;
-      top: 0;
-      right: -10%;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-      transition: background 0.3s 0.3s ease-in-out;
-      &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        pointer-events: none;
-        background: transparent;
-      }
-    }
+    -webkit-tap-highlight-color: transparent; // iOS 탭 하이라이트 제거
+    -webkit-touch-callout: none; // iOS 링크 옵션 제거
+    // .swipe-animation {
+    //   display: block;
+    //   bottom: 0;
+    //   position: absolute;
+    //   left: -10%;
+    //   top: 0;
+    //   right: -10%;
+    //   backdrop-filter: blur(10px);
+    //   -webkit-backdrop-filter: blur(10px);
+    //   mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    //   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    //   transition: background 0.3s 0.3s ease-in-out;
+    //   &::before {
+    //     // content: '';
+    //     position: absolute;
+    //     inset: 0;
+    //     z-index: 2;
+    //     pointer-events: none;
+    //     background: transparent;
+    //     transition: background 0.3s ease;
+    //   }
+
+    //   &::after {
+    //     //  content: '';
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 2rem;
+    //     right: 2rem;
+    //     height: 2px;
+    //     transform: translateY(-50%);
+    //     background: linear-gradient(
+    //       90deg,
+    //       transparent 0%,
+    //       rgba(255, 255, 255, 0.6) 20%,
+    //       rgba(255, 255, 255, 0.8) 50%,
+    //       rgba(255, 255, 255, 0.6) 80%,
+    //       transparent 100%
+    //     );
+    //     border-radius: 1px;
+    //     opacity: 0;
+    //     transition: all 0.3s ease;
+    //     box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+    //   }
+    // }
+
     &.walking-status {
       // background-color: transparent;
       background: linear-gradient(to bottom, rgba(175, 226, 217, 0) 0%, rgba(175, 226, 217, 0) 50%, #afe2d9 100%);
-      .swipe-animation {
-        background: linear-gradient(180deg, #76cdff 0%, rgba(118, 205, 255, 0) 30%);
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 40%;
+        background: linear-gradient(180deg, #76cdff 0%, rgba(118, 205, 255, 0) 100%);
       }
     }
 
     &.vitality-status {
       background-color: #f2dd92;
-      .swipe-animation {
-        background: linear-gradient(180deg, #ffe057 0%, rgba(255, 196, 87, 0) 100%);
-      }
     }
 
     &.health-status {
       background-color: #56e2c1;
-      .swipe-animation {
-        background: linear-gradient(180deg, rgba(0, 125, 134, 0.2) 0%, rgba(0, 125, 134, 0) 100%);
-      }
+
       &.health-careful {
         background-color: #a9a0fd;
-        .swipe-animation {
-          background: linear-gradient(180deg, rgba(60, 0, 134, 0.2) 0%, rgba(60, 0, 134, 0) 100%);
-        }
       }
       &.health-warning {
         background-color: #ff8e75;
-        .swipe-animation {
-          background: linear-gradient(180deg, rgba(188, 11, 11, 0.2) 0%, rgba(188, 11, 11, 0) 100%);
-        }
       }
     }
 
     &.vitality-no-ring,
     &.health-no-profile {
       background-color: #dadee7;
-      .swipe-animation {
-        background: #dadee7;
-      }
     }
 
     .charactor {
@@ -528,16 +685,20 @@ onUnmounted(() => {
 
       // 메인 좌우 섹터 스와이프 영역
       .sector-swiper-area {
+        display: block;
         position: absolute;
         cursor: grab; // 스와이프 가능 영역 표시
         user-select: none;
         touch-action: pan-x; // 가로 스와이프만 허용
         z-index: 10; // 다른 요소보다 위에 배치
-        height: 10rem;
-        width: calc(100% - 10rem);
+        height: 40rem;
+        // width: calc(100% - 10rem);
+        left: 0;
+        right: 0;
         top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        // background: rgba(188, 11, 11, 0.2); 영역 확인용
+        // left: 50%;
+        transform: translateY(-50%);
       }
 
       background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
@@ -589,9 +750,9 @@ onUnmounted(() => {
         right: 50%;
         text-align: left;
         margin-right: 2.5rem;
-        top: 3.7rem;
+        top: 0;
+        opacity: 0;
         border-radius: 1.2rem;
-        opacity: 0.8;
         padding: 1.1rem 1.6rem;
         background: rgba(2, 2, 2, 0.85);
         box-shadow: 0 0.4rem 0.8rem 0 rgba(0, 0, 0, 0.04);
@@ -599,6 +760,23 @@ onUnmounted(() => {
         font-size: 1.3rem;
         color: vars.$white;
         white-space: nowrap;
+
+        &.animate-txt {
+          animation: charTxt 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes charTxt {
+          0% {
+            top: 2rem;
+            opacity: 0;
+            transform: scale(0.5);
+          }
+
+          100% {
+            top: 3.7rem;
+            opacity: 0.8;
+            transform: scale(1);
+          }
+        }
       }
     }
     .charctor-option {
@@ -629,6 +807,10 @@ onUnmounted(() => {
         font-weight: 500;
         color: rgba(0, 0, 0, 0.7);
         text-align: center;
+        opacity: 0;
+        &.animate-txt {
+          animation: charTxt 0.5s 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
       }
     }
     .banner-box {
@@ -684,15 +866,24 @@ onUnmounted(() => {
     }
   }
 }
-@media (max-width: 375px) {
+// 모바일 반응형 디자인 최적화
+@media (max-width: 390px) {
   .main-sector {
     .main-section {
       .charactor {
+        // 터치 영역 더 넣게 확대
+        .sector-swiper-area {
+          // height: 20rem; // 18rem -> 20rem
+          // width: calc(100% - 3rem); // 5rem -> 3rem
+        }
+
         .charctor-txt {
           font-size: 1.2rem;
           top: 1.5rem;
           padding: 1.1rem;
-          margin-right: 0;
+          margin-right: 4rem;
+          // 작은 화면에서 가독성 향상
+          box-shadow: 0 0.2rem 1.2rem rgba(0, 0, 0, 0.15);
         }
       }
       .banner-box {
@@ -701,6 +892,7 @@ onUnmounted(() => {
           padding-right: 8rem;
           strong {
             font-size: 1.4rem;
+            line-height: 1.4;
           }
           img {
             width: 8rem;

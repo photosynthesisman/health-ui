@@ -20,7 +20,7 @@
             max-length="4"
             unit-r="cm"
             valid-text="키를 입력해주세요"
-            placeholder=""
+            placeholder="키를 입력해주세요"
             class="flex-1"
           />
           <InputText
@@ -30,7 +30,7 @@
             maxLength="4"
             unit-r="kg"
             valid-text="몸무게를 입력해주세요."
-            placeholder=""
+            placeholder="몸무게를 입력해주세요."
             class="flex-1"
           />
         </div>

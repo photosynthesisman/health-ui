@@ -9,7 +9,7 @@
       icon="arrow-type-black"
       link-class="btn-link"
       :is-link="true"
-      link-href="#"
+      link-href="/community/[communityId]/byActivityRanking"
     />
     <StickyTabsContainer>
       <BoxedTabs

@@ -29,6 +29,7 @@
           @input="onBackInput"
         />
         <div class="circles-display" @click="onBackInputClick">
+          <p v-if="!backValue" class="placeholder">{{ placeholder2 }}</p>
           <span
             v-for="(val, idx) in 7"
             :key="idx"
@@ -177,7 +178,7 @@ function handleKeypadConfirm(data: SecurityKeypadEmitData) {
       background-color: #fff;
       outline: none;
       &::placeholder {
-        color: #bbb;
+        color: #959595;
       }
       &:read-only {
         cursor: pointer;
@@ -235,5 +236,10 @@ function handleKeypadConfirm(data: SecurityKeypadEmitData) {
     font-size: 1.3rem;
     line-height: 1.4rem;
   }
+}
+.placeholder {
+  font-weight: 500;
+  line-height: 2.2rem;
+  color: #959595;
 }
 </style>

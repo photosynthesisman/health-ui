@@ -32,6 +32,10 @@ const emit = defineEmits(['click'])
   padding: 1.2rem;
   border-radius: 0.8rem;
   background: #f4f4f4;
+  // 2025-09-01 css 수정
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
   & > div {
     text-align: left;
     line-height: 1.6rem;

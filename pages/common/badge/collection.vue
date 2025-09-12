@@ -1,11 +1,12 @@
 <template>
   <BaseBody page-title="MY배지 모아보기" :show-back-button="true">
-    <MyBadgeProfile :badge-count="badges1.length" :profile-image="''"></MyBadgeProfile>
-    <MyBadgeWrap title="걸음수" :badges-data="badges1" :show-title-box="false"> </MyBadgeWrap>
+    <MyBadgeProfile :badge-count="badges1.length" :profile-image="''" />
+    <MyBadgeWrap title="걸음수" :badges-data="badges1" :show-title-box="false" />
   </BaseBody>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import MyBadgeWrap from '~/components/publishing/common/myBadge/myBadgeWrap.vue'
 import MyBadgeProfile from '~/components/publishing/common/myBadge/myBadgeProfile.vue'
 import BaseBody from '~/components/layout/BaseBody.vue'

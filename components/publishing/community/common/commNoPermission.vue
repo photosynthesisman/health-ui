@@ -35,15 +35,15 @@ const contactAdmin = () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 51.98%);
-    backdrop-filter: blur(1px);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
+    backdrop-filter: blur(1.25px);
   }
 
   .permission-modal {
     position: absolute;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
+    bottom: 7.8rem;
     text-align: center;
 
     .icon {

@@ -1,24 +1,23 @@
 <template>
   <FlexColDiv class="pointmission-section">
-    <div class="pointmission-title-box">
-      <div>
+    <div class="pointmission-title-box tooltip-tit">
+      <div class="">
         <strong>전체 포인트 모으기</strong>
-        <Button btn-type="trans" element-type="button" :border-radius="20" :width="2" :height="2">
-          <div class="icon ico-question"></div>
-        </Button>
+        <TooltipIcon icon-type="question" tooltip-text="기획에서는 툴팁 내용이 없어서 임의대로 일단 넣어둠" />
       </div>
-      <Button btn-type="gray" element-type="button" :border-radius="20" :width="3.2" :height="3.2" class="ico-cate">
-        <span></span>
-      </Button>
+      <Button btn-type="gray" element-type="button" :border-radius="20" :width="3.2" :height="3.2" class="ico-cate" />
     </div>
     <PointMissionList />
   </FlexColDiv>
 </template>
+
 <script setup lang="ts">
 import PointMissionList from '~/components/publishing/benefit/PointMissionList.vue'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
+import TooltipIcon from '~/components/common/TooltipIcon.vue'
 import Button from '~/components/publishing/button/Button.vue'
 </script>
+
 <style scoped lang="scss">
 .pointmission-section {
   gap: 2.4rem;

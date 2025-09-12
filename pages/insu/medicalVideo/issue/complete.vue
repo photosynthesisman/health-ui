@@ -5,7 +5,7 @@
         :title="'의료영상 발급<br/>결제가 완료되었어요.'"
         :description="'의료영상 발급은 다소 시간이 소요될 수 있으며<br/>완료 후  알림 및 보관함에서 확인할 수 있어요.'"
       />
-      <MedicalPayment :payment-infos="paymentInfos" :total-price="totalPrice" class="mt-32" />
+      <MedicalPayment :payment-infos="paymentInfos" :total-price="totalPrice.toLocaleString()" class="mt-32" />
       <MedicalHistoryAccordion
         :medical-history="medicalHistory"
         :is-label-title="true"
@@ -13,9 +13,8 @@
         class="mt-32"
       />
     </section>
-    <ButtonGroup class="is-fixed half">
-      <Button aria-label="취소" btn-type="secondary" class="lg" />
-      <Button aria-label="결제하기" btn-type="primary" class="lg" />
+    <ButtonGroup class="is-fixed">
+      <Button aria-label="의료영상 내역으로" btn-type="primary" class="w-full lg" />
     </ButtonGroup>
   </BaseBody>
 </template>

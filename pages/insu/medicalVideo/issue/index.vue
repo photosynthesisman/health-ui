@@ -3,8 +3,8 @@
     <section class="medical-issue-section">
       <!-- 타이틀 영역 -->
       <TitleSection
-        title="촬영한 의료영상을<br />다른병원에 공유할 수 있어요"
-        description="레몬 페이로 결제하여 의료영상을 저장하고 다른 병원에 영상을 공유하거나 CD로 배송 받을 수 있어요."
+        title="촬영한 의료영상을<br />모바일로 발급 받아보세요"
+        description="의료영상을 저장하고<br />다른 병원에 영상을 공유하거나<br />CD로 배송 받을 수 있어요."
       >
         <template #content>
           <div class="service-help">

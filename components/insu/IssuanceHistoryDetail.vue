@@ -5,7 +5,7 @@
         v-for="item in detailsList"
         :key="item.id"
         class="detail-info-item"
-        :class="{ 'is-refunded': item.isRefunded, 'has-reason': item.hasReason }"
+        :class="{ 'is-refunded': item.isRefunded, 'has-reason': item.hasReason, 'has-line': item.hasLine }"
       >
         <span class="tit">{{ item.title }}</span>
         <span v-if="item.price" class="detail">{{ item.price.toLocaleString() }}원</span>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div v-if="applyRefund" class="mt-20">
-      <Button btn-type="line" element-type="button" aria-label="환불 신청" />
+      <Button btn-type="line" element-type="button" aria-label="환불 신청" @click="clickNext" />
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@ const props = withDefaults(
       detail?: string
       isRefunded?: boolean
       hasReason?: boolean
+      hasLine?: boolean
     }[]
     applyRefund?: boolean
   }>(),
@@ -36,6 +37,9 @@ const props = withDefaults(
     detailsList: () => []
   }
 )
+const clickNext = () => {
+  return navigateTo('/insu/medicalVideo/history/confirmRefundedData')
+}
 </script>
 <style lang="scss" scoped>
 .history-detail-box {
@@ -64,7 +68,7 @@ const props = withDefaults(
         color: #f14960;
       }
     }
-    &:nth-child(4) {
+    &.has-line {
       margin-bottom: 1.2rem;
       padding-bottom: 2rem;
       border-bottom: 0.1rem solid #eee;
