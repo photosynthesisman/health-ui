@@ -8,9 +8,13 @@
 
       <!-- Normal 타입일 때 정보 -->
       <template v-if="profileType === 'normal'">
-        <div class="detail-info">
+        <div class="detail-info has-gap">
           <span class="location">{{ profileData.location }}</span>
           <span class="reward">{{ profileData.reward }}</span>
+          <!-- Expert 타입일 때 버튼 -->
+          <button v-if="hasExpertProfile" type="button" class="btn-member expert" @click="emit('view-expert-profile')">
+            <i class="icon ico-ribbon" aria-label="hidden"></i>전문가 프로필 보기
+          </button>
         </div>
       </template>
 
@@ -19,19 +23,13 @@
         <div class="detail-info">
           <span class="company">{{ profileData.company }}</span>
           <span class="service_years">{{ profileData.serviceYears }}년차</span>
+          <!-- Normal 타입일 때 버튼 -->
+          <button type="button" class="btn-member" @click="emit('view-normal-profile')">
+            <i class="icon ico-member" aria-label="hidden"></i>일반 프로필 보기
+          </button>
         </div>
       </template>
     </div>
-
-    <!-- Normal 타입일 때 버튼 -->
-    <button v-if="profileType === 'expert'" type="button" class="btn-member">
-      <i class="icon ico-member" aria-label="hidden"></i>회원 프로필
-    </button>
-
-    <!-- Expert 타입일 때 버튼 -->
-    <button v-if="profileType === 'normal'" type="button" class="btn-member expert">
-      <i class="icon ico-ribbon" aria-label="hidden"></i>전문가 프로필
-    </button>
   </div>
 </template>
 <script setup lang="ts">
@@ -40,9 +38,9 @@ type ProfileType = 'normal' | 'expert'
 
 // Profile 데이터 인터페이스
 interface ProfileData {
-  name: string
-  location: string
-  reward: number
+  name?: string
+  location?: string
+  reward?: number
   company?: string // expert 타입에서만 필요
   serviceYears?: number // expert 타입에서만 필요
 }
@@ -50,22 +48,25 @@ interface ProfileData {
 // Props 정의
 const props = withDefaults(
   defineProps<{
-    profileType: ProfileType
+    profileType?: ProfileType
     profileData: ProfileData
+    hasExpertProfile?: boolean
   }>(),
   {
-    profileType: 'normal'
+    profileType: 'normal',
+    hasExpertProfile: true
   }
 )
+
+const emit = defineEmits(['view-expert-profile', 'view-normal-profile'])
 </script>
 
 <style lang="scss" scoped>
 .profile-box {
-  padding-top: 2.4rem;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  gap: 0 1.2rem;
+  gap: 1.2rem 0;
   .profile-photo {
     width: 6.4rem;
     height: 6.4rem;
@@ -78,6 +79,10 @@ const props = withDefaults(
     }
   }
   .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
     .name {
       font-size: 1.8rem;
       font-weight: 700;
@@ -85,29 +90,33 @@ const props = withDefaults(
     .detail-info {
       display: flex;
       flex-direction: row;
+      &.has-gap {
+        gap: 0.6rem;
+      }
     }
-    .location {
-      font-size: 1.6rem;
-      font-weight: 500;
-      color: #555;
+    .location,
+    .reward {
       display: inline-flex;
-      flex-direction: row;
-      align-items: center;
-      &::after {
+      align-content: center;
+      font-size: 1.4rem;
+      font-weight: 500;
+      line-height: 2rem;
+      color: #2b2b2b;
+      padding: 0.4rem 0.8rem;
+      background: #f4f4f4;
+      border-radius: 0.4rem;
+      &::before {
         content: '';
-        width: 0.3rem;
-        height: 0.3rem;
-        margin: 0 0.6rem;
-        border-radius: 50%;
-        background: #959595;
+        display: inline-block;
+        width: 1.8rem;
+        height: 1.8rem;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='16' viewBox='0 0 12 16' fill='none'%3E%3Cpath d='M5.99978 0.927734C3.16405 0.927734 0.856934 3.13996 0.856934 5.85916C0.856934 9.86238 5.54275 14.7564 5.74221 14.9627C5.80864 15.0315 5.9018 15.0705 5.99943 15.0706C6.09694 15.0706 6.19045 15.0317 6.25688 14.9632C6.45635 14.7577 11.1426 9.88122 11.1426 5.85916C11.1426 3.13996 8.83551 0.927734 5.99978 0.927734ZM5.99978 3.03792C7.61346 3.03792 8.92628 4.29674 8.92628 5.84405C8.92628 7.39137 7.61346 8.65016 5.99978 8.65016C4.38609 8.65016 3.07327 7.39134 3.07327 5.84403C3.07327 4.29671 4.38609 3.03792 5.99978 3.03792Z' fill='%234C7FF7'/%3E%3C/svg%3E");
       }
     }
     .reward {
-      font-size: 1.6rem;
-      color: #2b2b2b;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
       &::before {
         content: '';
         display: inline-block;
@@ -146,6 +155,9 @@ const props = withDefaults(
       font-weight: 500;
       display: flex;
       align-items: center;
+      & + .btn-member {
+        margin-left: 0.6rem;
+      }
     }
   }
   .btn-member {
@@ -154,14 +166,14 @@ const props = withDefaults(
     color: #555;
     font-size: 1.2rem;
     font-weight: 500;
-    border-radius: 2rem;
-    padding: 0.7rem 1.2rem;
+    border-radius: 0.4rem;
+
+    padding: 0.5rem 0.8rem 0.5rem 0.6rem;
     display: inline-flex;
     align-items: center;
     flex: 0 0 auto;
-    margin-left: auto;
     gap: 0 0.2rem;
-
+    line-height: 1.6rem;
     .icon {
       width: 1.8rem;
       display: inline-block;

@@ -122,6 +122,9 @@
           <div class="list-item">
             <NuxtLink to="#">마음건강</NuxtLink>
           </div>
+          <div class="list-item">
+            <NuxtLink to="#">내 커뮤니티 탈퇴</NuxtLink>
+          </div>
         </div>
       </section>
 

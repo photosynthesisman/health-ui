@@ -38,7 +38,7 @@
         :buttons="[{ linkHref: '#', btnType: 'primary', elementType: 'a', isLink: true }]"
       />
       <LinkShadowCard
-        title="MY병원 연결 시 <br/> 500P 적립"
+        title="MY병원 연결 시 <br/> 500원 적립"
         class="hospital-card"
         :buttons="[{ linkHref: '#', btnType: 'primary', elementType: 'a', isLink: true }]"
       />

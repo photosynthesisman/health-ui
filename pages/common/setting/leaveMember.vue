@@ -88,11 +88,14 @@
           <div class="leave-box">
             <strong class="leave-infotitle">회원 탈퇴하시면 모든 개인 데이터는 완전히 삭제됩니다.</strong>
             <ul class="leave-info">
-              <li>보유한 포인트는 탈퇴즉시 소멸되며, 복구가 불가능합니다.</li>
+              <li>보유한 포인트는 탈퇴 즉시 소멸되며, 복구가 불가능합니다.</li>
+              <li>
+                걷기왕 챌린지의 경품 및 상금은 대회 종료 시점에 회원 자격을 유지한 사용자에 한해 지급됩니다. 회원 탈퇴
+                시 걷기왕 챌린지 내 데이터 및 랭킹이 모두 소멸되며 상금 및 경품 보상이 지급되지 않습니다.
+              </li>
               <li>개인데이터와 건강 통계 등의 데이터 모두 삭제됩니다.</li>
               <li>실손청구된 진료건별 처방전, 영수증, 세부내역서 모두 삭제됩니다.</li>
-              <li>그매 결제 후 보관함에 저장된 병원 서류들 모두 삭제됩니다.</li>
-              <li>(주)헥토 데이터와 연동된 정보가 모두 삭제됩니다.</li>
+              <li>금액 결제 후 보관함에 저장된 병원 서류들 모두 삭제됩니다.</li>
             </ul>
           </div>
           <div class="leave-check ml-n20 mr-n20">
@@ -137,12 +140,13 @@ const toggleBottomModal = () => {
 }
 
 const clickConfirmModal = async () => {
+  // 25-09-30 취합리스트 59
   const modalContent = `
     <div style="display: flex; flex-direction: column; gap: 1rem; text-align: center">
       <div>
         <i class="ri-information-line"></i>
       </div>
-      <div style="font-weight: bold">건강의신 서비스 회원탈퇴를 진행하시겠습니까?</div>
+      <div style="font-weight: bold">건강의신 회원탈퇴를 진행하시겠습니까?</div>
     </div>`
 
   const confirmRes = await ConfirmModal.open({

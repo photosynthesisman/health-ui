@@ -14,7 +14,9 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 1.6rem;
   justify-items: center;
-  margin-bottom: 2.4rem;
+  margin: 0 -2rem 2.4rem -2rem;
+  padding: 2rem;
+  border-top: 0.1rem solid #eee;
 }
 .no-reward-content {
   display: flex;

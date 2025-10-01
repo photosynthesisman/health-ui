@@ -2,7 +2,7 @@
   <div class="walking-challenge-item">
     <div class="flex flex-row gap-4">
       <CommonBadge color="blue">개인전</CommonBadge>
-      <CommonBadge color="yellow">3,000P</CommonBadge>
+      <CommonBadge color="yellow">3,000원</CommonBadge>
       <CommonBadge color="purple">많이걷기</CommonBadge>
     </div>
     <div class="challenge-tit mt-16">
@@ -14,7 +14,7 @@
     <div v-if="!end" class="challenge-detail">
       <dl class="reward-info">
         <dt>총 상금</dt>
-        <dd>6,224,500P</dd>
+        <dd>6,224,500원</dd>
         <dd class="increase-amount">+45,000</dd>
       </dl>
       <dl class="recruit-number">
@@ -35,19 +35,11 @@ const props = defineProps({
 <style lang="scss" scoped>
 .walking-challenge-item {
   position: relative;
-  margin: 0 -2rem;
-  padding: 0.8rem 2rem 3.2rem;
+  margin: -5.6rem -2rem 0;
+  padding: 6.4rem 2rem 3.2rem;
+  overflow: hidden;
   background-color: #dae7f1;
   // border: 0.1rem solid #eee;
-  &::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: -0.1rem;
-    right: -0.1rem;
-    height: 6rem;
-    background-color: #dae7f1;
-  }
 
   &::after {
     content: '';
@@ -55,7 +47,7 @@ const props = defineProps({
     position: absolute;
     width: 18rem;
     height: 22rem;
-    top: -5.6rem;
+    top: 0;
     right: 0;
     background: url(~/assets/images/walkingking/img-walkingking-card.png) center bottom/ contain no-repeat;
     @media (max-width: 375px) {

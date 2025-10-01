@@ -22,9 +22,9 @@
 <script setup lang="ts">
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import MainChallengeCard from '~/components/publishing/walkking/subMain/MainChallengeCard.vue'
-import dummyImage1 from '~/assets/images/home/img-challenge-main.svg'
-import dummyImage2 from '~/assets/images/home/img-private-game.svg'
-import dummyImage3 from '~/assets/images/home/img-before-challenge.svg'
+import dummyImage1 from '~/assets/images/home/img-challenge-main.png'
+import dummyImage2 from '~/assets/images/home/img-private-game.png'
+import dummyImage3 from '~/assets/images/home/img-before-challenge.png'
 
 // CardData 타입 정의
 interface CardData {

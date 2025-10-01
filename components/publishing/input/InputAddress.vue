@@ -17,8 +17,9 @@
           :class="['c-inp', $attrs.class, { 't-right': unitR }]"
           @input="onInput"
         />
+        <!-- 25-09-30 취합리스트 61 -->
         <Button
-          btn-type="secondary"
+          btn-type="primary"
           element-type="button"
           aria-label="주소검색"
           class="xs"

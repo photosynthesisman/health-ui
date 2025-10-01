@@ -18,9 +18,9 @@
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import MainChallengeCard from '~/components/publishing/walkking/subMain/MainChallengeCard.vue'
 import Button from '~/components/publishing/Button/Button.vue'
-import dummyImage1 from '~/assets/images/home/img-challenge-main.svg'
-import dummyImage2 from '~/assets/images/home/img-private-game.svg'
-import dummyImage3 from '~/assets/images/home/img-before-challenge.svg'
+import dummyImage1 from '~/assets/images/home/img-challenge-main.png'
+import dummyImage2 from '~/assets/images/home/img-private-game.png'
+import dummyImage3 from '~/assets/images/home/img-before-challenge.png'
 
 // CardData 타입 정의
 interface CardData {
@@ -30,6 +30,7 @@ interface CardData {
   duration: string
   totalPrize: string
   increaseAmount: string
+  increasePeople: string
   buttonLink: string
   totalJoinMember: string
   image: string
@@ -57,6 +58,7 @@ const props = withDefaults(defineProps<Props>(), {
       duration: '2025.06.15 12:30 ~ 2025.06.30 19:00',
       totalPrize: '6,224,500',
       increaseAmount: '+45,000',
+      increasePeople: '+1,200',
       buttonLink: 'javascript:void(0)',
       totalJoinMember: '224',
       image: dummyImage1,
@@ -76,6 +78,7 @@ const props = withDefaults(defineProps<Props>(), {
       schedule: '2025.06.15 12:30 ~ 2025.06.30 19:00',
       duration: '2025.06.15 12:30 ~ 2025.06.30 19:00',
       totalPrize: '5,150,000',
+      increasePeople: '+1,200',
       increaseAmount: '+32,000',
       buttonLink: 'javascript:void(0)',
       totalJoinMember: '189',
@@ -96,6 +99,7 @@ const props = withDefaults(defineProps<Props>(), {
       schedule: '2025.06.15 12:30 ~ 2025.06.30 19:00',
       duration: '2025.06.15 12:30 ~ 2025.06.30 19:00',
       totalPrize: '3,890,000',
+      increasePeople: '+1,200',
       increaseAmount: '+18,500',
       buttonLink: 'javascript:void(0)',
       totalJoinMember: '156',

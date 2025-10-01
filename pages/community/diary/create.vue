@@ -15,7 +15,7 @@
           <span class="date-label">{{ formatDate(selectedDate) }}</span>
         </div>
 
-        <div v-if="isDailyQuoteMode" class="daily-quote-title">
+        <div class="daily-quote-title">
           <span>오늘 한마디</span>
           <p v-html="dailyQuoteQuestion"></p>
         </div>
@@ -600,7 +600,7 @@ const openDatePicker = () => {
   background: #fff;
   padding: 0 2rem;
   transition: bottom 0.3s ease;
-
+  border-top: 0.1rem solid #e2e2e2;
   &.is-focused {
     bottom: 0;
   }

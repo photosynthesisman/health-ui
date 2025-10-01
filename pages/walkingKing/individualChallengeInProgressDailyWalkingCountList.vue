@@ -48,7 +48,8 @@
     <template #content>
       <!-- 08-13 안내문구 추가 -->
       <p class="fz-13 text-left" style="color: #555">걸음내역은 일일 마감 이후 업데이트 됩니다.</p>
-      <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
+      <StepsHistoryItem :date="'2025.06.25'" :steps="'-'" :mission="'-'" :item="'-'" />
+      <StepsHistoryItem :date="'2025.06.25'" :steps="'0'" :mission="'0'" :item="'1'" />
       <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
       <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
       <!-- 08-13 집계내역 없음 추가 -->

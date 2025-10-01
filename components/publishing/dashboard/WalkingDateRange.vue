@@ -65,6 +65,11 @@ const props = defineProps<{
   }
   .date-text {
     text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0 0.2rem;
     .main-date {
       font-size: 2rem;
       font-weight: 700;

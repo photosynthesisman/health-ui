@@ -10,10 +10,11 @@
       />
     </StickyTabsContainer>
     <TotalCountSelectType
+      v-model:selected-period="selectedPeriod"
       :count="6"
       class="pt-20 pb-20"
-      v-model:selected-period="selectedPeriod"
       :select-options="periodOptions"
+      :filter-icon="true"
     />
 
     <!-- 게시글 없음 상태 -->

@@ -20,7 +20,7 @@
               : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
         }"
       >
-        <div v-for="(rank, index) in rankData" :key="`rank-${index}`" class="rank-box">
+        <div v-for="(rank, index) in finalRanks" :key="`rank-${index}`" class="rank-box">
           <i class="badge" :class="rank.iconClass" aria-label="hidden"></i>
           <div class="box-txt">
             <span class="tit"
@@ -55,15 +55,24 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   rightMargin: 40,
   ranks: () => [
-    { id: 2, title: '올해 랭킹', value: '134위', iconClass: 'total-trophy', hasArrow: true },
-    { id: 1, title: '총상금', value: '480,000P', iconClass: 'total-prize' },
-    { id: 3, title: '챌린지 참가', value: '10회', iconClass: 'total-challenge' },
-    { id: 4, title: '최고순위', value: '84위', iconClass: 'total-rank' },
-    { id: 5, title: '총걸음', value: '264,203걸음', iconClass: 'total-steps' },
-    { id: 6, title: '평균걸음(일)', value: '12,120걸음', iconClass: 'average-steps' }
+    { id: 2, title: '올해 랭킹', value: '', iconClass: 'total-trophy', hasArrow: true },
+    { id: 1, title: '총상금', value: '', iconClass: 'total-prize' },
+    { id: 3, title: '챌린지 참가', value: '', iconClass: 'total-challenge' },
+    { id: 4, title: '최고순위', value: '', iconClass: 'total-rank' },
+    { id: 5, title: '총걸음', value: '', iconClass: 'total-steps' },
+    { id: 6, title: '평균걸음(일)', value: '', iconClass: 'average-steps' }
   ]
 })
-
+const finalRanks = computed(() => {
+  return props.ranks.map(rank => {
+    // rank.value가 빈 문자열일 경우에만 '-'를 사용
+    const displayValue = rank.value === '' ? '-' : rank.value
+    return {
+      ...rank,
+      value: displayValue
+    }
+  })
+})
 // 스와이프 상태 관리
 const startX = ref(0)
 const currentX = ref(0)

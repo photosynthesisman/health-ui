@@ -1,52 +1,46 @@
 <template>
   <div class="trending-today">
     <div class="trending-list">
-      <!-- 1위 게시글 (스와이프 가능) -->
-      <div v-if="trendingItems[0]" class="trending-item rank-1" @click="handleItemClick(trendingItems[0])">
-        <!-- 작성자 정보 -->
-        <div v-if="trendingItems[0].writer" class="writer-box">
+      <div
+        v-for="(item, index) in trendingItems"
+        :key="item.id"
+        class="trending-item rank-1"
+        @click="handleItemClick(item)"
+      >
+        <h3 class="tit">{{ item.tit }}</h3>
+        <div v-if="item.writer" class="writer-box">
           <div class="profile-img">
-            <img
-              :src="getWriterImageUrl(trendingItems[0].writerImageUrl)"
-              alt="작성자 이미지"
-              @error="handleImageError"
-            />
+            <img :src="getWriterImageUrl(item.writerImageUrl)" alt="작성자 이미지" @error="handleImageError" />
           </div>
-          <span class="name">{{ trendingItems[0].writer }}</span>
+          <span class="name">{{ item.writer }}</span>
         </div>
 
-        <!-- 배지/카테고리 -->
-        <div v-if="trendingItems[0].badge?.length" class="flex flex-row gap-8">
-          <span
-            v-for="(b, i) in trendingItems[0].badge"
-            :key="'badge-' + i"
-            :class="['badge', { 'badge-blue': b.type === 'blue' }]"
-          >
-            {{ b.label }}
-          </span>
-        </div>
-        <div v-if="trendingItems[0].cate?.length" class="flex flex-row gap-8">
-          <span
-            v-for="(c, i) in trendingItems[0].cate"
-            :key="'cate-' + i"
-            :class="['cate', { 'cate-blue': c.type === 'blue' }]"
-          >
-            {{ c.label }}
-          </span>
-        </div>
-
-        <!-- 본문 내용 -->
-        <div class="info-box">
-          <div class="info">
-            <h3 class="tit">{{ trendingItems[0].tit }}</h3>
-            <p class="text">{{ trendingItems[0].text }}</p>
+        <FlexColDiv class="gap-8">
+          <div v-if="item.badge?.length" class="flex flex-row gap-8">
+            <span
+              v-for="(b, i) in item.badge"
+              :key="'badge-' + i"
+              :class="['badge', { 'badge-blue': b.type === 'blue' }]"
+            >
+              {{ b.label }}
+            </span>
           </div>
-        </div>
+          <div v-if="item.cate?.length" class="flex flex-row gap-8">
+            <span v-for="(c, i) in item.cate" :key="'cate-' + i" :class="['cate', { 'cate-blue': c.type === 'blue' }]">
+              {{ c.label }}
+            </span>
+          </div>
 
-        <!-- 1위 이미지 스와이프 -->
+          <div class="info-box">
+            <div class="info">
+              <p class="text">{{ item.text }}</p>
+            </div>
+          </div>
+        </FlexColDiv>
+
         <div class="post-image-swiper">
           <CommonSwiper
-            :slides="getFirstItemImages(trendingItems[0])"
+            :slides="getFirstItemImages(item)"
             slide-type="custom"
             :slides-per-view="1"
             :space-between="12"
@@ -64,69 +58,10 @@
           </CommonSwiper>
         </div>
 
-        <!-- 게시글 정보 -->
-        <div class="detail-info">
-          <span class="like-num">{{ trendingItems[0].likeNum ?? 0 }}</span>
-          <span class="view-num">조회 {{ trendingItems[0].viewNum ?? 0 }}</span>
-          <span class="reply-num">댓글 {{ trendingItems[0].replyNum ?? 0 }}</span>
-          <span v-if="trendingItems[0].dateNum" class="date-num">{{ trendingItems[0].dateNum }} 전</span>
-        </div>
-      </div>
-
-      <!-- 2위, 3위 게시글 -->
-      <div
-        v-for="(item, index) in trendingItems.slice(1, 3)"
-        :key="item.id"
-        class="trending-item"
-        @click="handleItemClick(item)"
-      >
-        <!-- 작성자 정보 -->
-        <div v-if="item.writer" class="writer-box">
-          <div class="profile-img">
-            <img :src="getWriterImageUrl(item.writerImageUrl)" alt="작성자 이미지" @error="handleImageError" />
-          </div>
-          <span class="name">{{ item.writer }}</span>
-        </div>
-
-        <!-- 배지/카테고리 -->
-        <div v-if="item.badge?.length" class="flex flex-row gap-8">
-          <span
-            v-for="(b, i) in item.badge"
-            :key="'badge-' + i"
-            :class="['badge', { 'badge-blue': b.type === 'blue' }]"
-          >
-            {{ b.label }}
-          </span>
-        </div>
-        <div v-if="item.cate?.length" class="flex flex-row gap-8">
-          <span v-for="(c, i) in item.cate" :key="'cate-' + i" :class="['cate', { 'cate-blue': c.type === 'blue' }]">
-            {{ c.label }}
-          </span>
-        </div>
-
-        <!-- 본문 내용 -->
-        <div class="info-box">
-          <div class="info">
-            <h3 class="tit">{{ item.tit }}</h3>
-            <p class="text">{{ item.text }}</p>
-          </div>
-
-          <div class="img-wrap" v-if="item.src || (item.images && item.images.length > 0)">
-            <i v-if="getImageCount(item) > 1" class="img-length">+{{ getImageCount(item) }}</i>
-            <img :src="getImageUrl(item.src || (item.images && item.images[0]))" alt="게시글 이미지" />
-          </div>
-
-          <!-- <div class="img-wrap" v-if="item.src">
-            <i v-if="item.length && item.length > 1" class="img-length">+{{ item.length }}</i>
-            <img :src="getImageUrl(item.src)" alt="게시글 이미지" />
-          </div> -->
-        </div>
-
-        <!-- 게시글 정보 -->
         <div class="detail-info">
           <span class="like-num">{{ item.likeNum ?? 0 }}</span>
-          <span>조회 {{ item.viewNum ?? 0 }}</span>
-          <span>댓글 {{ item.replyNum ?? 0 }}</span>
+          <span class="view-num">조회 {{ item.viewNum ?? 0 }}</span>
+          <span class="reply-num">댓글 {{ item.replyNum ?? 0 }}</span>
           <span v-if="item.dateNum" class="date-num">{{ item.dateNum }} 전</span>
         </div>
       </div>
@@ -137,6 +72,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
 
 interface LabelItem {
@@ -178,13 +114,13 @@ const emit = defineEmits<{
 }>()
 
 const router = useRouter()
-const swiperContainer = ref<HTMLElement | null>(null)
 const imageError = ref(false)
 
-// 상위 3개 아이템만 표시
-const trendingItems = computed(() => props.items.slice(0, 3))
+// 전달받은 모든 아이템을 그대로 사용 (이전에 slice(0, 3)으로 제한했으나 이제 전체 사용)
+// CommonSwiper 사용을 위해 getFirstItemImages 함수를 이용합니다.
+const trendingItems = computed(() => props.items)
 
-// 1위 아이템의 이미지 배열 반환
+// 모든 아이템에 대해 이미지 배열 반환 (이전 1위 항목 로직 재사용)
 const getFirstItemImages = (item: TrendingItem) => {
   if (item.images && item.images.length > 0) {
     return item.images
@@ -195,6 +131,7 @@ const getFirstItemImages = (item: TrendingItem) => {
   return []
 }
 
+// getImageCount는 더 이상 템플릿에서 사용되지 않지만, 다른 곳에서 사용될 경우를 대비해 남겨둡니다.
 const getImageCount = (item: TrendingItem) => {
   if (item.images && item.images.length > 0) {
     return item.images.length
@@ -205,7 +142,7 @@ const getImageCount = (item: TrendingItem) => {
   return 0
 }
 
-const getImageUrl = (src: string) => {
+const getImageUrl = (src: string | undefined) => {
   return src ? `/_nuxt/assets/images/${src}` : ''
 }
 
@@ -243,8 +180,8 @@ const handleItemClick = (item: TrendingItem) => {
 .trending-item {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  padding: 2.4rem 0;
+  gap: 1.6rem;
+  padding: 3.2rem 0;
   & + .trending-item {
     border-top: 1px solid #eee;
   }
@@ -354,7 +291,7 @@ const handleItemClick = (item: TrendingItem) => {
       height: 100%;
       img {
         width: 100%;
-        height: 100%;
+        height: 24rem;
         object-fit: cover;
       }
     }
@@ -382,29 +319,11 @@ const handleItemClick = (item: TrendingItem) => {
       }
     }
   }
+  // 기존의 2, 3위 항목용 작은 썸네일 관련 스타일은 필요 없으므로 제거
   .img-wrap {
-    position: relative;
-    overflow: hidden;
-    width: 7.2rem;
-    height: 7.2rem;
-    border-radius: 1.2rem;
-    .img-length {
-      position: absolute;
-      top: 0;
-      right: 0;
-      padding: 0.4rem 0.6rem;
-      background: rgba($color: #000000, $alpha: 0.7);
-      border-radius: 0 0.8rem;
-      font-size: 1.4rem;
-      color: #fff;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    display: none;
   }
+
   .detail-info {
     display: flex;
     flex-direction: row;

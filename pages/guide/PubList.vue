@@ -266,6 +266,22 @@ const pageListData: PageItemData[] = [
 
   // 결제내역
   {
+    title: '주문 완료',
+    description: '주문 완료',
+    path: '/common/payment/finishedOrder',
+    category: '포인트 스토어',
+    section: 'payment',
+    status: ''
+  },
+  {
+    title: '선물 완료',
+    description: '선물 완료',
+    path: '/common/payment/finishedGift',
+    category: '포인트 스토어',
+    section: 'payment',
+    status: ''
+  },
+  {
     title: '결제내역',
     description: '결제내역 리스트',
     path: '/common/payment',
@@ -1668,6 +1684,14 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
+    title: '챌린지 랭킹 집계 전',
+    description: '챌린지 랭킹 집계 전',
+    path: '/walkingKing/individualChallengeInProgressType0',
+    category: '건강관리',
+    section: 'walkingKing',
+    status: ''
+  },
+  {
     title: '챌린지 진행중(TOP30) - 개인',
     description: 'TOP30',
     path: '/walkingKing/individualChallengeInProgressType1',
@@ -1969,6 +1993,14 @@ const pageListData: PageItemData[] = [
     status: '' // 빈 문자열로 변경 (completed로 표시됨)
   },
   {
+    title: '회원가입 계정정보(일반)',
+    description: '회원가입 계정정보 작성화면',
+    path: '/common/signup/signupNormalAccountInput',
+    category: '회원가입',
+    section: 'signup',
+    status: '' // 빈 문자열로 변경 (completed로 표시됨)
+  },
+  {
     title: '회원가입 신체정보',
     description: '회원가입 신체정보 입력화면',
     path: '/common/signup/signupPhysicalInput',
@@ -2076,6 +2108,14 @@ const pageListData: PageItemData[] = [
     section: 'setProfile',
     status: ''
   },
+  {
+    title: '프로필 수정 - 건강프로필',
+    description: '건강프로필 수정 화면',
+    path: '/common/setProfile/modifyHealthInput',
+    category: '프로필설정',
+    section: 'setProfile',
+    status: ''
+  },
 
   // 전체 메뉴
   {
@@ -2123,6 +2163,22 @@ const pageListData: PageItemData[] = [
     title: '프로필 팝업 리스트',
     description: '회원프로필 바텀모달 리스트',
     path: '/common/commonProfile/profilePopList',
+    category: '회원프로필',
+    section: 'commonProfile',
+    status: ''
+  },
+  {
+    title: '팔로워/팔로잉',
+    description: '팔로워/팔로잉',
+    path: '/common/commonProfile/myFollowList',
+    category: '회원프로필',
+    section: 'commonProfile',
+    status: ''
+  },
+  {
+    title: 'MY친구',
+    description: '회원프로필 바텀모달 리스트',
+    path: '/common/commonProfile/myFriendsList',
     category: '회원프로필',
     section: 'commonProfile',
     status: ''
@@ -2243,6 +2299,22 @@ const pageListData: PageItemData[] = [
     section: 'common',
     status: ''
   },
+  {
+    title: '로딩화면 타입1',
+    description: '로딩화면 타입1',
+    path: '/common/loading/loadingType1',
+    category: '로딩화면',
+    section: 'common',
+    status: ''
+  },
+  {
+    title: '로딩화면 타입2',
+    description: '로딩화면 타입2',
+    path: '/common/loading/loadingType2',
+    category: '로딩화면',
+    section: 'common',
+    status: ''
+  },
   // 리워드보관함
   {
     title: '리워드보관함',
@@ -2301,9 +2373,33 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
+    title: '챌린지 참가권 리워드',
+    description: '챌린지 참가권 리워드',
+    path: '/common/lottery/[id]/rewardConfirm',
+    category: '리워드보관함',
+    section: 'lottery',
+    status: ''
+  },
+  {
     title: '꽝',
     description: '꽝 화면',
     path: '/common/lottery/[id]/resultLose',
+    category: '리워드보관함',
+    section: 'lottery',
+    status: ''
+  },
+  {
+    title: '당첨자 정보 입력',
+    description: '당첨자 정보 입력',
+    path: '/common/lottery/[id]/resultWinner',
+    category: '리워드보관함',
+    section: 'lottery',
+    status: ''
+  },
+  {
+    title: '리워드/아이템 전체 사용 내역',
+    description: '리워드/아이템 전체 사용 내역',
+    path: '/common/lottery/[id]/usageHistory	',
     category: '리워드보관함',
     section: 'lottery',
     status: ''
@@ -2401,9 +2497,25 @@ const pageListData: PageItemData[] = [
     status: ''
   },
   {
-    title: '커뮤니티 ',
-    description: '커뮤니티 둘러보기',
+    title: '전체 커뮤니티 둘러보기',
+    description: '전체 커뮤니티 둘러보기',
     path: '/community/explore',
+    category: '커뮤니티',
+    section: 'community',
+    status: ''
+  },
+  {
+    title: '내 커뮤니티 ',
+    description: '내 커뮤니티',
+    path: '/community/mine',
+    category: '커뮤니티',
+    section: 'community',
+    status: ''
+  },
+  {
+    title: '커뮤니티 탈퇴하기',
+    description: '커뮤니티 탈퇴하기',
+    path: '/community/cancel',
     category: '커뮤니티',
     section: 'community',
     status: ''

@@ -74,8 +74,8 @@ interface ChallengeSlide {
 interface Props {
   slides?: ChallengeSlide[]
 }
-import dummyImage1 from '~/assets/images/home/img-challenge-main.svg'
-import dummyImage2 from '~/assets/images/home/img-private-game.svg'
+import dummyImage1 from '~/assets/images/home/img-challenge-main.png'
+import dummyImage2 from '~/assets/images/home/img-private-game.png'
 
 // 배경 패턴 생성 공통 함수
 const generateBackgroundPattern = (colorHex: string): string => {
@@ -298,9 +298,10 @@ const emit = defineEmits<{
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-
+    width: 16.1rem;
     img {
       display: block;
+      width: 100%;
       max-width: 100%;
       height: auto;
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="best-section">
-    <TitleBox class="mt-32" title="커뮤니티명 베스트 후기" :is-show-star="true" :rating="rating" />
+    <TitleBox class="mt-32" title="커뮤니티명 베스트 후기" :is-show-star="false" :rating="rating" />
 
     <CommonSwiper
       :slides="commList"
@@ -48,7 +48,7 @@ const props = defineProps({})
 const commList = [
   {
     id: 1,
-    cate: [{ label: '자유게시판', type: 'blue' }],
+    cate: [{ label: '자유게시판', type: '' }],
     dateNum: '3시간',
     tit: '러닝할때 스마트링 활용해요 러닝할때 스마트링 활용해요',
     text: '몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음',
@@ -61,7 +61,7 @@ const commList = [
   },
   {
     id: 2,
-    cate: [{ label: '자유게시판', type: 'blue' }],
+    cate: [{ label: '자유게시판', type: '' }],
     dateNum: '3시간',
     tit: '러닝할때 스마트링 활용해요 러닝할때 스마트링 활용해요',
     text: '몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음',
@@ -74,7 +74,7 @@ const commList = [
   },
   {
     id: 3,
-    cate: [{ label: '자유게시판', type: 'blue' }],
+    cate: [{ label: '자유게시판', type: '' }],
     dateNum: '3시간',
     tit: '러닝할때 스마트링 활용해요 러닝할때 스마트링 활용해요',
     text: '몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음',
@@ -86,7 +86,7 @@ const commList = [
   },
   {
     id: 4,
-    cate: [{ label: '자유게시판', type: 'blue' }],
+    cate: [{ label: '자유게시판', type: '' }],
     dateNum: '3시간',
     tit: '러닝할때 스마트링 활용해요 러닝할때 스마트링 활용해요',
     text: '몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음',

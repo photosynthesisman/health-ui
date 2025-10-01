@@ -14,22 +14,15 @@
         <img :src="fullImagePath" alt="프로필 이미지" />
         <div class="detail-profile">
           <p>
-            <strong class="nickname">{{ nickname }}</strong
-            >{{ userName }}
+            <strong class="nickname">{{ nickname }}</strong>
+            <span>{{ userName }}</span>
           </p>
-          <span class="address">{{ address }}</span>
+          <span class="phone">{{ phone }}</span>
         </div>
       </div>
       <div class="steps-box">
-        <div class="steps">
-          <p>
-            <strong>{{ animatedFriendsSteps.toLocaleString() }}</strong
-            >걸음/일
-          </p>
-          <div class="rank-progress">
-            <div class="current-bar" :style="progressBarWidthStyle"></div>
-          </div>
-        </div>
+        <!-- 09-16 조르기 버튼 추가 -->
+        <p v-if="alreadyBeg" class="beg">조르기 했어요!</p>
         <i class="icon" aria-hidden="true"></i>
       </div>
     </label>
@@ -44,12 +37,13 @@ const props = withDefaults(
     id: string
     name?: string
     disabled?: boolean
+    alreadyBeg?: boolean
     friendsSteps?: number
     targetSteps?: number
     modelValue?: string | number
     nickname?: string
     userName?: string
-    address?: string
+    phone?: string
     profileImage?: string
   }>(),
   {
@@ -60,7 +54,7 @@ const props = withDefaults(
     modelValue: '',
     nickname: '',
     userName: '',
-    address: '',
+    phone: '',
     profileImage: '/img-profile.svg'
   }
 )
@@ -71,7 +65,7 @@ const internalValue = computed({
   get: () => props.modelValue,
   set: newValue => {
     emit('update:modelValue', newValue)
-    emit('change', { id: props.id, fullImagePath: fullImagePath.value })
+    emit('change', { id: props.id, fullImagePath: fullImagePath.value, nickname: props.nickname })
   }
 })
 
@@ -126,12 +120,9 @@ const fullImagePath = computed(() => {
   position: relative;
   width: 100%;
   margin: 0;
-  margin-bottom: 1.2rem;
   .c-radio {
     &:checked {
       ~ .c-label {
-        border: 1px solid #4c7ff7;
-        background: #f6f9ff;
         &::after {
           color: #4c7ff7;
         }
@@ -139,23 +130,11 @@ const fullImagePath = computed(() => {
     }
   }
   .c-label {
-    border-radius: 1.2rem;
-    border: 1px solid #eee;
+    border-bottom: 1px solid #eee;
     background: #fff;
     width: 100%;
-    padding: 2rem;
+    padding: 1.6rem 0.4rem;
     cursor: pointer;
-    &::after {
-      color: #959595;
-      content: attr(aria-label);
-      margin-left: 0.8rem;
-      min-width: 0;
-      font-size: 1.6rem;
-      font-weight: 500;
-    }
-    @media (max-width: 375px) {
-      padding: 1.2rem;
-    }
   }
   .icon {
     display: flex;
@@ -163,6 +142,7 @@ const fullImagePath = computed(() => {
     justify-content: center;
     width: 2.4rem;
     height: 2.4rem;
+    flex-shrink: 0;
     border-radius: 50%;
     border: 1.5px solid #eee;
     background-color: #fff;
@@ -218,6 +198,7 @@ const fullImagePath = computed(() => {
 .profile-box {
   display: flex;
   align-items: center;
+  width: 50%;
   img {
     width: 4.8rem;
     height: 4.8rem;
@@ -227,14 +208,39 @@ const fullImagePath = computed(() => {
   .detail-profile {
     font-size: 1.4rem;
     line-height: 2rem;
+    flex: 1;
     p {
-      font-weight: 500;
+      display: flex;
+      align-items: center;
+      span {
+        max-width: 20%;
+        color: #959595;
+        font-size: 1.3rem;
+        font-weight: 500;
+        line-height: 1.8rem;
+        @include mixin.ellipsis;
+        @media (max-width: 450px) {
+          max-width: 15%;
+        }
+        @media (max-width: 400px) {
+          max-width: 10%;
+        }
+      }
+      .nickname {
+        max-width: 30%;
+        display: inline-block;
+        margin-right: 0.2rem;
+        font-weight: 600;
+        @include mixin.ellipsis;
+        @media (max-width: 450px) {
+          max-width: 20%;
+        }
+        @media (max-width: 400px) {
+          max-width: 15%;
+        }
+      }
     }
-    .nickname {
-      margin-right: 0.2rem;
-      font-weight: 600;
-    }
-    .address {
+    .phone {
       color: #959595;
       font-weight: 500;
     }
@@ -244,6 +250,18 @@ const fullImagePath = computed(() => {
   display: flex;
   align-items: center;
   margin-left: auto;
+  .beg {
+    flex-shrink: 0;
+    margin-right: 1.2rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 2rem;
+    color: var(--blue-primary);
+    @media (max-width: 375px) {
+      margin-right: 0.6rem;
+      font-size: 1.2rem;
+    }
+  }
   .steps {
     margin-right: 1.6rem;
     display: flex;
@@ -282,7 +300,6 @@ const fullImagePath = computed(() => {
   .friends-checkbox-wrap {
     .c-label {
       justify-content: space-between;
-      padding: 1.2rem;
     }
   }
   .steps-box {

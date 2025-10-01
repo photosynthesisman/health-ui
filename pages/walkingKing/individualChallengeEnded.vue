@@ -55,7 +55,9 @@
       <!-- 일일 걸음수 내역 모달 -->
       <BottomModal :is-visible="isShowStepHistoryModal" v-bind="StepHistoryModalProps" @close="toggleStepHistoryModal">
         <template #content>
-          <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
+          <p class="fz-13 fc-body-02">걸음내역은 일일 마감 이후 업데이트 됩니다.</p>
+          <StepsHistoryItem :date="'2025.06.25'" :steps="'-'" :mission="'-'" :item="'-'" />
+          <StepsHistoryItem :date="'2025.06.25'" :steps="'0'" :mission="'0'" :item="'1'" />
           <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
           <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
         </template>

@@ -62,32 +62,43 @@
         valid-text="회사명 벨리데이터 메시지"
         placeholder="현재 소속된 회사명을 입력해주세요."
       />
-
-      <InputText
-        label="활동 경력"
-        type="text"
-        :is-valid="false"
-        valid-text="활동 경력 벨리데이터 메시지"
-        placeholder="활동 경력 년차를 숫자로 입력해주세요."
-      />
-
-      <section class="w-full">
+      <!-- 2025-09-24 년/월 입력 칸 분리 -->
+      <FlexSection class="w-full pt-0">
+        <FlexColDiv class="gap-6">
+          <InputLabelText :label="'총 활동 경력'" />
+          <FlexRowDiv class="align-center gap-6">
+            <InputText type="number" max-length="2" :is-valid="false" valid-text="활동 경력 벨리데이터 메시지" />
+            <p class="mr-8">년</p>
+            <InputText type="number" max-length="2" :is-valid="false" valid-text="활동 경력 벨리데이터 메시지" />
+            <p>개월</p>
+          </FlexRowDiv>
+        </FlexColDiv>
+      </FlexSection>
+      <!-- 2025-09-24 pt-0 클래스 추가 -->
+      <section class="w-full pt-0">
         <label for="" class="c-label require" style="font-size: 1.2rem">활동이력</label>
         <FieldSet
-          maxLength="500"
+          maxlength="500"
           placeholder="500글자 이내로 입력해주세요
 
 예 : 2018.03 대학교 졸업
        2024.05 보험설계사 활동"
         />
       </section>
-
-      <section class="btn-radio-box w-full">
+      <!-- 2025-09-24 pt-0 클래스 추가 -->
+      <section class="btn-radio-box w-full pt-0">
         <label for="" class="c-label" style="font-size: 1.2rem">상담채널</label>
         <div class="flex flex-row w-full gap-8">
-          <Check id="chk1" name="chk1" checked custom-style="buttonType2" aria-label="Direct Message" class="flex-11" />
-          <Check id="chk2" name="chk1" custom-style="buttonType2" aria-label="전화" class="flex-11" />
-          <Check id="chk3" name="chk1" custom-style="buttonType2" aria-label="문자" class="flex-11" />
+          <Checkbox
+            id="chk1"
+            name="chk1"
+            checked
+            custom-style="buttonType2"
+            aria-label="Direct Message"
+            class="flex-11"
+          />
+          <Checkbox id="chk2" name="chk1" custom-style="buttonType2" aria-label="전화" class="flex-11" />
+          <Checkbox id="chk3" name="chk1" custom-style="buttonType2" aria-label="문자" class="flex-11" />
         </div>
       </section>
     </div>
@@ -157,7 +168,7 @@ import BaseBody from '~/components/layout/BaseBody.vue'
 import Button from '~/components/publishing/button/Button.vue'
 import ButtonGroup from '~/components/publishing/button/ButtonGroup.vue'
 import Radio from '~/components/publishing/input/radio.vue'
-import Check from '~/components/publishing/input/Check.vue'
+import Checkbox from '~/components/publishing/input/check.vue'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import InputText from '~/components/publishing/input/InputText.vue'
 import defaultProfileImage from '~/assets/images/img-profile.svg'
@@ -165,11 +176,14 @@ import FieldSet from '~/components/publishing/input/FieldSet.vue'
 import RadioImg from '~/components/publishing/input/radioImg.vue'
 import iconCamera from '~/assets/images/insu/icon-camera.png'
 import iconAlbum from '~/assets/images/insu/icon-album.png'
-
+import InputLabelText from '~/components/publishing/input/InputLabelText.vue'
 import iconBasic from '~/assets/images/insu/icon-basic.png'
 import LineTabs, { type Tab } from '~/components/tabbar/LineTabs.vue'
 
 import ConfirmModal from '~/components/common/modal/ConfirmModal.vue'
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
+import FlexSection from '~/components/page/FlexSection.vue'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
 
 const tabs = ref<Tab[]>([
   { title: '계정정보', to: '/common/setProfile/accountInfoInput' },

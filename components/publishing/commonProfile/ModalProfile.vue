@@ -3,36 +3,55 @@
     <span class="profile-photo">
       <img src="../../../assets/images/img-community-01.png" alt="" />
     </span>
-    <div class="profile-info">
-      <strong class="name">장동건</strong>
-      <div class="detail-info">
-        <span class="location">서울강남</span>
-        <span class="reward">12</span>
-        <span class="message">메시지</span>
+    <template v-if="profileType === 'normal'">
+      <div class="profile-info">
+        <strong class="name">장동건</strong>
+        <div class="detail-info">
+          <span class="location">서울강남</span>
+          <span class="reward">12</span>
+          <span class="message">메시지</span>
+        </div>
       </div>
-    </div>
-    <div class="flow-info">
-      <div class="flow-item">
-        <span class="tit">팔로워</span>
-        <strong>10</strong>
+      <div class="flow-info">
+        <div class="flow-item">
+          <span class="tit">팔로워</span>
+          <strong>10</strong>
+        </div>
+        <div class="flow-item">
+          <span class="tit">팔로잉</span>
+          <strong>152</strong>
+        </div>
+        <div class="flow-item">
+          <span class="tit">팔로우</span>
+          <button v-if="isFollowing" type="button" class="btn flowing-btn" @click="handleFollowToggle">팔로잉</button>
+          <!-- 팔로우 버튼 추가 -->
+          <button v-else type="button" class="btn flow-btn" @click="handleFollowToggle">팔로우</button>
+        </div>
       </div>
-      <div class="flow-item">
-        <span class="tit">팔로잉</span>
-        <strong>152</strong>
+      <hr class="hr-section ml-n20 mr-n20 mb-10" />
+    </template>
+    <template v-if="profileType === 'expert'">
+      <div class="profile-info">
+        <strong class="name">장동건</strong>
+        <div class="detail-info">
+          <div class="flex align-center">
+            <span class="company">삼성생명</span>
+            <span class="service_years">7년차</span>
+          </div>
+          <div class="flow-item">
+            <button v-if="isFollowing" type="button" class="btn flowing-btn" @click="handleFollowToggle">팔로잉</button>
+            <!-- 팔로우 버튼 추가 -->
+            <button v-else type="button" class="btn flow-btn" @click="handleFollowToggle">팔로우</button>
+          </div>
+        </div>
       </div>
-      <div class="flow-item">
-        <span class="tit">팔로우</span>
-        <button v-if="isFollowing" type="button" class="btn flowing-btn" @click="handleFollowToggle">팔로잉</button>
-        <!-- 팔로우 버튼 추가 -->
-        <button v-else type="button" class="btn flow-btn" @click="handleFollowToggle">팔로우</button>
-      </div>
-    </div>
-    <hr class="hr-section ml-n20 mr-n20 mb-10" />
+    </template>
   </div>
 </template>
 <script setup lang="ts">
 const props = defineProps({
-  isFollowingInitial: { type: Boolean, default: false }
+  isFollowingInitial: { type: Boolean, default: false },
+  profileType: { type: String as () => 'normal' | 'expert', default: 'normal' }
 })
 // 팔로우 상태 관리
 const isFollowing = ref(props.isFollowingInitial)
@@ -61,6 +80,7 @@ const handleFollowToggle = () => {
     display: flex;
     gap: 0 1.2rem;
     flex-direction: column;
+    align-items: center;
     .name {
       font-size: 2rem;
       font-weight: 700;
@@ -72,7 +92,8 @@ const handleFollowToggle = () => {
       display: flex;
       flex-direction: row;
       justify-content: center;
-      gap: 0 0.6rem;
+      align-items: center;
+      gap: 0.6rem;
       .location,
       .reward,
       .message {
@@ -93,6 +114,7 @@ const handleFollowToggle = () => {
         display: inline-flex;
         align-content: center;
         gap: 0 0.2rem;
+        line-height: 2rem;
         &::before {
           content: '';
           display: inline-block;
@@ -118,6 +140,29 @@ const handleFollowToggle = () => {
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M13.7887 3.05203C14.5076 2.80267 15.197 3.49231 14.9479 4.21121L10.8971 15.888C10.6194 16.6875 9.49666 16.7093 9.18809 15.9212L7.40098 11.3567L11.0475 7.71023C11.267 7.49058 11.267 7.13496 11.0475 6.91531C10.8278 6.69567 10.4722 6.69572 10.2525 6.91531L6.58945 10.5764L2.07969 8.81277C1.29124 8.50425 1.31301 7.38032 2.11289 7.10281L13.7887 3.05203Z' fill='white'/%3E%3C/svg%3E");
         }
       }
+      .company {
+        font-size: 1.6rem;
+        font-weight: 500;
+        color: #555;
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        &::after {
+          content: '';
+          width: 0.3rem;
+          height: 0.3rem;
+          margin: 0 0.6rem;
+          border-radius: 50%;
+          background: #959595;
+        }
+      }
+      .service_years {
+        font-size: 1.6rem;
+        color: #2b2b2b;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+      }
     }
   }
   .flow-info {
@@ -140,57 +185,7 @@ const handleFollowToggle = () => {
         font-weight: 600;
         color: #959595;
       }
-      .flowing-btn {
-        background-color: #4f5561;
-        color: vars.$white;
-        font-size: 1.2rem;
-        display: inline-flex;
-        width: 7.5rem;
-        line-height: 2.8rem;
-        border-radius: 2rem;
-        text-align: center;
-        justify-content: center;
-        position: relative;
-        align-items: center;
-        @include mixin.rippleEffectWhite;
-        &::before {
-          content: '';
-          width: 1.6rem;
-          height: 1.6rem;
-          margin-right: 0.4rem;
-          background-repeat: no-repeat;
-          background-size: contain;
-          background-position: center;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.1001 14.3996C1.10007 14.6757 1.3239 14.8996 1.60004 14.8996C1.87618 14.8996 2.10007 14.6758 2.1001 14.3997L1.1001 14.3996ZM1.60037 11.9993L2.10037 11.9994L1.60037 11.9993ZM8.4001 10.0996C8.67624 10.0996 8.9001 9.87575 8.9001 9.59961C8.9001 9.32347 8.67624 9.09961 8.4001 9.09961V10.0996ZM14.4001 10.8996C14.6762 10.8996 14.9001 10.6758 14.9001 10.3996C14.9001 10.1235 14.6762 9.89961 14.4001 9.89961V10.8996ZM10.8001 9.89961C10.524 9.89961 10.3001 10.1235 10.3001 10.3996C10.3001 10.6758 10.524 10.8996 10.8001 10.8996V9.89961ZM12.1001 12.1995C12.1001 12.4757 12.324 12.6995 12.6001 12.6995C12.8762 12.6995 13.1001 12.4757 13.1001 12.1995H12.1001ZM13.1001 8.59952C13.1001 8.32337 12.8762 8.09952 12.6001 8.09952C12.324 8.09952 12.1001 8.32337 12.1001 8.59952H13.1001ZM9.6001 3.99961H9.1001C9.1001 5.04895 8.24944 5.89961 7.2001 5.89961V6.39961V6.89961C8.80172 6.89961 10.1001 5.60123 10.1001 3.99961H9.6001ZM7.2001 6.39961V5.89961C6.15076 5.89961 5.3001 5.04895 5.3001 3.99961H4.8001H4.3001C4.3001 5.60123 5.59847 6.89961 7.2001 6.89961V6.39961ZM4.8001 3.99961H5.3001C5.3001 2.95027 6.15076 2.09961 7.2001 2.09961V1.59961V1.09961C5.59847 1.09961 4.3001 2.39798 4.3001 3.99961H4.8001ZM7.2001 1.59961V2.09961C8.24944 2.09961 9.1001 2.95027 9.1001 3.99961H9.6001H10.1001C10.1001 2.39798 8.80172 1.09961 7.2001 1.09961V1.59961ZM1.6001 14.3996L2.1001 14.3997L2.10037 11.9994L1.60037 11.9993L1.10037 11.9993L1.1001 14.3996L1.6001 14.3996ZM4.00037 9.59961V9.09961C2.39887 9.09961 1.10055 10.3978 1.10037 11.9993L1.60037 11.9993L2.10037 11.9994C2.10049 10.9501 2.95111 10.0996 4.00037 10.0996V9.59961ZM4.00037 9.59961V10.0996H8.4001V9.59961V9.09961H4.00037V9.59961ZM14.4001 10.3996V9.89961H12.6001V10.3996V10.8996H14.4001V10.3996ZM12.6001 10.3996V9.89961H10.8001V10.3996V10.8996H12.6001V10.3996ZM12.6001 12.1995H13.1001V10.3996H12.6001H12.1001V12.1995H12.6001ZM12.6001 10.3996H13.1001V8.59952H12.6001H12.1001V10.3996H12.6001Z' fill='white'/%3E%3C/svg%3E");
-        }
-      }
 
-      .flow-btn {
-        background-color: vars.$white;
-        border: 0.1rem solid #e2e2e2;
-        color: #959595;
-        font-size: 1.2rem;
-        display: inline-flex;
-        width: 7.5rem;
-        height: 2.8rem;
-        line-height: 2.8rem;
-        border-radius: 2rem;
-        text-align: center;
-        justify-content: center;
-        position: relative;
-        align-items: center;
-        @include mixin.rippleEffectPrimary;
-        &::before {
-          content: '';
-          width: 1.6rem;
-          height: 1.6rem;
-          margin-right: 0.4rem;
-          background-repeat: no-repeat;
-          background-size: contain;
-          background-position: center;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M13.5995 14.3996L13.5997 11.9998C13.5998 10.6743 12.5253 9.59961 11.1997 9.59961H4.80017C3.47479 9.59961 2.40032 10.674 2.40017 11.9993L2.3999 14.3996M10.3999 3.99961C10.3999 5.32509 9.32539 6.39961 7.9999 6.39961C6.67442 6.39961 5.5999 5.32509 5.5999 3.99961C5.5999 2.67413 6.67442 1.59961 7.9999 1.59961C9.32539 1.59961 10.3999 2.67413 10.3999 3.99961Z' stroke='%232B2B2B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-        }
-      }
       &:before {
         content: '';
         position: absolute;
@@ -206,6 +201,59 @@ const handleFollowToggle = () => {
           content: none;
         }
       }
+    }
+  }
+  .flowing-btn {
+    background-color: #4f5561;
+    color: vars.$white;
+    font-size: 1.2rem;
+    display: inline-flex;
+    width: 7.5rem;
+    margin-left: 0.6rem;
+    line-height: 2.8rem;
+    border-radius: 2rem;
+    text-align: center;
+    justify-content: center;
+    position: relative;
+    align-items: center;
+    @include mixin.rippleEffectWhite;
+    &::before {
+      content: '';
+      width: 1.6rem;
+      height: 1.6rem;
+      margin-right: 0.4rem;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M1.1001 14.3996C1.10007 14.6757 1.3239 14.8996 1.60004 14.8996C1.87618 14.8996 2.10007 14.6758 2.1001 14.3997L1.1001 14.3996ZM1.60037 11.9993L2.10037 11.9994L1.60037 11.9993ZM8.4001 10.0996C8.67624 10.0996 8.9001 9.87575 8.9001 9.59961C8.9001 9.32347 8.67624 9.09961 8.4001 9.09961V10.0996ZM14.4001 10.8996C14.6762 10.8996 14.9001 10.6758 14.9001 10.3996C14.9001 10.1235 14.6762 9.89961 14.4001 9.89961V10.8996ZM10.8001 9.89961C10.524 9.89961 10.3001 10.1235 10.3001 10.3996C10.3001 10.6758 10.524 10.8996 10.8001 10.8996V9.89961ZM12.1001 12.1995C12.1001 12.4757 12.324 12.6995 12.6001 12.6995C12.8762 12.6995 13.1001 12.4757 13.1001 12.1995H12.1001ZM13.1001 8.59952C13.1001 8.32337 12.8762 8.09952 12.6001 8.09952C12.324 8.09952 12.1001 8.32337 12.1001 8.59952H13.1001ZM9.6001 3.99961H9.1001C9.1001 5.04895 8.24944 5.89961 7.2001 5.89961V6.39961V6.89961C8.80172 6.89961 10.1001 5.60123 10.1001 3.99961H9.6001ZM7.2001 6.39961V5.89961C6.15076 5.89961 5.3001 5.04895 5.3001 3.99961H4.8001H4.3001C4.3001 5.60123 5.59847 6.89961 7.2001 6.89961V6.39961ZM4.8001 3.99961H5.3001C5.3001 2.95027 6.15076 2.09961 7.2001 2.09961V1.59961V1.09961C5.59847 1.09961 4.3001 2.39798 4.3001 3.99961H4.8001ZM7.2001 1.59961V2.09961C8.24944 2.09961 9.1001 2.95027 9.1001 3.99961H9.6001H10.1001C10.1001 2.39798 8.80172 1.09961 7.2001 1.09961V1.59961ZM1.6001 14.3996L2.1001 14.3997L2.10037 11.9994L1.60037 11.9993L1.10037 11.9993L1.1001 14.3996L1.6001 14.3996ZM4.00037 9.59961V9.09961C2.39887 9.09961 1.10055 10.3978 1.10037 11.9993L1.60037 11.9993L2.10037 11.9994C2.10049 10.9501 2.95111 10.0996 4.00037 10.0996V9.59961ZM4.00037 9.59961V10.0996H8.4001V9.59961V9.09961H4.00037V9.59961ZM14.4001 10.3996V9.89961H12.6001V10.3996V10.8996H14.4001V10.3996ZM12.6001 10.3996V9.89961H10.8001V10.3996V10.8996H12.6001V10.3996ZM12.6001 12.1995H13.1001V10.3996H12.6001H12.1001V12.1995H12.6001ZM12.6001 10.3996H13.1001V8.59952H12.6001H12.1001V10.3996H12.6001Z' fill='white'/%3E%3C/svg%3E");
+    }
+  }
+
+  .flow-btn {
+    background-color: vars.$white;
+    border: 0.1rem solid #e2e2e2;
+    color: #959595;
+    font-size: 1.2rem;
+    display: inline-flex;
+    width: 7.5rem;
+    height: 2.8rem;
+    margin-left: 0.6rem;
+    line-height: 2.8rem;
+    border-radius: 2rem;
+    text-align: center;
+    justify-content: center;
+    position: relative;
+    align-items: center;
+    @include mixin.rippleEffectPrimary;
+    &::before {
+      content: '';
+      width: 1.6rem;
+      height: 1.6rem;
+      margin-right: 0.4rem;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M13.5995 14.3996L13.5997 11.9998C13.5998 10.6743 12.5253 9.59961 11.1997 9.59961H4.80017C3.47479 9.59961 2.40032 10.674 2.40017 11.9993L2.3999 14.3996M10.3999 3.99961C10.3999 5.32509 9.32539 6.39961 7.9999 6.39961C6.67442 6.39961 5.5999 5.32509 5.5999 3.99961C5.5999 2.67413 6.67442 1.59961 7.9999 1.59961C9.32539 1.59961 10.3999 2.67413 10.3999 3.99961Z' stroke='%232B2B2B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
   }
 }

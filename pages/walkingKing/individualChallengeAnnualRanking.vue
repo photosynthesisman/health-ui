@@ -20,7 +20,7 @@ import AnnualRankingTopList from '~/components/publishing/walkking/AnnualRanking
 
 // 챌린지 참가 여부 상태
 type ChallengeStatus = 'joined' | 'notJoined'
-const challengeStatus = ref<ChallengeStatus>('joined')
+const challengeStatus = ref<ChallengeStatus>('notJoined')
 
 // 탑30위 데이터
 const topRankUsers = [

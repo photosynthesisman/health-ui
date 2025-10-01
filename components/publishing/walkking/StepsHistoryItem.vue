@@ -21,22 +21,31 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
+
 const props = withDefaults(
   defineProps<{
     date: string
-    total?: string
     steps?: string
     mission?: string
     item?: string
   }>(),
   {
-    total: '0',
     steps: '0',
     mission: '0',
     item: '0'
   }
 )
+const total = computed(() => {
+  const parsedSteps = Number(props.steps.replace(/,/g, ''))
+  const parsedMission = Number(props.mission.replace(/,/g, ''))
+  const parsedItem = Number(props.item.replace(/,/g, ''))
+
+  if (isNaN(parsedSteps) && isNaN(parsedMission) && isNaN(parsedItem)) {
+    return '-'
+  }
+  return (parsedSteps + parsedMission + parsedItem).toLocaleString()
+})
 </script>
 <style lang="scss" scoped>
 .steps-history-wrap {

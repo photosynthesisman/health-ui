@@ -14,9 +14,10 @@
     <div class="c-texttype">
       <div class="c-inp-el">
         <textarea
+          id="textField"
+          ref="textareaRef"
           v-model="inputValue"
           name="textField"
-          id="textField"
           :placeholder="placeholder"
           :class="['c-textarea', $attrs.class, { 'is-invalid': isInvalid }]"
           :disabled="disabled"
@@ -53,6 +54,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue', 'focus', 'blur'])
 
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const inputId = 'textField'
 const opened = ref(false)
 const selected = ref('')
@@ -73,13 +75,25 @@ const inputValue = ref(props.modelValue)
 const currentLength = computed(() => {
   return inputValue.value.length
 })
-
+// textarea 높이 조절 함수
+const adjustHeight = () => {
+  if (textareaRef.value) {
+    textareaRef.value.style.height = 'auto' // 높이 초기화
+    nextTick(() => {
+      textareaRef.value!.style.height = `${textareaRef.value!.scrollHeight}px` // scrollHeight로 높이 설정
+    })
+  }
+}
 // props.modelValue가 변경될 때 inputValue 동기화
 watch(
   () => props.modelValue,
   newValue => {
     inputValue.value = newValue
-  }
+    nextTick(() => {
+      adjustHeight()
+    })
+  },
+  { immediate: true }
 )
 
 // 입력 이벤트 핸들러
@@ -87,7 +101,11 @@ function onInput(e: Event) {
   const target = e.target as HTMLTextAreaElement
   inputValue.value = target.value
   emit('update:modelValue', target.value)
+  adjustHeight() // 입력 시 높이 조절
 }
+onMounted(() => {
+  adjustHeight()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -95,16 +113,20 @@ function onInput(e: Event) {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 11.6rem;
+  height: auto;
+  min-height: 11.6rem;
   padding: 1.2rem 1.2rem 0.8rem 1.2rem;
   border-radius: 0.8rem;
   border: 0.1rem solid #e2e2e2;
   background: #fff;
   .c-inp-el {
-    height: 100%;
+    height: auto;
     textarea {
       background-color: transparent;
-      height: 100%;
+      height: auto;
+      min-height: 5.6rem;
+      resize: none;
+      overflow-y: hidden;
       font-size: 1.6rem;
     }
   }

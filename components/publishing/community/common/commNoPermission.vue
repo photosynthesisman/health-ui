@@ -27,8 +27,8 @@ const contactAdmin = () => {
   bottom: 0;
   width: calc(100% + 4rem);
   height: calc(100% + 6.3rem);
+  min-height: 30rem;
   z-index: 100;
-
   .dim-overlay {
     position: absolute;
     top: 0;

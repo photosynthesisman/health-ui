@@ -4,6 +4,7 @@
       <div :class="['flex flex-col', { 'gap-8': mainData && !text }, { 'gap-4': !mainData && text }]">
         <p class="tit">{{ title }}</p>
         <strong v-if="mainData && mainData.trim() && hasData" class="data-text">{{ mainData }}</strong>
+        <p v-if="subTitle && subTitle.trim()" class="sub-title">{{ subTitle }}</p>
         <span v-if="!hasData" class="badge gray">데이터없음</span>
         <span v-if="text && text.trim()" class="text">{{ text }}</span>
       </div>
@@ -18,8 +19,7 @@
     <!-- chart가 false일 때: 서브 제목 + 서브 데이터 + 이모지 영역 표시 -->
     <div v-else class="flex flex-row space-between">
       <div v-if="hasSubContent" class="flex flex-col">
-        <p v-if="subTitle && subTitle.trim()" class="sub-title">{{ subTitle }}</p>
-        <strong v-if="subData && subData.trim()" class="sub-data-text">{{ subData }}</strong>
+        <strong v-if="subData && subData.trim()" class="sub-data-text">나는 {{ subData }}</strong>
         <strong v-if="subNum" class="sub-num">{{ NumFormat }}개</strong>
       </div>
 
@@ -133,6 +133,7 @@ const computedEmojiType = computed(() => {
   }
 
   .sub-title {
+    margin-top: -0.4rem;
     font-size: 1.4rem;
     line-height: 2rem;
     font-weight: 500;
@@ -140,8 +141,10 @@ const computedEmojiType = computed(() => {
   }
 
   .sub-data-text {
-    line-height: 2.2rem;
-    color: #555;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 2rem;
+    color: var(--blue-primary);
   }
 
   .data-text {
@@ -192,7 +195,7 @@ const computedEmojiType = computed(() => {
   .chart-area {
     flex: 1;
     min-height: 0;
-    margin-top: 1rem;
+    margin-top: 0.8rem;
   }
 }
 </style>

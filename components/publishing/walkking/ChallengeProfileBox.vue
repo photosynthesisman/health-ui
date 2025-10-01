@@ -12,7 +12,9 @@
     </div>
     <div class="ranking-box">
       <div class="rank-txt">
+        <!-- 2025-09-26 집계 중 프롭스 및 클래스 추가 -->
         <div
+          v-if="profileData.rank"
           :class="{
             unchange: true,
             up: profileData.rankUp === true,
@@ -21,6 +23,8 @@
         >
           {{ profileData.rank }}
         </div>
+        <!-- 2025-09-26 집계 중 케이스 추가 -->
+        <div v-else class="rank-counting">집계 중</div>
         <p class="current-rank">{{ profileData.currentRank }}위</p>
       </div>
       <div class="rank-progress">
@@ -34,10 +38,10 @@
 interface ProfileData {
   rankUp?: boolean
   rank?: string
-  currentRank: string
+  currentRank?: string
   name: string
   location: string
-  reward: number
+  reward?: number
 }
 
 // Props 정의
@@ -155,6 +159,13 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   margin-left: auto;
+  .rank-counting {
+    order: 1;
+    margin-left: 0.6rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 2rem;
+  }
 }
 .unchange {
   display: flex;

@@ -6,7 +6,7 @@
     </div>
     <div class="flex flex-row gap-4">
       <CommonBadge color="blue">개인전</CommonBadge>
-      <CommonBadge color="yellow">3,000P</CommonBadge>
+      <CommonBadge color="yellow">3,000원</CommonBadge>
     </div>
     <div class="challenge-tit mt-16">
       <span class="img-wrap">
@@ -20,7 +20,7 @@
     <div class="challenge-detail">
       <dl class="reward-info">
         <dt>총 상금</dt>
-        <dd>6,224,500P <span class="increase-amount">+45,000</span></dd>
+        <dd>6,224,500원 <span class="increase-amount">+45,000</span></dd>
       </dl>
       <dl class="recruit-number">
         <dt>참가자</dt>

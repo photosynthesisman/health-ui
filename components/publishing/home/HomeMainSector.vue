@@ -36,14 +36,15 @@
           @mouseleave="handleMouseUp"
         ></span>
         <span class="charctor-txt" :class="{ 'animate-txt': !isTransitioning }" v-html="characterText"></span>
-        <LottieAnimation
+        <img :src="animationSrc" style="width: 20rem; margin: 0 auto" />
+        <!-- <LottieAnimation
           :src="animationSrc"
           width="100%"
           height="100%"
           :speed="1.2"
           :loop="true"
           aria-label="건강의 신 케릭터 이미지"
-        />
+        /> -->
         <i class="charactor-shadow" aria-hidden="true"></i>
 
         <div v-if="currentStatus === 'walking-status'" class="charctor-option">
@@ -74,7 +75,11 @@
         </div>
       </div>
       <!-- 걸음영역 - walking-status일 때만 표시 -->
-      <WalkingStatus v-if="currentStatus === 'walking-status'" />
+      <WalkingStatus
+        v-if="currentStatus === 'walking-status'"
+        :current-steps="currentSteps"
+        @update:current-steps="currentSteps = $event"
+      />
       <!-- 건강영역 - health-status일 때만 표시 -->
       <HealthStatus v-if="currentStatus === 'health-status' && healthCondition !== 'noProfileSet'" />
       <!-- 활력영역 - vitality-status일 때만 표시 -->
@@ -83,9 +88,10 @@
       <!-- 건강 상태 프로필 없을 때 배너 -->
       <div v-if="currentStatus === 'health-status' && healthCondition === 'noProfileSet'" class="banner-box health">
         <nuxt-link to="javascript:void(0)" class="box-content">
+          <!-- 2025-09-24 건강프로필 작성하기 > 내 건강지수 AI 분석 문구 변경 -->
           <strong
             >내 건강 프로필 맞춤 AI 건강미션 매일 완료하고 포인트 받으세요!
-            <span class="arrow-txt">건강프로필 작성하기</span>
+            <span class="arrow-txt">내 건강지수 AI 분석</span>
           </strong>
           <img src="~/assets/images/home/img-gift.svg" alt="" />
         </nuxt-link>
@@ -107,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import MainTopGraph from '~/components/publishing/home/MainTopGraph.vue'
 
 import WalkingStatus from '~/components/publishing/home/WalkingStatus.vue'
@@ -120,11 +126,19 @@ const currentIndex = ref(0)
 const currentStatus = ref(statusList[0])
 const mainTopGraphRef = ref<InstanceType<typeof MainTopGraph> | null>(null)
 
+// 현재 걸음 수 상태 관리
+const currentSteps = ref(5500)
+
 // 애니메이션 소스 맵핑
+// const animationMap = {
+//   'walking-status': '/animations/character/walk.json',
+//   'vitality-status': '/animations/character/default.json',
+//   'health-status': '/animations/character/cry.json'
+// }
 const animationMap = {
-  'walking-status': '/animations/character/walk.json',
-  'vitality-status': '/animations/character/default.json',
-  'health-status': '/animations/character/cry.json'
+  'walking-status': '/animations/character/lemon-walk.gif',
+  'vitality-status': '/animations/character/lemon-default.gif',
+  'health-status': '/animations/character/lemon-cry.gif'
 }
 
 // 캐릭터 텍스트 맵핑
@@ -135,35 +149,68 @@ const textMap = {
 }
 
 // 현재 상태에 따른 애니메이션 소스
+// const animationSrc = computed(() => {
+//   if (currentStatus.value === 'health-status') {
+//     switch (healthCondition.value) {
+//       case 'good':
+//         return '/animations/character/happy.json'
+//       case 'careful':
+//         return '/animations/character/worry.json'
+//       case 'warning':
+//         return '/animations/character/cry.json'
+//       case 'noProfileSet':
+//         return '/animations/character/default.json'
+//       default:
+//         return '/animations/character/default.json'
+//     }
+//   } else if (currentStatus.value === 'vitality-status') {
+//     switch (vitalityCondition.value) {
+//       case 'good':
+//         return '/animations/character/happy.json'
+//       case 'careful':
+//         return '/animations/character/worry.json'
+//       case 'warning':
+//         return '/animations/character/cry.json'
+//       case 'noSmartRingConnect':
+//         return '/animations/character/default.json'
+//       default:
+//         return '/animations/character/default.json'
+//     }
+//   } else {
+//     return animationMap[currentStatus.value] || '/animations/character/walk.json'
+//   }
+// })
+
+// 현재 상태에 따른 애니메이션 소스
 const animationSrc = computed(() => {
   if (currentStatus.value === 'health-status') {
     switch (healthCondition.value) {
       case 'good':
-        return '/animations/character/happy.json'
+        return '/animations/character/lemon-happy.gif'
       case 'careful':
-        return '/animations/character/worry.json'
+        return '/animations/character/lemon-worry.gif'
       case 'warning':
-        return '/animations/character/cry.json'
+        return '/animations/character/lemon-cry.gif'
       case 'noProfileSet':
-        return '/animations/character/default.json'
+        return '/animations/character/lemon-default.gif'
       default:
-        return '/animations/character/default.json'
+        return '/animations/character/lemon-default.gif'
     }
   } else if (currentStatus.value === 'vitality-status') {
     switch (vitalityCondition.value) {
       case 'good':
-        return '/animations/character/happy.json'
+        return '/animations/character/lemon-happy.gif'
       case 'careful':
-        return '/animations/character/worry.json'
+        return '/animations/character/lemon-worry.gif'
       case 'warning':
-        return '/animations/character/cry.json'
+        return '/animations/character/lemon-cry.gif'
       case 'noSmartRingConnect':
-        return '/animations/character/default.json'
+        return '/animations/character/lemon-default.gif'
       default:
-        return '/animations/character/default.json'
+        return '/animations/character/lemon-default.gif'
     }
   } else {
-    return animationMap[currentStatus.value] || '/animations/character/walk.json'
+    return animationMap[currentStatus.value] || '/animations/character/lemon-walk.gif'
   }
 })
 
@@ -216,8 +263,8 @@ const swipeDirection = ref('') // 스와이프 방향 ('left', 'right', '')
 // 조건부 상태 전역 상태 관리
 // health 상태: 'good', 'careful', 'warning', 'noProfileSet'
 // vitality 상태: 'good', 'careful', 'warning', 'noSmartRingConnect'
-const vitalityCondition = ref('noSmartRingConnect') // 기본값을 noSmartRingConnect로 설정
-const healthCondition = ref('noProfileSet') // 기본값을 noProfileSet로 설정
+const vitalityCondition = ref('good') // 기본값을 good으로 설정 (테스트용)
+const healthCondition = ref('warning') // 기본값을 good으로 설정 (테스트용)
 
 // 터치 이벤트 핸들러
 const handleTouchStart = (e: TouchEvent) => {
@@ -453,7 +500,21 @@ defineExpose({
 })
 
 // 라이프사이클
+// currentSteps 변경 시 MainTopGraph 업데이트
+watch(currentSteps, newValue => {
+  if (mainTopGraphRef.value) {
+    mainTopGraphRef.value.updateChartData(0, newValue, 10000)
+  }
+})
+
 onMounted(() => {
+  // MainTopGraph의 걸음 수 데이터를 currentSteps와 동기화
+  setTimeout(() => {
+    if (mainTopGraphRef.value) {
+      mainTopGraphRef.value.updateChartData(0, currentSteps.value, 10000)
+    }
+  }, 100)
+
   // Edge 브라우저 오버스크롤 방지를 위한 전역 스타일 적용
   document.body.style.overscrollBehaviorX = 'none'
   document.documentElement.style.overscrollBehaviorX = 'none'
@@ -640,8 +701,8 @@ onUnmounted(() => {
     // }
 
     &.walking-status {
-      // background-color: transparent;
-      background: linear-gradient(to bottom, rgba(175, 226, 217, 0) 0%, rgba(175, 226, 217, 0) 50%, #afe2d9 100%);
+      background-color: transparent;
+      //background: linear-gradient(to bottom, rgba(175, 226, 217, 0) 0%, rgba(175, 226, 217, 0) 50%, #afe2d9 100%);
 
       &::before {
         content: '';
@@ -671,7 +732,9 @@ onUnmounted(() => {
 
     &.vitality-no-ring,
     &.health-no-profile {
-      background-color: #dadee7;
+      // 2025-09-26 회색 > 녹색으로 변경
+      background-color: #56e2c1;
+      // background-color: #dadee7;
     }
 
     .charactor {
@@ -871,12 +934,6 @@ onUnmounted(() => {
   .main-sector {
     .main-section {
       .charactor {
-        // 터치 영역 더 넣게 확대
-        .sector-swiper-area {
-          // height: 20rem; // 18rem -> 20rem
-          // width: calc(100% - 3rem); // 5rem -> 3rem
-        }
-
         .charctor-txt {
           font-size: 1.2rem;
           top: 1.5rem;

@@ -1,9 +1,16 @@
 <template>
   <div class="no-posts-state">
-    <div class="description">아직 올라온 게시글이 없어요<br />게시글을 작성해보는 건 어떠세요?</div>
+    <div v-html="text" class="description"></div>
   </div>
 </template>
-
+<script setup lang="ts">
+const props = defineProps({
+  text: {
+    type: String,
+    default: '아직 올라온 게시글이 없어요<br />게시글을 작성해보는 건 어떠세요?'
+  }
+})
+</script>
 <style scoped lang="scss">
 .no-posts-state {
   display: flex;

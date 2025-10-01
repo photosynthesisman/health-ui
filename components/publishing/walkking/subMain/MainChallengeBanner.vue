@@ -40,7 +40,11 @@ const clickConfirmModal = async () => {
         </li>      
         <li class="flex">
           <span class="dot mt-7 mr-6" style="flex-shrink: 0; background-color: #959595; width: .3rem; height: .3rem;"></span>
-          <p>걷기왕 대회의 주요 정보(걸음 수 순위 정보 등)는 앱 갱신을 통해 반영됩니다. 실시간 정보를 원하실 경우 앱을 다시 실행해 주세요. (디바이스 메모리, 배터리 등의 손실을 최소화하기 위한 설정입니다.)</p>
+          <p>걷기왕 대회의 걸음수 집계 및 랭킹 갱신은 5분 단위로 진행됩니다. 따라서 실시간 걸음수가 즉각 반영되지 않을 수 있습니다.</p>
+        </li>
+        <li class="flex">
+          <span class="dot mt-7 mr-6" style="flex-shrink: 0; background-color: #959595; width: .3rem; height: .3rem;"></span>
+          <p>참가한 챌린지가 진행되는 도중에 회원 탈퇴 시 랭킹에서 제외되며 상금 시상 및 경품 지급이 불가합니다.</p>
         </li>
       </ul>
     </div>

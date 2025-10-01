@@ -25,6 +25,7 @@
 import { computed, ref } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 
+const scrollContainer = ref<HTMLDivElement | null>(null)
 interface WalkingGraphProps {
   title?: string
   height?: string
@@ -57,11 +58,25 @@ const chartOptions = computed(() => {
   return {
     chart: {
       type: 'bar',
-      zoom: {
-        enabled: false // 줌 비활성화 (스크롤과 충돌 방지)
-      },
-      toolbar: {
-        show: false // 툴바 숨김
+      zoom: { enabled: false },
+      toolbar: { show: false },
+      events: {
+        dataPointSelection: (event: any, chartContext: any, config: any) => {
+          const dataPointIndex = config.dataPointIndex
+          if (scrollContainer.value) {
+            const barElement = scrollContainer.value.querySelector(
+              `.apexcharts-bar-series .apexcharts-bar-area:nth-child(${dataPointIndex + 1})`
+            )
+
+            if (barElement) {
+              barElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center'
+              })
+            }
+          }
+        }
       }
     },
     plotOptions: {
@@ -195,7 +210,7 @@ const chartOptions = computed(() => {
             <div style="color: white; white-space:nowrap">
               ${value.toLocaleString()} 걸음 / 6.04km
             </div>
-            
+
           </div>
         `
       }

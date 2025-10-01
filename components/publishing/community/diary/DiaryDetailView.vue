@@ -118,7 +118,7 @@ const pageTitle = computed((): string => {
 })
 
 // 다이어리 내용
-const diaryContent = computed(() => props.diary?.content || '')
+const diaryContent = computed(() => props.diary?.content || 'ㅇㅇdd')
 </script>
 
 <style lang="scss" scoped>
@@ -247,7 +247,9 @@ const diaryContent = computed(() => props.diary?.content || '')
     }
   }
 }
-
+:deep(textarea) {
+  opacity: 1;
+}
 // 하단 고정 버튼 스타일
 .is-fixed {
   position: fixed;

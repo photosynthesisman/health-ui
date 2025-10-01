@@ -43,11 +43,18 @@
       <div class="pay-box">
         <p class="tit">포인트 사용 할인 금액</p>
         <p class="num">-600원</p>
-        <span class="point-noti">10P = 2원 입니다.</span>
+        <!-- 2025-09-30 문구 삭제 -->
+        <!-- <span class="point-noti">10P = 2원 입니다.</span> -->
       </div>
     </div>
     <ButtonGroup class="is-fixed">
-      <Button btn-type="primary" element-type="button" aria-label="1,400원 결제하기" class="lg w-full btn-sticky" />
+      <Button
+        btn-type="primary"
+        element-type="button"
+        aria-label="1,400원 결제하기"
+        class="lg w-full btn-sticky"
+        @click="clickNext"
+      />
     </ButtonGroup>
   </BaseBody>
 </template>
@@ -71,6 +78,9 @@ const props = defineProps({
     default: '본 상품은 결제 후 단순변심으로 환불이 불가합니다.\n 구매 전 내용을 충분히 확인해 주세요.'
   }
 })
+const clickNext = () => {
+  return navigateTo('/common/payment/finishedOrder/')
+}
 </script>
 <style scoped lang="scss">
 .claim-gift-wrap {

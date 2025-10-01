@@ -30,7 +30,8 @@ import MainPrivateGame from '~/components/publishing/home/MainPrivateGame.vue'
   display: flex;
   flex-direction: column;
   gap: 1.2rem 0;
-  margin-top: 1.2rem;
-  padding-bottom: 3.2rem;
+  overflow: hidden; // 메인 좌우스크롤 문제 수정
+  margin: 1.2rem -2rem 0; // 메인 좌우스크롤 문제 수정
+  padding: 0 2rem 3.2rem; // 메인 좌우스크롤 문제 수정
 }
 </style>

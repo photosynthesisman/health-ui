@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="c-label">첨부파일 </span>
+    <span class="c-label" :class="{ required: required === true }">첨부파일 </span>
     <div class="file-upload-container">
       <input ref="fileInput" type="file" :id="inputId" style="display: none" aria-label="파일 선택" />
       <label :for="inputId" class="file-upload-button">
@@ -16,13 +16,23 @@ const props = defineProps({
   inputId: {
     type: String,
     default: 'file-attached'
-  }
+  },
+  required: { type: Boolean, default: false }
 })
 </script>
 
 <style lang="scss" scoped>
 .c-label {
   font-size: 1.2rem;
+  &.required {
+    &::after {
+      content: '*';
+      font-size: 1.2rem;
+      display: inline-block;
+      margin-left: 0.3rem;
+      color: #f14960;
+    }
+  }
 }
 .file-upload-container {
   display: block;

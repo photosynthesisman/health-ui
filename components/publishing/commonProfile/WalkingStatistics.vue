@@ -2,42 +2,59 @@
   <div class="steps-statistics">
     <div class="flex flex-row mb-8">
       <strong class="tit">걷기 통계</strong>
-      <span class="date ml-auto">16:15 기준</span>
+      <span class="date ml-auto">{{ time }} 기준</span>
     </div>
     <div class="steps-dashboard">
-      <div class="box">
-        <strong class="box-tit">오늘 걸음</strong>
+      <div v-for="(stat, index) in statistics" :key="index" class="box">
+        <strong class="box-tit">{{ stat.title }}</strong>
         <div class="box-figure">
-          <span class="steps">4,532 걸음</span>
-          <span class="distance">4.84 km</span>
-        </div>
-      </div>
-      <div class="box">
-        <strong class="box-tit">총 걸음</strong>
-        <div class="box-figure">
-          <span class="steps">4,532 걸음</span>
-          <span class="distance">4.84 km</span>
-        </div>
-      </div>
-      <div class="box">
-        <strong class="box-tit">최고 걸음수(일 기준)</strong>
-        <div class="box-figure">
-          <span class="steps">4,532 걸음</span>
-          <span class="distance">4.84 km</span>
-        </div>
-      </div>
-      <div class="box">
-        <strong class="box-tit">일 평균</strong>
-        <div class="box-figure">
-          <span class="steps">4,532 걸음</span>
-          <span class="distance">4.84 km</span>
+          <span class="steps"> {{ stat.steps ? stat.steps.toLocaleString() : '-' }} 걸음</span>
+          <span class="distance">{{ stat.distance }} km</span>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, nextTick, computed } from 'vue'
+import { withDefaults, defineProps } from 'vue'
+
+interface StatisticsItem {
+  title: string
+  steps: number
+  distance: string
+}
+
+const props = withDefaults(
+  defineProps<{
+    time?: string
+    statistics?: StatisticsItem[]
+  }>(),
+  {
+    time: '16:15',
+    statistics: () => [
+      {
+        title: '오늘 걸음',
+        steps: 4532,
+        distance: '4.84'
+      },
+      {
+        title: '총 걸음',
+        steps: 4532,
+        distance: '4.84'
+      },
+      {
+        title: '최고 걸음수(일 기준)',
+        steps: 4532,
+        distance: '4.84'
+      },
+      {
+        title: '일 평균',
+        steps: 4532,
+        distance: '4.84'
+      }
+    ]
+  }
+)
 </script>
 
 <style lang="scss" scoped>

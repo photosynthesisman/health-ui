@@ -373,6 +373,7 @@ const props = withDefaults(defineProps<Props>(), {
       viewNum: 234,
       replyNum: 5,
       dateNum: '3시간',
+      images: ['community/img-community-02.png', 'community/img-community-01.png', 'community/img-community-02.png'],
       length: 3
     },
     {
@@ -384,7 +385,7 @@ const props = withDefaults(defineProps<Props>(), {
       viewNum: 234,
       replyNum: 5,
       dateNum: '3시간',
-      src: 'community/img-community-01.png',
+      images: ['community/img-community-02.png', 'community/img-community-01.png', 'community/img-community-02.png'],
       length: 3
     },
     {
@@ -402,7 +403,7 @@ const props = withDefaults(defineProps<Props>(), {
       viewNum: 234,
       replyNum: 5,
       dateNum: '3시간',
-      src: 'community/img-community-01.png',
+      images: ['community/img-community-02.png', 'community/img-community-01.png', 'community/img-community-02.png'],
       length: 0
     }
   ]

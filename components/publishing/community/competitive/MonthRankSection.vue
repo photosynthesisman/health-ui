@@ -1,8 +1,9 @@
 <template>
   <div class="month-ranking-section">
+    <!-- 2025-09-24 이번 달 활동 랭킹 > 커뮤니티 활동랭킹 문구 수정 -->
     <TitleBox
       class="mt-32"
-      title="이번 달 활동 랭킹"
+      title="커뮤니티 활동랭킹"
       aria-label="전체랭킹"
       element-type="a"
       :is-show-link="true"
@@ -11,6 +12,7 @@
       :is-link="true"
       link-href="/community/[communityId]/byActivityRanking"
     />
+    <p class="fz-13 fc-body-02 mb-16">랭킹은 이번달 기준으로, 매월 1일부터 말일까지 집계되며 익월 1일에 갱신</p>
     <StickyTabsContainer>
       <BoxedTabs
         :tabs="boxTabsB"

@@ -9,7 +9,7 @@
     </div>
     <nuxt-link to="javascript:void(0)" class="cbtn btn-blue">유료참가권 받기</nuxt-link>
     <i class="img-wrap">
-      <img src="~/assets/images/home/img-before-challenge.svg" alt="" />
+      <img src="~/assets/images/home/img-before-challenge.png" style="width: 21rem" alt="" />
     </i>
   </div>
 </template>

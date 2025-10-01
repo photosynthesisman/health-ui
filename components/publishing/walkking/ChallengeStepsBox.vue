@@ -36,6 +36,9 @@ const emit = defineEmits(['click'])
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+  @media (max-width: 350px) {
+    padding: 1.2rem 0.8rem;
+  }
   & > div {
     text-align: left;
     line-height: 1.6rem;
@@ -65,6 +68,10 @@ const emit = defineEmits(['click'])
   font-size: 1.2rem;
   font-weight: 500;
   color: #555;
+  @media (max-width: 350px) {
+    font-size: 1.1rem;
+    letter-spacing: -0.05rem;
+  }
 }
 p {
   margin-top: 0.4rem;

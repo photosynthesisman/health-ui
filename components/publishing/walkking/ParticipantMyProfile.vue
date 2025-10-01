@@ -38,6 +38,8 @@ const fullImagePath = computed(() => {
     height: 5.6rem;
     flex-shrink: 0;
     img {
+      width: 100%;
+      height: 100%;
       outline: 0.3rem solid var(--blue-primary);
       border-radius: 50%;
     }

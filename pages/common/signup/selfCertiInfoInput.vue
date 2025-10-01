@@ -24,7 +24,7 @@
         <label for="" class="c-label" style="font-size: 1.2rem">성별</label>
         <div class="flex flex-row gap-8 flex-11">
           <Radio id="rdo1" name="rdo6" custom-style="button" aria-label="남자" class="flex-11" />
-          <Radio id="rdo2" name="rdo6" checked custom-style="button" aria-label="여자" class="flex-11" />
+          <Radio id="rdo2" name="rdo6" custom-style="button" aria-label="여자" class="flex-11" />
         </div>
       </div>
 

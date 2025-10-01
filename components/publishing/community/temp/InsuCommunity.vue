@@ -1,10 +1,13 @@
 <template>
   <div v-if="activeLineTab === 'comm'">
     <FlexColDiv class="gap-16">
+      <FlexColDiv class="notice-list gap-20">
+        <NoticeItem v-for="item in noticeList" :key="item.id" :text="item.text" :type="item.type" :label="item.label" />
+      </FlexColDiv>
       <CardCommInfo
         card-custom-class="card-insu"
         badge="분류명"
-        title="관리자에서 설정된<br/> 커뮤니티명이 들어갑니다."
+        title="관리자에서 설정된 커뮤니티명이 들어갑니다."
         text="커뮤니티 한 줄 설명이 들어갑니다"
         :member-num="5678"
         src="community/ico-paper.svg"
@@ -34,11 +37,8 @@
           </div>
         </template>
       </CommonSwiper>
-      <FlexColDiv class="notice-list gap-20">
-        <NoticeItem v-for="item in noticeList" :key="item.id" :text="item.text" :type="item.type" :label="item.label" />
-      </FlexColDiv>
+
       <Button v-if="patient" aria-label="환자 인증하기" />
-      <Button v-else aria-label="커뮤니티 가입하고 100P 받기" />
     </FlexColDiv>
     <hr class="hr-section mt-32 ml-n20 mr-n20 mb-10" />
   </div>

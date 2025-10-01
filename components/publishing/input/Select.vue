@@ -343,7 +343,7 @@ onUnmounted(() => {
   }
 }
 .c-label {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 400;
   line-height: 1.6rem;
   color: #555;

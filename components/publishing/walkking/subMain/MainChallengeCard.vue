@@ -21,13 +21,14 @@
     </div>
     <div class="flex flex-row gap-4">
       <CommonBadge color="blue">개인전</CommonBadge>
-      <CommonBadge color="yellow">3,000P</CommonBadge>
+      <CommonBadge color="yellow">3,000원</CommonBadge>
       <CommonBadge color="orange">FREE</CommonBadge>
     </div>
     <div class="challenge-tit mt-12">
       <div class="challenge-info">
         <strong class="tit">{{ cardData?.title || '출퇴근 러닝 챌린지' }}</strong>
-        <div class="date-wrap">
+        <!-- 2025-09-26 모집기간 및 진행기간 제거 -->
+        <div v-if="cardData.schedule || cardData.duration" class="date-wrap">
           <span class="during-date"
             ><span class="schedule-tit">모집기간</span>{{ cardData?.schedule || '2025. 06. 15 ~ 2025. 06. 30' }}</span
           >
@@ -41,13 +42,16 @@
       <dl class="reward-info">
         <dt>총 상금</dt>
         <dd>
-          {{ formatPrize(cardData?.totalPrize) }}P
+          {{ formatPrize(cardData?.totalPrize) }}원
           <span class="increase-amount">{{ cardData?.increaseAmount || '0' }}</span>
         </dd>
       </dl>
       <dl class="recruit-number">
         <dt>참가자</dt>
-        <dd>{{ cardData?.totalJoinMember || '224' }}명</dd>
+        <dd>
+          {{ cardData?.totalJoinMember || '224' }}명
+          <span class="increase-amount">{{ cardData?.increasePeople || '' }}</span>
+        </dd>
       </dl>
       <i
         class="img-wrap"
@@ -60,6 +64,7 @@
     </div>
     <!-- 조건부 렌더링: rankBar가 true일 때만 표시 -->
     <div v-if="rankBar" class="current-rank">
+      <CommonBadge color="blue" :variant="'solid'"> 공식집계 </CommonBadge>
       <div class="rank-info-wrap">
         <dl class="ranking-info">
           <dt>현재순위</dt>
@@ -94,6 +99,7 @@ interface CardData {
   duration: string
   totalPrize?: string
   increaseAmount?: string // 상금 증가량 추가
+  increasePeople?: string // 참가자 수 추가
   buttonLink?: string
   totalJoinMember?: string
   image: string
@@ -453,7 +459,7 @@ function startCountingAnimation() {
       display: flex;
       flex-direction: row;
       gap: 0 0.4rem;
-
+      flex-shrink: 0;
       dt {
         font-size: 1.4rem;
         color: #555;
@@ -505,19 +511,30 @@ function startCountingAnimation() {
     }
 
     .total-steps {
+      justify-content: flex-end;
+      align-items: center;
+      width: 100%;
       font-size: 2rem;
       font-weight: 700;
       color: #4c7ff7;
-
+      display: flex;
+      flex-wrap: nowrap;
       .icon {
         width: 2.4rem;
         height: 2.4rem;
+        flex-shrink: 0;
+        flex-grow: 0;
         display: inline-block;
         margin-right: 0.4rem;
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
         vertical-align: middle;
+      }
+      .counting {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.06rem;
       }
     }
   }

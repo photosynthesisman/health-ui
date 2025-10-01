@@ -20,7 +20,7 @@
     <div class="info-box">
       <h3 class="title">
         <span><span>유료</span>{{ point }}</span
-        >로 참가하실 경우<br />더 좋은 혜택을 받아보실 수 있어요!
+        >으로 참가하실 경우<br />더 좋은 혜택을 받아보실 수 있어요!
       </h3>
       <p class="detail">
         랜덤 미션을 통해 발급되는 행운복권은<br />
@@ -42,7 +42,7 @@ import imgGift4 from '~/assets/images/walkingking/img-join-challenge4.png'
 const imageSlides = [imgGift1, imgGift2, imgGift3, imgGift4, imgGift1, imgGift2, imgGift3, imgGift4]
 
 const props = defineProps({
-  point: { type: String, default: '5,000P' }
+  point: { type: String, default: '5,000원' }
 })
 </script>
 

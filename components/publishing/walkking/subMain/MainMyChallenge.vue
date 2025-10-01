@@ -31,9 +31,9 @@
 import { ref } from 'vue'
 import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
 import MainChallengeCard from '~/components/publishing/walkking/subMain/MainChallengeCard.vue'
-import dummyImage1 from '~/assets/images/home/img-challenge-main.svg'
-import dummyImage2 from '~/assets/images/home/img-private-game.svg'
-import dummyImage3 from '~/assets/images/home/img-before-challenge.svg'
+import dummyImage1 from '~/assets/images/home/img-challenge-main.png'
+import dummyImage2 from '~/assets/images/home/img-private-game.png'
+import dummyImage3 from '~/assets/images/home/img-before-challenge.png'
 
 // CardData 타입 정의
 interface CardData {
@@ -64,8 +64,6 @@ const props = withDefaults(defineProps<Props>(), {
     {
       id: 1,
       title: '프리썸머 챌린지',
-      schedule: '2025.06.15 12:30~ 2025.06.30 19:00',
-      duration: '2025.06.15 12:30~ 2025.06.30 19:00',
       totalPrize: '6,224,500',
       increaseAmount: '+45,000',
       buttonLink: 'javascript:void(0)',
@@ -75,16 +73,14 @@ const props = withDefaults(defineProps<Props>(), {
       backgroundColorHex: 'FFC249', // 노란색
       limitFlagColor: 'FDDD66', // 노란색
       daysLeft: 34,
-      currentRank: 46,
+      currentRank: 461,
       rankChange: 23,
       rankDirection: 'up',
-      currentSteps: 324521
+      currentSteps: 99999999
     },
     {
       id: 2,
       title: '여름 다이어트 챌린지',
-      schedule: '2025.06.15 12:30~ 2025.06.30 19:00',
-      duration: '2025.06.15 12:30~ 2025.06.30 19:00',
       totalPrize: '5,150,000',
       increaseAmount: '+32,000',
       buttonLink: 'javascript:void(0)',
@@ -97,13 +93,11 @@ const props = withDefaults(defineProps<Props>(), {
       currentRank: 32,
       rankChange: 12,
       rankDirection: 'down',
-      currentSteps: 298743
+      currentSteps: 2987431
     },
     {
       id: 3,
       title: '건강한 출퇴근 챌린지',
-      schedule: '2025.06.15 12:30~ 2025.06.30 19:00',
-      duration: '2025.06.15 12:30~ 2025.06.30 19:00',
       totalPrize: '3,890,000',
       increaseAmount: '+18,500',
       buttonLink: 'javascript:void(0)',
@@ -116,7 +110,7 @@ const props = withDefaults(defineProps<Props>(), {
       currentRank: 18,
       rankChange: 5,
       rankDirection: 'up',
-      currentSteps: 412896
+      currentSteps: 4128961
     }
   ]
 })

@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-swiper">
+  <div class="custom-swiper" v-bind="$attrs">
     <ClientOnly>
       <swiper-container
         ref="swiperContainerRef"
@@ -58,7 +58,9 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-
+defineOptions({
+  inheritAttrs: false
+})
 // Props for customization
 const props = defineProps({
   slides: {
@@ -434,6 +436,21 @@ button.pause {
 button.play:hover,
 button.pause:hover {
   opacity: 0.8;
+}
+
+.relative-pagination {
+  swiper-container::part(pagination) {
+    position: relative;
+    margin-top: 1.2rem;
+    bottom: auto;
+  }
+}
+.absolute-pagination {
+  swiper-container::part(pagination) {
+    position: absolute;
+    margin-top: 1.2rem;
+    bottom: 5rem;
+  }
 }
 </style>
 

@@ -34,6 +34,7 @@
     display: flex;
     gap: 0 1.2rem;
     flex-direction: column;
+    align-items: center;
     .name {
       font-size: 2rem;
       font-weight: 700;

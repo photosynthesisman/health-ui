@@ -1,19 +1,20 @@
 <template>
   <FlexColDiv class="gap-16">
+    <FlexColDiv class="notice-list gap-20">
+      <NoticeItem v-for="item in noticeList" :key="item.id" :text="item.text" :type="item.type" :label="item.label" />
+    </FlexColDiv>
     <CardCommInfo
       card-custom-class="card-hospital"
       title="세브란스병원 커뮤니티"
-      text="세브란스 환자, 보호자들의<br/>의료, 건강 정보교환 목적으로<br/> 활동되고 있어요"
+      text="환자, 보호자들의 의료, 건강 정보<br/>교환 목적으로 활동되고 있어요"
       :member-num="5678"
-      src="community/ico-hospital.svg"
+      src="community/ico-hospital.png"
     />
     <FlexRowDiv class="gap-12">
       <CardLink href="teststs" text="병원 <br/>홈페이지" card-link-class="hospital-link" />
       <CardLink href="teststs" text="챗봇 <br/>상담받기" card-link-class="chatbot-link" />
     </FlexRowDiv>
-    <FlexColDiv class="notice-list gap-20">
-      <NoticeItem v-for="item in noticeList" :key="item.id" :text="item.text" :type="item.type" :label="item.label" />
-    </FlexColDiv>
+
     <Button v-if="patient" aria-label="환자 인증하기" />
     <Button v-else aria-label="가입승인 요청하기" />
   </FlexColDiv>

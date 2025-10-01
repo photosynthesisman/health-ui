@@ -1,7 +1,7 @@
 <template>
   <BaseBody page-title="글 쓰기" :show-back-button="true" :is-transparent="true" :has-close-btn="true">
-    <FlexSection class="gap-12 mt-24">
-      <Select
+    <FlexSection>
+      <!-- <Select
         :modal-title="'게시글 카테고리'"
         :label="'커뮤니티'"
         :select-placeholder="'커뮤니티를 선택해주세요'"
@@ -16,7 +16,7 @@
           { value: '질문', label: '질문' }
         ]"
         @change="handleCommunityChange"
-      />
+      /> -->
       <SelectTypeBtn
         :legend="'게시판'"
         :display-label="selectedCategoryCombinedLabel"
@@ -39,7 +39,9 @@
         rows="10"
         class="mt-8"
       ></textarea> -->
+
       <EditorCustom
+        class="mt-16"
         :selected-health-data="selectedHealthDataItems"
         @open-health-modal="openHealthModal"
         @remove-health-data="removeHealthDataItem"

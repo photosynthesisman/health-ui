@@ -9,8 +9,23 @@
     :has-add-text-left="true"
   >
     <div class="pt-24 flex flex-col gap-12">
-      <Input :is-valid="false" valid-text="아이디 벨리데이터 메시지" placeholder="아이디를 입력해 주세요." />
+      <!-- 2025-09-26 아이디 입력 창 이메일 형식으로 변경 -->
+      <InputMail
+        v-model="emailValue"
+        label="아이디(이메일)"
+        :is-valid="false"
+        valid-text="올바른 이메일 주소를 입력해주세요."
+        placeholder="입력해주세요"
+        :custom-domains="[
+          { value: 'gmail.com', label: 'gmail.com' },
+          { value: 'naver.com', label: 'naver.com' },
+          { value: 'daum.net', label: 'daum.net' },
+          { value: 'kakao.com', label: 'kakao.com' }
+        ]"
+      />
+
       <Input
+        label="비밀번호"
         type="password"
         :is-valid="false"
         valid-text="비밀번호 벨리데이터 메시지"
@@ -38,6 +53,14 @@
 import BaseBody from '~/components/layout/BaseBody.vue'
 import Input from '~/components/publishing/input/InputText.vue'
 import Button from '~/components/publishing/button/Button.vue'
+import InputMail from '~/components/publishing/input/InputMail.vue'
+
+const emailValue = ref('')
+
+// 이메일 확인
+const isEmailComplete = computed(() => {
+  return emailValue.value && emailValue.value.includes('@') && emailValue.value.split('@')[1]?.length > 0
+})
 </script>
 <style scoped lang="scss">
 .find-btn-wrap {

@@ -125,6 +125,16 @@
         </div>
       </div>
     </article>
+
+    <article class="chat-message mine">
+      <!-- 메세지 박스 -->
+      <div class="message-content">
+        <!-- 메세지 그룹 -->
+        <div class="message-text">
+          <slot name="uploaded-images"></slot>
+        </div>
+      </div>
+    </article>
   </div>
 </template>
 
@@ -135,7 +145,7 @@
   height: 100%; /* 명시적 높이 설정 */
   overflow-y: auto;
   overflow-x: hidden;
-
+  padding: 0 2rem;
   /* Webkit 브라우저 (Chrome, Safari, Edge) */
   &::-webkit-scrollbar {
     width: 0px;

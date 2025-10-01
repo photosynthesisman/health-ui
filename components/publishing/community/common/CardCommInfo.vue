@@ -4,7 +4,7 @@
       <div class="card-content">
         <transition name="fade-slide" mode="out-in">
           <div v-if="activeCard === 'A'" key="expanded" class="expanded-content">
-            <div class="flex flex-col gap-8">
+            <div class="flex flex-col gap-6">
               <strong v-html="title" class="tit"></strong>
               <p v-html="text" class="text"></p>
             </div>
@@ -27,7 +27,7 @@
   <template v-else>
     <div :class="['card-item', cardCustomClass]">
       <div class="card-content">
-        <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-6">
           <strong v-html="title" class="tit"></strong>
           <p v-html="text" class="text"></p>
         </div>
@@ -92,10 +92,10 @@ const cardImg = computed(() => {
 .card-item {
   position: relative;
   overflow: hidden;
-  border-radius: 2.4rem;
-  padding: 3.2rem 2.4rem;
+  border-radius: 2rem;
+  padding: 3.2rem 2.4rem 2.4rem;
   color: #fff;
-  height: 29.8rem;
+  height: 18rem;
   .badge {
     width: max-content;
     padding: 0.3rem 0.6rem;
@@ -106,8 +106,9 @@ const cardImg = computed(() => {
     line-height: 1.6rem;
   }
   .tit {
-    font-size: 2.4rem;
-    line-height: 3.1rem;
+    font-size: 2rem;
+    line-height: 2.6rem;
+    @include mixin.ellipsis;
   }
 
   .text {
@@ -132,9 +133,9 @@ const cardImg = computed(() => {
   .img {
     position: absolute;
     bottom: 1.6rem;
-    right: 2rem;
-    width: 12rem;
-    height: 12rem;
+    right: 1.6rem;
+    width: 7.2rem;
+    height: 7.2rem;
     img {
       width: 100%;
       height: 100%;

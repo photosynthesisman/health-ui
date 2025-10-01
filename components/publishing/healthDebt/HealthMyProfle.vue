@@ -55,7 +55,7 @@ const closeConfirmModal = () => {
 }
 
 const handleToDownloadMydata = () => {
-  closeConfirmModal()
+  return navigateTo('/common/setProfile/modifyHealthInput')
 }
 </script>
 <style lang="scss" scoped>

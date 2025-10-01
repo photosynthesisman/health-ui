@@ -3,17 +3,7 @@
     <template v-if="allCommunities.length > 0">
       <FlexRowDiv class="space-between align-center">
         <TitleBox title="내가 가입한 커뮤니티" class="mb-0" />
-        <Button
-          btn-type="line"
-          element-type="button"
-          :aria-label="isEditing ? '완료' : '커뮤니티 탈퇴하기'"
-          class="xxs"
-          :width="11.4"
-          :border-radius="14"
-          @click="toggleEditMode"
-        >
-          {{ isEditing ? '완료' : '커뮤니티 탈퇴하기' }}
-        </Button>
+        <!-- 09-23 커뮤니티 탈퇴하기 버튼 삭제 -->
       </FlexRowDiv>
       <div class="community-list">
         <!-- 커뮤니티 삭제 버튼 노출 -->
@@ -83,7 +73,12 @@ import CommunityLink from '~/components/publishing/community/home/CommunityLink.
 import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 import Button from '~/components/publishing/button/Button.vue'
 import AlertModal from '~/components/common/modal/AlertModal.vue'
-
+const props = defineProps({
+  isEditing: {
+    type: Boolean,
+    default: true
+  }
+})
 interface CommunityType {
   id: number
   url: string
@@ -235,7 +230,7 @@ const loadInitialCommunities = () => {
   if (allCommunities.value.length > 0) {
     const initialItems = allCommunities.value.slice(0, itemsPerPage).map(item => ({
       ...item,
-      isEditing: false // 초기값 설정
+      isEditing: props.isEditing // 초기값 설정
     }))
     displayedCommunities.value = initialItems
     currentPage.value = 1
@@ -259,7 +254,7 @@ const loadMoreCommunities = async () => {
     const endIndex = startIndex + itemsPerPage
     const newItems = allCommunities.value.slice(startIndex, endIndex).map(item => ({
       ...item,
-      isEditing: isEditing.value // 현재 편집 모드 상태 적용
+      isEditing: props.isEditing // 현재 편집 모드 상태 적용
     }))
 
     if (newItems.length > 0) {
@@ -352,7 +347,7 @@ const emit = defineEmits<{
 // 커뮤니티 개수가 변경될 때마다 부모로 전달
 watch(
   () => allCommunities.value.length,
-  (newCount) => {
+  newCount => {
     emit('update:count', newCount)
   },
   { immediate: true }

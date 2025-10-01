@@ -85,7 +85,9 @@ const totalNumFormat = computed(() => {
   justify-content: space-between;
   gap: 1.2rem;
   padding: 1.6rem 0.8rem 1.6rem 0;
-  border-bottom: 0.1rem solid #eee;
+  & + .ranking-wrap {
+    border-top: 0.1rem solid #eee;
+  }
   @media (max-width: 375px) {
     gap: 0.8rem;
   }

@@ -15,7 +15,7 @@
       <div class="card-content">
         <transition name="fade-slide" mode="out-in">
           <div v-if="activeCard === 'B'" key="expanded" class="expanded-content">
-            <FlexRowDiv class="gap-16 space-between mb-16">
+            <FlexRowDiv class="space-between mb-12">
               <strong class="tit">활력점수 랭킹</strong>
               <Button
                 btn-type="text"
@@ -27,33 +27,32 @@
                 :icon-size="16"
                 @click="clickNext"
             /></FlexRowDiv>
-            <div class="flex flex-col gap-16">
-              <div class="rank-list">
-                <transition-group name="rank-item" tag="div">
-                  <NuxtLink
-                    v-for="(rank, index) in displayRanks"
-                    :key="rank.name"
-                    to="#"
-                    :style="{ transitionDelay: `${index * 50}ms` }"
+            <div class="flex flex-col gap-12">
+              <transition-group name="rank-item" tag="div" class="rank-list">
+                <NuxtLink
+                  v-for="(rank, index) in displayRanks"
+                  :key="rank.name"
+                  to="#"
+                  :style="{ transitionDelay: `${index * 50}ms` }"
+                >
+                  <span
+                    class="rank"
+                    :class="{
+                      gold: rank.rank === 1,
+                      silver: rank.rank === 2,
+                      copper: rank.rank === 3
+                    }"
                   >
-                    <span
-                      class="rank"
-                      :class="{
-                        gold: rank.rank === 1,
-                        silver: rank.rank === 2,
-                        copper: rank.rank === 3
-                      }"
-                    >
-                      {{ rank.rank }}위
-                    </span>
-                    <div class="profile-img">
-                      <img :src="`/_nuxt/assets/images/${rank.image}.${rank.extension}`" :alt="rank.name" />
-                    </div>
-                    <p class="name">{{ rank.name }}</p>
-                    <strong class="score">{{ rank.score }}점</strong>
-                  </NuxtLink>
-                </transition-group>
-              </div>
+                    {{ rank.rank }}위
+                  </span>
+                  <div class="profile-img">
+                    <img :src="`/_nuxt/assets/images/${rank.image}.${rank.extension}`" :alt="rank.name" />
+                  </div>
+                  <p class="name">{{ rank.name }}</p>
+                  <strong class="score">{{ rank.score }}점</strong>
+                </NuxtLink>
+              </transition-group>
+
               <div class="my-rank">
                 <div class="my-profile">
                   <img src="~/assets/images/community/img-rank-profile.png" alt="" />
@@ -155,10 +154,10 @@ const myRank = 2357
 ::v-deep(.card-item) {
   position: relative;
   overflow: hidden;
-  border-radius: 2.4rem;
-  padding: 3.2rem 2.4rem;
+  border-radius: 2rem;
+  padding: 3.2rem 2.4rem 2.4rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 29.8rem;
+  height: 18rem;
   &:not(.active) {
     padding: 1.6rem 2.4rem;
     display: flex;
@@ -215,6 +214,10 @@ const myRank = 2357
   &.card-b {
     background: #f8f4f0;
     margin-top: -4.8rem;
+    &.active {
+      height: 29.2rem;
+      padding: 2.4rem;
+    }
     &:not(.active) {
       justify-content: flex-end;
     }

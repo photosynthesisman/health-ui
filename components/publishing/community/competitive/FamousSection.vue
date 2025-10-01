@@ -41,6 +41,8 @@ const commList = [
       { label: '스마트링', type: 'blue' },
       { label: '자유게시판', type: '' }
     ],
+    writer: '작성자',
+    writerImageUrl: 'community/img-rank-profile.png',
     tit: '러닝할때 스마트링 활용해요 러닝할때 스마트링 활용해요',
     text: '몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음',
     src: 'community/img-community-01.png',
@@ -56,6 +58,8 @@ const commList = [
       { label: '스마트링', type: 'blue' },
       { label: '자유게시판', type: '' }
     ],
+    writer: '작성자',
+    writerImageUrl: 'community/img-rank-profile.png',
     tit: '러닝할때 스마트링 활용해요 러닝할때 스마트링 활용해요',
     text: '몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음',
     likeNum: 12,

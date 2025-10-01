@@ -1,7 +1,6 @@
 <template>
   <BaseBody
-    :has-share-type2="true"
-    page-title="16th 하이워킹 챌린지 하프 마라 하이워킹 챌린지 하프 마라 하이워킹 챌린지 하프 마라"
+    page-title="16th 하이워킹 챌린지 하프 마라 하이워킹 챌린지 하프 마라 하이워킹 챌린지 하프 마라1"
     :show-back-button="true"
     :is-transparent="true"
     :has-add-text="true"

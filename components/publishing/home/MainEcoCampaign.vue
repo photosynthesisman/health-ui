@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <img src="~/assets/images/home/img-main-campaign.svg" alt="" />
+    <img src="~/assets/images/home/img-main-campaign.png" alt="" />
   </div>
 </template>
 

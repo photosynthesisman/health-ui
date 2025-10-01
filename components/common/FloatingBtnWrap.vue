@@ -14,6 +14,10 @@
       </button>
     </transition>
     <button v-if="hasWriteBtn" class="move-write-button" aria-label="커뮤니티 글쓰기로 이동" @click="clickNext">
+      <!-- 25-09-30 툴팁 추가 -->
+      <Transition name="fade">
+        <ToolbatBtnTooltip v-if="showTooltip1" :text="'처음 작성 시 +20P'" />
+      </Transition>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
         <path
           d="M13.4487 6.95143L17.0487 10.5514M13.7999 19.5516H19.7999M4.44873 19.5514L8.81472 18.6717C9.04649 18.625 9.25931 18.5109 9.42645 18.3437L19.2001 8.56461C19.6687 8.09576 19.6684 7.33577 19.1994 6.86731L17.129 4.79923C16.6602 4.33097 15.9006 4.33129 15.4322 4.79995L5.65749 14.58C5.49068 14.7469 5.37678 14.9593 5.33003 15.1906L4.44873 19.5514Z"
@@ -29,7 +33,16 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import ToolbatBtnTooltip from '~/components/publishing/community/board/ToolbatBtnTooltip.vue'
+// tooltip 관련 상태 정의 및 최초 진입시 노출
+const showTooltip1 = ref(true)
 
+// onMounted(() => {
+//   showTooltip1.value = true
+//   setTimeout(() => {
+//     showTooltip1.value = false
+//   }, 2500)
+// })
 const props = defineProps<{
   hasWriteBtn?: boolean
   anchorSelector?: string // 새롭게 추가된 props
@@ -112,7 +125,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .floating-btn-wrap {
   position: fixed;
-  z-index: 1000;
+  z-index: 100;
   bottom: 1.6rem;
   right: 1.6rem;
   display: flex;
@@ -138,10 +151,22 @@ onUnmounted(() => {
   transition: opacity 0.3s ease;
 }
 .move-write-button {
+  position: relative;
   width: 5.6rem;
   height: 5.6rem;
   background: var(--blue-primary);
   border: none;
+  :deep(.tooltip-wrap) {
+    bottom: 100%;
+    right: 0;
+    left: auto;
+    text-wrap: nowrap;
+    transform: translateY(50%);
+    &:after {
+      left: auto;
+      right: 1.2rem;
+    }
+  }
 }
 .fade-enter-active,
 .fade-leave-active {

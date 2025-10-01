@@ -12,7 +12,7 @@
     <FlexColDiv class="gap-20 mt-24 mb-32">
       <RecruitmentGuidelines :type="'date'" :title="'모집기간'" :detail="'2025.05.15 ~ 챌린지 종료까지'" />
       <RecruitmentGuidelines :type="'method'" :title="'진행방식'" :detail="'팀전(4인)/무조건 많이 걷기'" />
-      <RecruitmentGuidelines :title="'참가방식'" :detail="'12,000P 유료참가 / FREE 무료참가'" />
+      <RecruitmentGuidelines :title="'참가방식'" :detail="'12,000원 유료참가 / FREE 무료참가'" />
     </FlexColDiv>
     <hr class="hr-section mt-0 mb-8 ml-n20 mr-n20" />
     <LineTabs :tabs="lineTabs" :active-key="activeLineTab" @tab-change="onLineTabChange" />
@@ -282,10 +282,10 @@ const tableData = {
   cols: [{ width: '9.2rem' }],
   headers: [],
   body: [
-    [{ type: 'th', text: '포인트', rowspan: 4 }, { text: '1P 적립' }, { text: '5P 적립' }],
-    [{ text: '10P 적립' }, { text: '50P 적립' }],
-    [{ text: '100P 적립' }, { text: '500P 적립' }],
-    [{ text: '1,000P 적립' }, { text: '2,000P 적립' }],
+    [{ type: 'th', text: '포인트', rowspan: 4 }, { text: '1원 적립' }, { text: '5원 적립' }],
+    [{ text: '10원 적립' }, { text: '50원 적립' }],
+    [{ text: '100원 적립' }, { text: '500원 적립' }],
+    [{ text: '1,000원 적립' }, { text: '2,000원 적립' }],
     [
       { type: 'th', text: '포인트', rowspan: 4 },
       { text: '1hrx2 (4시간 2배 걸음)', colspan: 2 }

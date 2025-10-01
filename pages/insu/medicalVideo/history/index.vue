@@ -10,36 +10,35 @@
     <hr class="hr-section ml-n20 mr-n20 mt-0" />
     <StickyTabsContainer class="pt-8">
       <LineTabs :tabs="lineTabs" :active-key="activeLineTab" @tab-change="onLineTabChange" />
+    </StickyTabsContainer>
+    <!-- 영상 발급내역 탭 -->
+    <div v-if="activeLineTab === 'issue'">
+      <!-- 알림 노출 -->
+      <StatusNotification v-if="hospitalVideoHistory.length > 0" :count="hospitalVideoHistory.length" />
+      <!-- v-if="list.length > 0" -->
+      <IssueHistory
+        v-if="hospitalVideoHistory.length > 0"
+        :medical-infos="hospitalVideoHistory"
+        @history-click="handleMedicalVideoHistoryClick"
+        @status-click="handleIssueHistoryClick"
+        @share-click="handleMedicalShareClick"
+        @cd-click="handleShipCdClick"
+        @reissue-click="handleReissueClick"
+        @click-sort="clickSort"
+      />
+      <InsuEmpty v-else title="발급 내역이 없어요." sub-title="발급 내역을 확인할 수 있어요." />
 
-      <!-- 영상 발급내역 탭 -->
-      <div v-if="activeLineTab === 'issue'">
-        <!-- 알림 노출 -->
-        <StatusNotification v-if="hospitalVideoHistory.length > 0" :count="hospitalVideoHistory.length" />
-        <!-- v-if="list.length > 0" -->
-        <IssueHistory
-          v-if="hospitalVideoHistory.length > 0"
-          :medical-infos="hospitalVideoHistory"
-          @history-click="handleMedicalVideoHistoryClick"
-          @status-click="handleIssueHistoryClick"
-          @share-click="handleMedicalShareClick"
-          @cd-click="handleShipCdClick"
-          @reissue-click="handleReissueClick"
-          @click-sort="clickSort"
-        />
-        <InsuEmpty v-else title="발급 내역이 없어요." sub-title="발급 내역을 확인할 수 있어요." />
-
-        <!-- <ButtonGroup class="is-fixed">
+      <!-- <ButtonGroup class="is-fixed">
           <Button aria-label="제휴병원 연결" btn-type="primary" class="lg w-full" />
         </ButtonGroup> -->
-      </div>
+    </div>
 
-      <!-- 배송내역 탭 -->
-      <div v-else-if="activeLineTab === 'delivery'">
-        <!-- v-if="list.length > 0" -->
-        <DeliveryHistory v-if="deliveries.length > 0" :delivery-history="deliveries" @click-sort="clickShipSort" />
-        <InsuEmpty v-else title="배송 내역이 없어요." sub-title="배송 신청 후 내역을 확인할 수 있어요." />
-      </div>
-    </StickyTabsContainer>
+    <!-- 배송내역 탭 -->
+    <div v-else-if="activeLineTab === 'delivery'">
+      <!-- v-if="list.length > 0" -->
+      <DeliveryHistory v-if="deliveries.length > 0" :delivery-history="deliveries" @click-sort="clickShipSort" />
+      <InsuEmpty v-else title="배송 내역이 없어요." sub-title="배송 신청 후 내역을 확인할 수 있어요." />
+    </div>
 
     <Teleport to="body">
       <FullModal

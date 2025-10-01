@@ -502,7 +502,7 @@ const sanitizeHtml = html => {
   if (!html) return ''
 
   // 허용된 태그만 남기고 나머지는 제거
-  const allowedTags = ['strong', 'b', 'em', 'i', 'span', 'br']
+  const allowedTags = ['strong', 'b', 'em', 'i', 'span', 'br', 'img']
   const tagRegex = /<\/?([a-zA-Z]+)[^>]*>/g
 
   return html.replace(tagRegex, (match, tagName) => {

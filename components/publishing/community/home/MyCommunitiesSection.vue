@@ -15,10 +15,11 @@
         @all-notifications-click="handleAllNotificationsClick"
       />
       <!-- 내 커뮤니티 섹션 -->
+      <!-- 2025-09-24 버튼 명 전체로 변경 -->
       <TitleBox
         title="내 커뮤니티"
         titleClass=""
-        ariaLabel="내 커뮤니티"
+        ariaLabel="전체"
         text=""
         :is-showLink="true"
         element-type="a"

@@ -1,7 +1,8 @@
 <template>
   <div class="notice-item">
     <NuxtLink to="#" class="btn-link">
-      <span :class="['badge', { 'badge-info': type === 'info', 'badge-import': type === 'import' }]">{{ label }}</span>
+      <!-- 09-23 뱃지 삭제 -->
+      <!-- <span :class="['badge', { 'badge-info': type === 'info', 'badge-import': type === 'import' }]">{{ label }}</span> -->
       <p class="notice-text">{{ text }}</p>
     </NuxtLink>
   </div>
@@ -42,7 +43,7 @@ const props = defineProps<Props>()
       }
     }
     .notice-text {
-      margin-left: 0.8rem;
+      // margin-left: 0.8rem;
       padding-right: 3.2rem;
       @include mixin.ellipsis;
       font-size: var(--num-14);

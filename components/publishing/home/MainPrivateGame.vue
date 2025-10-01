@@ -6,7 +6,7 @@
     </div>
     <nuxt-link to="javascript:void(0)" class="cbtn btn-green">게임 만들기</nuxt-link>
     <i class="img-wrap">
-      <img src="~/assets/images/home/img-private-game.svg" alt="" />
+      <img src="~/assets/images/home/img-private-game.png" alt="" />
     </i>
   </div>
 </template>
@@ -67,6 +67,10 @@
     bottom: 0;
     background-position: center;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='247' height='257' viewBox='0 0 247 257' fill='none'%3E%3Cg opacity='0.2' filter='url(%23filter0_f_14558_8976)'%3E%3Cellipse cx='184.706' cy='148.712' rx='123.4' ry='63.1021' transform='rotate(-25.7411 184.706 148.712)' fill='%2349FF79'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_14558_8976' x='0.196777' y='0.589844' width='369.019' height='296.244' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='35' result='effect1_foregroundBlur_14558_8976'/%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E");
+    width: 18.3rem;
+    img {
+      width: 100%;
+    }
   }
 }
 

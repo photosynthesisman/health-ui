@@ -13,14 +13,18 @@
     <div class="flex flex-col gap-12 mt-24 pb-48">
       <!-- 프로필 정보 영역 -->
       <div class="profile-box flex flex-row">
-        <div class="flex flex-col gap-10">
+        <div class="flex flex-col">
           <div class="flex gap-8 flex-row">
             <strong class="fz-22 bold">장동건</strong>
             <button type="button" class="btn-modify" aria-label="수정하기">
               <i class="icon ico-modify"></i>
             </button>
           </div>
-          <div class="fz-14 medium flex flex-row gap-15 profile-info">
+          <div class="account-box">
+            <i class="icon" :class="socialClass"></i>
+            lee*****@gmail.com
+          </div>
+          <div class="fz-14 medium flex flex-row gap-12 profile-info">
             <span>40세</span>
             <span>남</span>
             <span>010-3455-4844</span>
@@ -246,24 +250,32 @@ onMounted(() => {
     setAddTextClickHandler(openExpertMemberModal)
   }
 })
+const socialClass = ref('social-apple')
+// const socialClass = ref('social-google')
+// const socialClass = ref('social-kakao')
+// const socialClass = ref('social-normal')
 </script>
 
 <style lang="scss">
 .profile-box {
+  align-items: center;
+  margin-bottom: 2rem;
   .profile-info {
+    margin-top: 0.6rem;
     span {
       position: relative;
       &::before {
         content: '';
         display: inline-block;
         position: absolute;
-        left: -0.9rem;
+        left: -0.6rem;
         top: 50%;
         margin-top: -0.2rem;
         width: 0.3rem;
         height: 0.3rem;
         border-radius: 50%;
         background: #959595;
+        transform: translateX(-50%);
       }
       &:first-child {
         &::before {
@@ -327,6 +339,21 @@ onMounted(() => {
       object-fit: cover;
       border-radius: 50%;
     }
+  }
+}
+.account-box {
+  margin-top: 1.2rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 2rem;
+  .icon {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.6rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 2rem;
   }
 }
 </style>

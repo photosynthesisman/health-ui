@@ -25,6 +25,7 @@
     <InputNum v-model="inputAmount" unit-r="" placeholder="0" class="t-right" />
     <div class="btn-wrap">
       <Button
+        v-if="!onlyGiftView"
         btn-type="line"
         :icon="!begFriendImage ? 'ico-plus' : ''"
         :image-src="begFriendImage"
@@ -41,18 +42,18 @@
         :icon="!giftFriendImage ? 'ico-plus' : ''"
         :image-src="giftFriendImage"
         element-type="button"
-        aria-label="선물하기"
+        :aria-label="label"
         :border-radius="30"
-        :class="{ 'gift-selected': selectedButtonType === 'gift' }"
+        :class="{ 'gift-selected': selectedButtonType === 'gift', 'square-border': onlyGiftView }"
         :disabled="selectedButtonType !== null && selectedButtonType !== 'gift'"
         @click="handleButtonClick('gift')"
       />
     </div>
-    <p class="guide-txt">
+    <p v-if="!onlyGiftView" class="guide-txt">
       조르기는 커뮤니티>패밀리 그룹 회원에게 요청 할수 있어요.<br />
       선물하기는 내 연락처에 등록된 친구에게 선물 할수 있어요.
     </p>
-    <div class="cal-point-box">
+    <div v-if="!onlyGiftView" class="cal-point-box">
       <dl>
         <dt>주문금액</dt>
         <dd>{{ calOrderCost }}P</dd>
@@ -77,7 +78,9 @@ const props = defineProps({
   infoText: { type: String, default: '' },
   point: { type: Number, default: 0 },
   begFriendImage: { type: String, default: '' },
-  giftFriendImage: { type: String, default: '' }
+  giftFriendImage: { type: String, default: '' },
+  onlyGiftView: { type: Boolean, default: false },
+  label: { type: String, default: '선물하기' }
 })
 const emits = defineEmits<{
   (e: 'see-more-info'): void
@@ -85,6 +88,7 @@ const emits = defineEmits<{
   (e: 'to-give-gift', actionType: 'gift'): void
   (e: 'update:cal-order-cost', cost: number): void
   (e: 'navigate-to', path: string): void
+  (e: 'update:inputAmount', amount: number | string): void
 }>()
 
 const selectedButtonType = ref<'beg' | 'gift' | null>(null) // 현재 선택된 버튼 타입 (초기값 null)
@@ -110,6 +114,13 @@ const handleButtonClick = (actionType: 'beg' | 'gift') => {
   }
 }
 const inputAmount = ref<string>('1')
+watch(
+  inputAmount,
+  newAmount => {
+    emits('update:inputAmount', newAmount)
+  },
+  { immediate: true }
+)
 const giftPointValue = computed(() => {
   const rawGiftType = props.giftType || ''
   const cleanedString = rawGiftType.replace(/,/g, '')
@@ -190,6 +201,15 @@ watch(
   }
   :deep(.c-btn) {
     gap: 0.4rem;
+    &.square-border {
+      border-radius: 0.8rem !important;
+      background-color: #e7f4ff;
+      outline: 1px solid #4c7ff7;
+      .text {
+        color: var(--blue-primary);
+        font-weight: 700;
+      }
+    }
     .icon {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='18' viewBox='0 0 19 18' fill='none'%3E%3Cpath d='M9.74961 3.59961L9.74961 14.3996M15.1496 8.99961L4.34961 8.99961' stroke='%232B2B2B' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
     }

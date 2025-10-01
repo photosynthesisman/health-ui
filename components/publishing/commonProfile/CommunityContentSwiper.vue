@@ -2,7 +2,7 @@
   <div class="community-content">
     <!--  알림 목록 영역 -->
 
-    <FlexSection class="pl-20 pr-20">
+    <FlexSection class="mt-24">
       <!-- 커뮤니티 박스 스와이퍼 -->
       <CommonSwiper
         :slides="communitySlides"
@@ -19,20 +19,33 @@
         <!-- 커뮤니티 슬라이드 커스텀 템플릿 -->
         <template #default="{ slide, index }">
           <div class="community-box">
-            <div class="content-area">
-              <div class="cate">{{ slide.category }}</div>
-              <div class="tit">{{ slide.title }}</div>
-              <div class="text">{{ slide.content }}</div>
-              <div class="detail-info">
-                <span class="like-num">{{ slide.likes }}</span>
-                <span>조회 {{ slide.views }}</span>
-                <span>댓글 {{ slide.replies }}</span>
+            <FlexRowDiv class="writer-box">
+              <div class="img">
+                <img class="img" :src="slide.writerImageUrl" alt="작성자 이미지" @error="handleImageError" />
               </div>
-            </div>
-            <div v-if="slide.image" class="img-wrap">
-              <img :src="slide.image" :alt="slide.title" />
-              <div v-if="slide.imageCount > 1" class="img-length">+{{ slide.imageCount }}</div>
-            </div>
+              <span class="name">{{ slide.writer }}</span>
+            </FlexRowDiv>
+            <FlexRowDiv>
+              <div class="content-area">
+                <FlexRowDiv class="align-center gap-8">
+                  <div class="cate">{{ slide.category }}</div>
+                  <div class="board">{{ slide.board }}</div>
+                </FlexRowDiv>
+                <FlexColDiv class="gap-4">
+                  <div class="tit">{{ slide.title }}</div>
+                  <div class="text">{{ slide.content }}</div>
+                </FlexColDiv>
+                <div class="detail-info">
+                  <span class="like-num">{{ slide.likes }}</span>
+                  <span>조회 {{ slide.views }}</span>
+                  <span>댓글 {{ slide.replies }}</span>
+                </div>
+              </div>
+              <div v-if="slide.image" class="img-wrap">
+                <img :src="slide.image" :alt="slide.title" />
+                <div v-if="slide.imageCount > 1" class="img-length">+{{ slide.imageCount }}</div>
+              </div>
+            </FlexRowDiv>
           </div>
         </template>
       </CommonSwiper>
@@ -44,7 +57,8 @@
 import { ref } from 'vue'
 import FlexSection from '~/components/page/FlexSection.vue'
 import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
-
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import BoxedTabs, { type BoxTab } from '~/components/tabbar/BoxedTabs.vue'
 
 import communityImg01 from '~/assets/images/img-community-01.png'
@@ -59,7 +73,10 @@ const communitySlides = ref([
     views: 70,
     replies: 2,
     image: communityImg01,
-    imageCount: 3
+    imageCount: 3,
+    writer: '작성자',
+    writerImageUrl: communityImg01,
+    board: '게시판명'
   },
   {
     category: '헬스케어',
@@ -69,7 +86,10 @@ const communitySlides = ref([
     views: 45,
     replies: 5,
     image: communityImg01,
-    imageCount: 2
+    imageCount: 2,
+    writer: '작성자',
+    writerImageUrl: communityImg01,
+    board: '게시판명'
   },
   {
     category: '운동',
@@ -79,7 +99,10 @@ const communitySlides = ref([
     views: 152,
     replies: 12,
     image: communityImg01,
-    imageCount: 4
+    imageCount: 4,
+    writer: '작성자',
+    writerImageUrl: communityImg01,
+    board: '게시판명'
   },
   {
     category: '식단',
@@ -89,7 +112,10 @@ const communitySlides = ref([
     views: 89,
     replies: 8,
     image: communityImg01,
-    imageCount: 1
+    imageCount: 1,
+    writer: '작성자',
+    writerImageUrl: communityImg01,
+    board: '게시판명'
   }
 ])
 
@@ -109,28 +135,32 @@ const onBoxTabChange = (key: string) => {
 
 <style scoped lang="scss">
 // 기본 커뮤니티 콘텐츠 스타일
+:deep(swiper-container::part(pagination)) {
+  position: relative;
+  margin-top: 1.2rem;
+}
 .community-content {
   // CommonSwiper의 커뮤니티 스타일 오버라이드
   :deep(.swiper-slide) {
     border-radius: 0 !important;
   }
-
   // 커뮤니티 박스 스타일
   .community-box {
     width: 100%;
     margin: 0;
-    padding: 2.4rem 0;
+    padding: 2.4rem 2rem;
     border-radius: 0;
     box-shadow: none;
     border-bottom: 0.1rem solid #eee;
     background: transparent;
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
     text-align: left;
-    &:last-child {
-      border-bottom: none;
-    }
-
+    background: #fff;
+    border-radius: 2rem;
+    border: 0.1rem solid #eee;
+    box-shadow: 0 0 2.3rem 0 rgba(0, 0, 0, 0.06);
     .content-area {
       gap: 0.8rem;
       display: flex;
@@ -214,5 +244,35 @@ const onBoxTabChange = (key: string) => {
       }
     }
   }
+}
+.writer-box {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+  .img {
+    overflow: hidden;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .name {
+    display: inline-block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 2rem;
+    color: #555;
+  }
+}
+.board {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 2rem;
+  color: #777f92;
 }
 </style>

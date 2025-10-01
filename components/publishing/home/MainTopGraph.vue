@@ -3,7 +3,7 @@
     <div class="chart-container">
       <!-- 왼쪽 차트 (고정 위치) -->
       <div class="chart-item left-chart" :class="{ 'shuffle-left': isShuffling }">
-        <div class="radial-chart" ref="chart1">
+        <div ref="chart1" class="radial-chart">
           <svg viewBox="0 0 86 86" class="circular-chart">
             <!-- 배경 호 (7/8 원) -->
             <path
@@ -12,6 +12,7 @@
               fill="transparent"
               stroke="rgba(255, 255, 255, 0.20)"
               stroke-width="8"
+              stroke-linecap="round"
             />
             <!-- 진행률 호 (7/8 원) -->
             <path
@@ -48,7 +49,7 @@
         >
           권한 허용하기
         </div>
-        <div class="radial-chart" ref="chart2">
+        <div ref="chart2" class="radial-chart">
           <svg viewBox="0 0 86 86" class="circular-chart">
             <!-- 배경 호 (7/8 원) -->
             <path
@@ -57,6 +58,7 @@
               fill="transparent"
               stroke="rgba(255, 255, 255, 0.20)"
               stroke-width="8"
+              stroke-linecap="round"
             />
             <!-- 진행률 호 (7/8 원) -->
             <path
@@ -64,7 +66,7 @@
               class="circle"
               d="M 21.2 67.4 A 35 35 0 1 1 64.8 67.4"
               fill="transparent"
-              :stroke="computedChartData[displayOrder[1]].color"
+              :stroke="props.currentStatus === 'walking-status' ? '#4C7FF7' : computedChartData[displayOrder[1]].color"
               stroke-width="8"
               stroke-linecap="round"
               :stroke-dasharray="getCircumference(displayOrder[1])"
@@ -79,7 +81,7 @@
 
       <!-- 오른쪽 차트 (고정 위치) -->
       <div class="chart-item right-chart" :class="{ 'shuffle-right': isShuffling }">
-        <div class="radial-chart" ref="chart3">
+        <div ref="chart3" class="radial-chart">
           <svg viewBox="0 0 86 86" class="circular-chart">
             <!-- 배경 호 (7/8 원) -->
             <path
@@ -88,6 +90,7 @@
               fill="transparent"
               stroke="rgba(255, 255, 255, 0.20)"
               stroke-width="8"
+              stroke-linecap="round"
             />
             <!-- 진행률 호 (7/8 원) -->
             <path
@@ -147,7 +150,7 @@ const chartData = ref<ChartData[]>([
   {
     title: '오늘 걸음 수',
     label: '걸음',
-    value: 10000, // 실제 걸음 수
+    value: 0, // 실제 걸음 수
     maxValue: 20000, // 목표 걸음 수
     percentage: 0, // 0 부터
     color: '#fff'
@@ -413,7 +416,7 @@ const handleAllowAccessClick = () => {
 .chart-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-self: center;
   text-align: center;
   opacity: 0.5;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -474,8 +477,8 @@ const handleAllowAccessClick = () => {
 }
 
 .chart-item:nth-child(2) .radial-chart {
-  width: 8.6rem;
-  height: 8.6rem;
+  width: 10.2rem;
+  height: 10.2rem;
   position: relative;
   &::before {
     content: '';
@@ -527,6 +530,13 @@ const handleAllowAccessClick = () => {
 }
 
 .circle {
+  transition:
+    stroke-dashoffset 2.5s cubic-bezier(0.4, 0, 0.2, 1),
+    stroke 0.5s ease;
+  stroke-linecap: round;
+}
+
+.circle-segment {
   transition: stroke-dashoffset 2.5s cubic-bezier(0.4, 0, 0.2, 1);
   stroke-linecap: round;
 }
@@ -541,7 +551,7 @@ const handleAllowAccessClick = () => {
   position: relative;
   opacity: 1;
   .percentage {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
 }
 

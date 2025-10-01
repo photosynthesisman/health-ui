@@ -206,6 +206,8 @@ onMounted(() => {
             border-radius: 0.8rem;
             font-size: 1.1rem;
             line-height: 1.5rem;
+            top: auto;
+            right: auto;
             white-space: nowrap;
             text-align: right;
             color: #fff;

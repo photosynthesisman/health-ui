@@ -1,49 +1,95 @@
 <template>
   <div class="community-box" v-if="!item.isBlind">
     <NuxtLink to="#">
-      <FlexColDiv class="gap-8">
+      <FlexColDiv :class="{ 'gap-8': typeFormat === 'type2', 'gap-16': typeFormat !== 'type2' }">
+        <strong v-if="typeFormat != 'type2'" class="tit">{{ item.tit }}</strong>
+        <FlexColDiv v-if="typeFormat === 'type2'" class="info">
+          <!-- 배지/카테고리  -->
+          <div v-if="item.badge?.length" class="flex flex-row gap-8">
+            <span
+              v-for="(b, i) in item.badge"
+              :key="'badge-' + i"
+              :class="['badge', { 'badge-blue': b.type === 'blue' }]"
+            >
+              {{ b.label }}
+            </span>
+          </div>
+          <div v-if="item.cate?.length" class="flex flex-row gap-8">
+            <span v-for="(c, i) in item.cate" :key="'cate-' + i" :class="['cate', { 'cate-blue': c.type === 'blue' }]">
+              {{ c.label }}
+            </span>
+          </div>
+        </FlexColDiv>
         <!-- 작성자 정보 -->
         <FlexRowDiv v-if="item.writer" class="writer-box">
           <div class="img"><img class="img" :src="writerImageUrl" alt="작성자 이미지" @error="handleImageError" /></div>
           <span class="name">{{ item.writer }}</span>
         </FlexRowDiv>
-        <!-- 배지/카테고리  -->
-        <div v-if="item.badge?.length" class="flex flex-row gap-8">
-          <span
-            v-for="(b, i) in item.badge"
-            :key="'badge-' + i"
-            :class="['badge', { 'badge-blue': b.type === 'blue' }]"
-          >
-            {{ b.label }}
-          </span>
-        </div>
-        <div v-if="item.cate?.length" class="flex flex-row gap-8">
-          <span v-for="(c, i) in item.cate" :key="'cate-' + i" :class="['cate', { 'cate-blue': c.type === 'blue' }]">
-            {{ c.label }}
-          </span>
-        </div>
+
         <!-- 본문 내용 -->
         <!-- 2025-08-27 스코어 추가 -->
-        <StarRatingInCommItem v-if="item.score" :score="item.score ?? 0" />
-        <FlexRowDiv class="info-box">
+        <StarRatingInCommItem v-if="item.score && typeFormat != 'type3'" :score="item.score ?? 0" />
+        <FlexRowDiv v-if="typeFormat != 'type2'" class="info-box">
           <FlexColDiv class="info">
+            <!-- 배지/카테고리  -->
+            <div v-if="item.badge?.length" class="flex flex-row gap-8">
+              <span
+                v-for="(b, i) in item.badge"
+                :key="'badge-' + i"
+                :class="['badge', { 'badge-blue': b.type === 'blue' }]"
+              >
+                {{ b.label }}
+              </span>
+            </div>
+            <div v-if="item.cate?.length" class="flex flex-row gap-8">
+              <span
+                v-for="(c, i) in item.cate"
+                :key="'cate-' + i"
+                :class="['cate', { 'cate-blue': c.type === 'blue' }]"
+              >
+                {{ c.label }}
+              </span>
+            </div>
+            <span class="text">{{ item.text }}</span>
+          </FlexColDiv>
+        </FlexRowDiv>
+
+        <FlexRowDiv v-if="typeFormat === 'type2'" class="info-box">
+          <FlexColDiv class="info">
+            <!-- 배지/카테고리  -->
             <strong class="tit">{{ item.tit }}</strong>
             <span class="text">{{ item.text }}</span>
           </FlexColDiv>
-          <div class="img-wrap" v-if="item.src && !imageError">
+          <div v-if="item.src && !imageError" class="img-wrap">
             <i v-if="item.length && item.length > 1" class="img-length">+{{ item.length }}</i>
             <img :src="imageUrl" alt="게시글 이미지" @error="handleImageError" />
           </div>
         </FlexRowDiv>
-
+        <div v-if="typeFormat != 'type2' && swiperImages.length > 0" class="post-image-swiper">
+          <CommonSwiper
+            :slides="swiperImages"
+            slide-type="custom"
+            :slides-per-view="1"
+            :space-between="12"
+            :navigation="false"
+            :pagination="true"
+            pagination-type="fraction"
+            :scrollbar="false"
+            :autoplay="false"
+            :show-slide-length="false"
+            :show-play-pause-button="false"
+          >
+            <template #default="{ slide, index }"> <img :src="slide" :alt="`게시글 이미지 ${index + 1}`" /> </template>
+          </CommonSwiper>
+        </div>
         <div class="detail-info" :class="typeFormat">
           <template v-if="typeFormat === 'type1'">
             <span class="like-num">{{ item.likeNum ?? 0 }}</span>
             <span class="view-num">조회 {{ item.viewNum ?? 0 }}</span>
             <span class="reply-num">댓글 {{ item.replyNum ?? 0 }}</span>
-            <span v-show="item.dateNum" class="date-num">{{ item.dateNum }} 전</span>
+            <!-- <span v-show="item.dateNum" class="date-num">{{ item.dateNum }} 전</span> -->
           </template>
-          <template v-else-if="typeFormat === 'type2'">
+          <template v-else>
             <div class="profile-img">
               <img :src="profileImageUrl" alt="프로필" />
             </div>
@@ -76,7 +122,7 @@
             <span class="comment-level">Lv.{{ expertComment.level }}</span>
             <span class="expert-badge">전문가</span>
           </div>
-          <span class="comment-date" v-show="expertComment.dateNum">{{ expertComment.dateNum }} 전</span>
+          <span v-show="expertComment.dateNum" class="comment-date">{{ expertComment.dateNum }} 전</span>
         </FlexRowDiv>
         <p class="comment-text">{{ expertComment.text }}</p>
       </div>
@@ -94,7 +140,7 @@ import { ref, computed } from 'vue'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 import StarRatingInCommItem from '~/components/publishing/community/common/StarRatingInCommItem.vue'
-
+import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
 interface LabelItem {
   label: string
   type?: 'blue' | ''
@@ -131,24 +177,39 @@ interface CommItem {
   rating?: number
   score?: number
   comments?: Comment[]
+  images?: string[]
 }
 
 const props = withDefaults(
   defineProps<{
     item: CommItem
-    typeFormat?: 'type1' | 'type2'
+    typeFormat?: 'type1' | 'type2' | 'type3'
   }>(),
   { typeFormat: 'type1' }
 )
 
 const imageError = ref(false)
-const imageUrl = computed(() => (props.item.src ? `/_nuxt/assets/images/${props.item.src}` : ''))
+// const imageUrl = computed(() => (props.item.src ? `/_nuxt/assets/images/${props.item.src}` : ''))
+
+const getImageUrl = (src: string) => {
+  return src ? `/_nuxt/assets/images/${src}` : ''
+}
+const imageUrl = computed(() => (props.item.src ? getImageUrl(props.item.src) : ''))
 const profileImageUrl = computed(() =>
   props.item.profileImageUrl ? `/_nuxt/assets/images/${props.item.profileImageUrl}` : ''
 )
 const writerImageUrl = computed(() =>
   props.item.writerImageUrl ? `/_nuxt/assets/images/${props.item.writerImageUrl}` : ''
 )
+const swiperImages = computed(() => {
+  if (props.item.images && props.item.images.length > 0) {
+    return props.item.images.map(src => getImageUrl(src))
+  }
+  if (props.item.src && props.typeFormat !== 'type2') {
+    return [getImageUrl(props.item.src)]
+  }
+  return []
+})
 const handleImageError = () => (imageError.value = true)
 
 const expertComment = computed(() => {
@@ -163,14 +224,17 @@ const getCommentAuthorImage = (comment: any) => {
 .community-box {
   display: block;
   & + .community-box {
-    border-top: 1px solid #eee;
+    border-top: 2px solid #eee;
   }
   &.blind-box {
     padding: 2.4rem 0;
   }
   a {
     display: block;
-    padding: 2.4rem 0;
+    padding: 3.2rem 0;
+    &:has(.type2) {
+      padding: 2.4rem 0;
+    }
   }
 
   .cate {
@@ -210,7 +274,7 @@ const getCommentAuthorImage = (comment: any) => {
     gap: 2rem;
   }
   .info {
-    gap: 0.4rem;
+    gap: 0.8rem;
     flex: 1;
     overflow: hidden;
   }
@@ -260,8 +324,8 @@ const getCommentAuthorImage = (comment: any) => {
   .img-wrap {
     position: relative;
     overflow: hidden;
-    width: 7.2rem;
-    height: 7.2rem;
+    width: 8rem;
+    height: 8rem;
     border-radius: 1.2rem;
     .img-length {
       position: absolute;
@@ -346,7 +410,8 @@ const getCommentAuthorImage = (comment: any) => {
         color: #555;
       }
     }
-    &.type2 {
+    &.type2,
+    &.type3 {
       align-items: center;
       gap: 0;
     }
@@ -414,6 +479,54 @@ const getCommentAuthorImage = (comment: any) => {
       font-weight: 500;
       line-height: 1.8rem;
       color: #959595;
+    }
+  }
+}
+.post-image-swiper {
+  overflow: hidden;
+  .swiper-container {
+    position: relative;
+  }
+  .swiper-slide {
+    overflow: hidden;
+    width: 100%;
+    height: 35.3rem;
+    border-radius: 1.2rem;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  :deep(swiper-slide) {
+    height: 100%;
+    img {
+      width: 100%;
+      height: 24rem;
+      object-fit: cover;
+    }
+  }
+  :deep(::part(pagination)) {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    top: 0.8rem;
+    right: 0.8rem;
+    left: auto;
+    bottom: auto;
+    min-width: 4rem;
+    width: max-content;
+    height: 2.8rem;
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    background: rgba(0, 0, 0, 0.7);
+    font-size: 1.4rem;
+    line-height: 2rem;
+    box-sizing: border-box;
+    color: #fff;
+
+    span {
+      color: #fff;
     }
   }
 }

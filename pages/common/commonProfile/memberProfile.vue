@@ -1,14 +1,17 @@
 <template>
   <BaseBody :show-back-button="true" page-title="회원 프로필" logo-type="text" :has-setting="true" class="pb-36">
     <ProfileBox
+      profile-type="normal"
       :profile-data="{
         name: '장동건',
         location: '서울 금천',
-        reward: 12
+        reward: 12,
+        serviceYears: 3,
+        company: '삼성생명'
       }"
     />
-    <Followers class="mt-16" />
-    <hr class="hr-section mb-10 ml-n20 mr-n20" />
+    <Followers />
+    <hr class="hr-section mt-24 mb-10 ml-n20 mr-n20" />
     <LineTabs :tabs="lineTabs" :active-key="activeLineTab" @tab-change="onLineTabChange" />
 
     <!-- 걷기 탭 컨텐츠 -->

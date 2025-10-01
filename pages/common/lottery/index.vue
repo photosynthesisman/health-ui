@@ -1,32 +1,81 @@
 <template>
+  <!-- 09-30 페이지 타이틀 변경 / 미확인 복권 확인 > 전체 사용 내역 보기로 변경 / 페이지 배경색 제거 -->
   <BaseBody
-    page-title="리워드 보관함"
+    page-title="보관함"
     :show-back-button="true"
     :has-add-text="true"
     :add-text-click-enabled="true"
-    add-text="<span style='color:#555;font-size:1.4rem;font-weight:600'>미확인 복권<span style='font-weight: 700'>2</span></span>"
-    style="background-color: #f4f4f4"
+    add-text="<span style='color:#555;font-size:1.4rem;font-weight:600'>전체 사용 내역 보기</span>"
   >
-    <TotalCountCheckType :count="1" :label="'미사용 내역 보기'" class="mg-21y" />
-    <RewardItemWrap>
-      <RewardItem
-        title="스타벅스 상품교환권"
-        date="2025.06.24 13:24"
-        :image-name="RewardImage1"
-        @button-click="toggleBottomModal()"
+    <StickyTabsContainer>
+      <LineTabs :tabs="lineTabs" :active-key="activeLineTab" @tab-change="onLineTabChange" />
+    </StickyTabsContainer>
+
+    <div v-if="activeLineTab === 'reward'">
+      <TotalCountSelectType
+        :count="6"
+        :filter-icon="true"
+        :place-holder="'타입별'"
+        class="pt-20 pb-20"
+        :select-options="periodOptions"
       />
-      <RewardItem title="챌린지부스터 1H 2배" date="2025.06.24 13:24" :image-name="RewardImage2" used />
-      <RewardItem title="챌린지부스터 2H 2배" date="2025.06.24 13:24" :image-name="RewardImage3" used />
-      <RewardItem title="100P" date="2025.06.24 13:24" :image-name="RewardImage4" reward-type="point" used />
-      <RewardItem title="챌린지부스터 8H 2배" date="2025.06.24 13:24" :image-name="RewardImage5" used />
-      <RewardItem
-        title="미션복권"
-        date="2025.06.24 13:24"
-        :image-name="RewardImage6"
-        :label="'복권확인'"
-        @button-click="clickFullModal1"
+      <RewardItemWrap>
+        <RewardItem
+          :reward-type="'ticket'"
+          title="행운티켓"
+          date="14:36:25"
+          :image-name="RewardImage7"
+          is-reward
+          @button-click="toggleBottomModal()"
+        />
+        <RewardItem
+          :reward-type="'ticket'"
+          title="달성티켓"
+          date="14:36:25"
+          :image-name="RewardImage8"
+          is-reward
+          @button-click="clickFullModal1"
+        />
+        <RewardItem title="챌린지 참가권" date="2일 13:24:21" :image-name="RewardImage9" is-reward />
+        <RewardItem title="2시간 걸음수 2배" date=" 13:24:21" :image-name="RewardImage3" is-reward />
+        <RewardItem title="2시간 걸음수 2배" date=" 13:24:21" :image-name="RewardImage10" is-reward />
+        <RewardItem title="2시간 걸음수 2배" date=" 13:24:21" :image-name="RewardImage5" is-reward />
+      </RewardItemWrap>
+    </div>
+
+    <div v-if="activeLineTab === 'purchase'">
+      <TotalCountSelectType
+        :count="6"
+        :filter-icon="true"
+        :place-holder="'타입별'"
+        class="pt-20 pb-20"
+        :select-options="periodOptions"
       />
-    </RewardItemWrap>
+      <RewardItemWrap>
+        <RewardItem
+          :reward-type="'ticket'"
+          title="행운티켓"
+          date="14:36:25"
+          :image-name="RewardImage7"
+          @button-click="toggleBottomModal()"
+        />
+        <RewardItem
+          :reward-type="'ticket'"
+          title="달성티켓"
+          date="14:36:25"
+          :image-name="RewardImage8"
+          @button-click="clickFullModal1"
+        />
+        <RewardItem
+          :reward-type="'package'"
+          title="첫걸음 환영 패키지"
+          date="2일 13:24:21"
+          :image-name="RewardImage11"
+        />
+        <RewardItem title="2시간 걸음수 2배" date=" 13:24:21" :image-name="RewardImage3" />
+        <RewardItem title="2시간 걸음수 2배" date=" 13:24:21" :image-name="RewardImage10" />
+      </RewardItemWrap>
+    </div>
   </BaseBody>
 
   <!-- 행운복권 모달 -->
@@ -118,6 +167,7 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
 import BaseBody from '~/components/layout/BaseBody.vue'
+import EmptyResult from '~/components/publishing/wholeMenu/EmptyResult.vue'
 import TotalCountCheckType from '~/components/publishing/common/temp/TotalCountCheckType.vue'
 import RewardItem from '~/components/publishing/common/lottery/RewardItem.vue'
 import RewardItemWrap from '~/components/publishing/common/lottery/RewardItemWrap.vue'
@@ -129,12 +179,37 @@ import RewardImage3 from '~/assets/images/lottery/img-reward-3.svg'
 import RewardImage4 from '~/assets/images/benefit/img-point-coin.png'
 import RewardImage5 from '~/assets/images/lottery/img-reward-5.svg'
 import RewardImage6 from '~/assets/images/lottery/img-reward-6.svg'
+import RewardImage7 from '~/assets/images/lottery/img-lucky-ticket-1.png'
+import RewardImage8 from '~/assets/images/lottery/img-lucky-ticket-2.png'
+import RewardImage9 from '~/assets/images/lottery/img-ticket-1.png'
+import RewardImage10 from '~/assets/images/lottery/img-reward-8.png'
+import RewardImage11 from '~/assets/images/lottery/img-package.png'
 import { BottomModal } from '@lemonhc/fo-ui/components/modal'
 import FullModal from '~/components/common/modal/FullModal.vue'
 import LotteryCheck from '~/components/publishing/common/lottery/check.vue'
 import LotteryScratch from '~/components/publishing/common/lottery/scratch.vue'
 import ClaimGift from '~/components/publishing/common/lottery/ClaimGift.vue'
+import StickyTabsContainer from '~/components/common/StickyTabsContainer.vue'
+import LineTabs, { type Tab } from '~/components/tabbar/LineTabs.vue'
+import TotalCountSelectType from '~/components/publishing/common/temp/TotalCountSelectType.vue'
+const activeLineTab = ref('reward')
 
+const lineTabs = ref<Tab[]>([
+  { title: '리워드 보관함', key: 'reward' },
+  { title: '구매 보관함', key: 'purchase' }
+])
+const onLineTabChange = (key: string) => {
+  activeLineTab.value = key
+}
+
+const selectedPeriod = ref('1')
+
+const periodOptions = [
+  { value: '1', label: '티켓' },
+  { value: '2', label: '참가권' },
+  { value: '3', label: '아이템' },
+  { value: '4', label: '상품교환권' }
+]
 const isShowFullModal1 = ref(false)
 const isShowFullModal2 = ref(false)
 const isShowFullModal3 = ref(false)

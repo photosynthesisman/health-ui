@@ -18,14 +18,15 @@
       </div>
     </div> -->
     <button :class="['booster-box', { visible: isVisible }]" @click="hideBooster">
-      <LottieAnimation
+      <!-- <LottieAnimation
         src="/animations/booster.json"
         width="100%"
         height="100%"
         :speed="1.5"
         :loop="true"
         class="booster-icon"
-      />
+      /> -->
+      <img src="/animations/booster.gif" alt="" style="width: 4rem" />
       <p class="booster-tit">부스터 ON!!</p>
       <span class="booster-time">59:47</span>
     </button>

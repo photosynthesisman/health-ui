@@ -16,6 +16,7 @@
         class="pt-20 pb-20"
         v-model:selected-period="selectedPeriod"
         :select-options="periodOptions"
+        :filter-icon="true"
       />
       <!-- 게시글 없음 상태 -->
       <CommNoItem v-if="commList.length === 0" />
@@ -77,6 +78,7 @@ const commList = [
     viewNum: 234,
     replyNum: 5,
     dateNum: '3시간',
+    images: ['community/img-community-02.png', 'community/img-community-01.png', 'community/img-community-02.png'],
     length: 3
   },
   {
@@ -88,7 +90,7 @@ const commList = [
     viewNum: 234,
     replyNum: 5,
     dateNum: '3시간',
-    src: 'community/img-community-01.png',
+    images: ['community/img-community-01.png', 'community/img-community-01.png', 'community/img-community-02.png'],
     length: 3
   },
   {
@@ -106,7 +108,8 @@ const commList = [
     viewNum: 234,
     replyNum: 5,
     dateNum: '3시간',
-    src: 'community/img-community-01.png',
+
+    images: ['community/img-community-01.png', 'community/img-community-01.png'],
     length: 0
   }
 ]

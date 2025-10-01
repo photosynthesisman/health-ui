@@ -9,54 +9,91 @@
     <ScrollableContents>
       <FlexSection class="pl-20 pr-20">
         <div class="community-box">
-          <div class="flex flex-col gap-8">
-            <span class="cate">스마트링</span>
-            <strong class="tit">러닝할때 스마트링 활용해요</strong>
-            <span class="text">몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음</span>
-            <div class="detail-info">
-              <span class="like-num">131</span>
-              <span class="view-num">조회 70</span>
-              <span class="reply-num">댓글 2</span>
+          <FlexRowDiv class="writer-box">
+            <div class="img">
+              <img class="img" :src="communityImg01" alt="작성자 이미지" @error="handleImageError" />
             </div>
-          </div>
-          <div class="img-wrap">
-            <i class="img-length">+2</i>
-            <img src="../../../assets/images/img-community-01.png" alt="" />
-          </div>
+            <span class="name">작성자</span>
+          </FlexRowDiv>
+          <!-- 09-22 space-between w-full 클래스 추가 -->
+          <FlexRowDiv class="space-between w-full">
+            <div class="flex flex-col gap-8">
+              <FlexRowDiv class="align-center gap-8">
+                <div class="cate">스마트링</div>
+                <div class="board">게시판명</div>
+              </FlexRowDiv>
+              <FlexColDiv class="gap-4">
+                <strong class="tit">러닝할때 스마트링 활용해요</strong>
+                <span class="text">몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음</span>
+              </FlexColDiv>
+              <div class="detail-info">
+                <span class="like-num">131</span>
+                <span class="view-num">조회 70</span>
+                <span class="reply-num">댓글 2</span>
+              </div>
+            </div>
+            <div class="img-wrap">
+              <i class="img-length">+2</i>
+              <img src="../../../assets/images/img-community-01.png" alt="" /></div
+          ></FlexRowDiv>
         </div>
 
         <div class="community-box">
-          <div class="flex flex-col gap-8">
-            <span class="cate">스마트링</span>
-            <strong class="tit">러닝할때 스마트링 활용해요</strong>
-            <span class="text">몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음</span>
-            <div class="detail-info">
-              <span class="like-num">131</span>
-              <span class="view-num">조회 70</span>
-              <span class="reply-num">댓글 2</span>
+          <FlexRowDiv class="writer-box">
+            <div class="img">
+              <img class="img" :src="communityImg01" alt="작성자 이미지" @error="handleImageError" />
             </div>
-          </div>
-          <div class="img-wrap">
-            <i class="img-length">+2</i>
-            <img src="../../../assets/images/img-community-01.png" alt="" />
-          </div>
+            <span class="name">작성자</span>
+          </FlexRowDiv>
+          <FlexRowDiv class="space-between w-full">
+            <div class="flex flex-col gap-8">
+              <FlexRowDiv class="align-center gap-8">
+                <div class="cate">스마트링</div>
+                <div class="board">게시판명</div>
+              </FlexRowDiv>
+              <FlexColDiv class="gap-4">
+                <strong class="tit">러닝할때 스마트링 활용해요</strong>
+                <span class="text">몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음</span>
+              </FlexColDiv>
+              <div class="detail-info">
+                <span class="like-num">131</span>
+                <span class="view-num">조회 70</span>
+                <span class="reply-num">댓글 2</span>
+              </div>
+            </div>
+            <div class="img-wrap">
+              <i class="img-length">+2</i>
+              <img src="../../../assets/images/img-community-01.png" alt="" /></div
+          ></FlexRowDiv>
         </div>
 
         <div class="community-box">
-          <div class="flex flex-col gap-8">
-            <span class="cate">스마트링</span>
-            <strong class="tit">러닝할때 스마트링 활용해요</strong>
-            <span class="text">몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음</span>
-            <div class="detail-info">
-              <span class="like-num">131</span>
-              <span class="view-num">조회 70</span>
-              <span class="reply-num">댓글 2</span>
+          <FlexRowDiv class="writer-box">
+            <div class="img">
+              <img class="img" :src="communityImg01" alt="작성자 이미지" @error="handleImageError" />
             </div>
-          </div>
-          <div class="img-wrap">
-            <i class="img-length">+2</i>
-            <img src="../../../assets/images/img-community-01.png" alt="" />
-          </div>
+            <span class="name">작성자</span>
+          </FlexRowDiv>
+          <FlexRowDiv class="space-between w-full">
+            <div class="flex flex-col gap-8">
+              <FlexRowDiv class="align-center gap-8">
+                <div class="cate">스마트링</div>
+                <div class="board">게시판명</div>
+              </FlexRowDiv>
+              <FlexColDiv class="gap-4">
+                <strong class="tit">러닝할때 스마트링 활용해요</strong>
+                <span class="text">몸에 대한 변화를 즉각적으로 알 수 있으니까 너무 좋음 짱좋음</span>
+              </FlexColDiv>
+              <div class="detail-info">
+                <span class="like-num">131</span>
+                <span class="view-num">조회 70</span>
+                <span class="reply-num">댓글 2</span>
+              </div>
+            </div>
+            <div class="img-wrap">
+              <i class="img-length">+2</i>
+              <img src="../../../assets/images/img-community-01.png" alt="" /></div
+          ></FlexRowDiv>
         </div>
       </FlexSection>
     </ScrollableContents>
@@ -68,9 +105,10 @@ import { ref } from 'vue'
 import FlexSection from '~/components/page/FlexSection.vue'
 import StickyTabsContainer from '~/components/common/StickyTabsContainer.vue'
 import ScrollableContents from '~/components/common/ScrollableContents.vue'
-
+import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 import BoxedTabs, { type BoxTab } from '~/components/tabbar/BoxedTabs.vue'
-
+import FlexColDiv from '~/components/page/FlexColDiv.vue'
+import communityImg01 from '~/assets/images/img-community-01.png'
 // RoundTabs 상태 관리
 const activeBoxTab = ref('all')
 
@@ -92,8 +130,8 @@ const onBoxTabChange = (key: string) => {
   }
   padding: 2.4rem 0;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   .img-wrap {
     width: 7.2rem;
     height: 7.2rem;
@@ -166,5 +204,35 @@ const onBoxTabChange = (key: string) => {
       }
     }
   }
+}
+.writer-box {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+  .img {
+    overflow: hidden;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .name {
+    display: inline-block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 2rem;
+    color: #555;
+  }
+}
+.board {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 2rem;
+  color: #777f92;
 }
 </style>

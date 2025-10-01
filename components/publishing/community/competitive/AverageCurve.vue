@@ -7,11 +7,12 @@
       v-if="tooltipVisible"
       class="tooltip"
       :style="{
-        left: `${tooltipPosition.x + (averageHeartRate >= 81 ? -45 : 0)}px`,
+        left: `${Math.max(10, tooltipPosition.x + (averageHeartRate >= 81 ? -45 : 0))}px`,
         top: `${tooltipPosition.y + (averageHeartRate >= 81 ? -13 : -45)}px`
       }"
       style="
         position: absolute;
+        width: fit-content;
         transform: translateX(-50%);
         padding: 0.4rem 0.8rem;
         background: #4f5561;
@@ -52,7 +53,12 @@
         height="6"
         viewBox="0 0 7 4"
         fill="none"
-        style="position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%)"
+        :style="{
+          position: 'absolute',
+          left: `${averageHeartRate >= 10 ? 50 : 30 + averageHeartRate * 2}%`,
+          bottom: '-5px',
+          transform: 'translateX(-50%)'
+        }"
       >
         <path
           fill-rule="evenodd"
@@ -340,6 +346,7 @@ onMounted(() => {
 
 // ApexCharts 스타일 오버라이드
 :deep(.apexcharts-svg) {
+  overflow: visible;
   background: transparent;
 }
 

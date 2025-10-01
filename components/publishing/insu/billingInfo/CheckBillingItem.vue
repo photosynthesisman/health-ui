@@ -21,7 +21,11 @@
         <i class="icon-arrow-right"></i>
       </div>
       <div class="claim-desc-list">
-        <div class="claim-item">
+        <div v-if="item.hospital" class="claim-item">
+          <div class="tit">{{ item.hospital }}</div>
+          <div class="desc">{{ item.details.length }}건</div>
+        </div>
+        <div v-if="item.designer" class="claim-item">
           <div class="tit">설계사(비서)</div>
           <div class="desc">{{ item.designer }}</div>
         </div>
@@ -56,6 +60,7 @@ const props = defineProps<{
     claimStatus: string
     autoBilling: boolean
     date: string
+    hospital: string
     insuranceLogo: string
     insuranceName: string
     designer: string

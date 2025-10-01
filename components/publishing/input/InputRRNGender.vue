@@ -84,7 +84,7 @@ function onBackInput(e: Event) {
   margin-bottom: 0.6rem;
   font-weight: 400;
   color: #555;
-  font-size: 12px;
+  font-size: 1.4rem;
   position: relative;
   &.required {
     &::after {

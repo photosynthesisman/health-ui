@@ -34,11 +34,29 @@
       </li>
     </ul>
   </div>
+
+  <!-- 챌린지 참가권 case -->
+  <div v-if="rewardType === 'ticket'" class="reward-guide-wrap">
+    <p class="guide-tit">챌린지 참가권 리워드 안내</p>
+    <ul>
+      <li>
+        아래 미션을 수행하면 리워드로 챌린지 참가권이 자동 지급됩니다.
+        <ul>
+          <li>최초 회원 가입:1회</li>
+          <li>추천 코드로 회원 가입 시:가입 시 마다 1회</li>
+          <li>마케팅 정보 제공 동의:1회</li>
+          <li>제3자 정보 제공 동의 시(마케팅활용):1회</li>
+          <li>마이 데이터 연동 완료:1회</li>
+        </ul>
+      </li>
+      <li>챌린지 참가권의 유효기간은 지급일로부터 1년이며 보관함에서도 확인하실 수 있습니다.</li>
+    </ul>
+  </div>
 </template>
 <script setup lang="ts">
 import { defineProps } from 'vue'
 const props = defineProps({
-  rewardType: { type: String as () => 'point' | 'item' | 'gift' | null, default: null }
+  rewardType: { type: String as () => 'point' | 'item' | 'gift' | 'ticket' | null, default: null }
 })
 </script>
 <style scoped lang="scss">
@@ -71,6 +89,17 @@ ul {
       height: 0.3rem;
       background-color: #959595;
       border-radius: 50%;
+    }
+    ul {
+      margin-top: 0;
+      li {
+        &::before {
+          border-radius: 0;
+          height: 0.1rem;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
     }
   }
 }

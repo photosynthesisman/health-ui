@@ -15,14 +15,14 @@
           <img class="img-alert" src="/assets/images/insu/logo-alert-samsung.png" alt="삼성화재" />
           <div class="wrap-alert-text">
             <span class="text">청구서류 전송을 완료했어요</span>
-            <div class="text-sub">삼성화재 청구 내역 확인<i class="icon-arrow-right"></i></div>
+            <div class="text-sub" @click="toDetail">삼성화재 청구 내역 확인<i class="icon-arrow-right"></i></div>
           </div>
         </button>
         <button class="btn-alert">
           <img class="img-alert" src="/assets/images/insu/logo-alert-db.png" alt="DB손해보험" />
           <div class="wrap-alert-text">
             <span class="text">추가서류가 필요한 청구가 있어요</span>
-            <div class="text-sub">DB손해보험 청구 내역 확인<i class="icon-arrow-right"></i></div>
+            <div class="text-sub" @click="toDetail">DB손해보험 청구 내역 확인<i class="icon-arrow-right"></i></div>
           </div>
         </button>
       </div>
@@ -115,15 +115,15 @@
       </FlexColDiv>
       <h2 class="tit2">청구의신 더 알아보기</h2>
       <div class="wrap-more">
-        <button class="item purple">
+        <button class="item purple" @click="toManage">
           <img class="img-more" src="/assets/images/insu/img-more-myhospital.png" alt="MY병원/보험사관리" />
           <div class="text">MY병원/<br />보험사관리</div>
         </button>
-        <button class="item pink">
+        <button class="item pink" @click="toHospital">
           <img class="img-more" src="/assets/images/insu/img-more-hospital.png" alt="제휴병원 찾아보기" />
           <div class="text">제휴병원 찾아보기</div>
         </button>
-        <button class="item yellow">
+        <button class="item yellow" @click="toGuide">
           <img class="img-more" src="/assets/images/insu/img-more-claim.png" alt="실손청구 알아보기" />
           <div class="text">실손청구 알아보기</div>
         </button>
@@ -173,13 +173,25 @@ const beforeProxyClaim = ref(false)
 // 청구의신 MY병원 상태 관리
 type InsuStatus = 'unregistered' | 'needUpdate' | 'registered'
 const insuStatus = ref<InsuStatus>('unregistered')
+const toGuide = () => {
+  return navigateTo('/insu/claim/guide/guideNoDocuments/')
+}
+const toManage = () => {
+  return navigateTo('/insu/claim/auto/manageHospital')
+}
+const toDetail = () => {
+  return navigateTo('/insu/claim/billingInfo/checkBillingDetail')
+}
+const toHospital = () => {
+  return navigateTo('/insu/claim/guide/guidePartnerHospital')
+}
 </script>
 
 <style scoped lang="scss">
 .wrap-claim-main {
-  padding-top: 5.6rem;
-  padding-bottom: 3.2rem;
-  margin: -5.6rem -2rem 0;
+  padding-top: 89.6px;
+  padding-bottom: 51.2px;
+  margin: -89.6px -32px 0;
   background: #d7e1f7;
   position: relative;
   overflow: hidden;
@@ -190,49 +202,49 @@ const insuStatus = ref<InsuStatus>('unregistered')
     left: 0;
     right: 0;
     top: 0;
-    bottom: 25.3rem;
+    bottom: 404.8px;
     background: linear-gradient(180deg, rgba(49, 81, 158, 0.2) 0%, rgba(49, 81, 158, 0) 100%);
   }
   .wrap-btn-alert {
-    padding: 0 2rem;
-    margin-top: 1rem;
+    padding: 0 32px;
+    margin-top: 16px;
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 12.8px;
     & + .wrap-btn-claim {
-      margin-top: 1.2rem;
+      margin-top: 19.2px;
     }
     .btn-alert {
-      padding: 1.6rem 2rem;
+      padding: 25.6px 32px;
       display: flex;
       align-items: center;
-      gap: 1.2rem;
-      border-radius: 1.2rem;
+      gap: 19.2px;
+      border-radius: 19.2px;
       background: rgba(255, 255, 255, 0.3);
-      border: 0.1rem solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.04);
-      backdrop-filter: blur(20px);
+      border: 1.6px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0rem 0.25rem 0.625rem 0rem rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(1.25rem);
       width: 100%;
       .img-alert {
-        width: 4rem;
-        height: 4rem;
+        width: 64px;
+        height: 64px;
       }
       .wrap-alert-text {
         .text {
-          font-size: 1.6rem;
+          font-size: 25.6px;
           font-weight: 500;
           color: #2b2b2b;
         }
         .text-sub {
-          margin-top: 0.4rem;
-          font-size: 1.4rem;
+          margin-top: 6.4px;
+          font-size: 22.4px;
           color: #2b2b2b;
           display: flex;
           align-items: center;
-          gap: 0.2rem;
+          gap: 3.2px;
           .icon-arrow-right {
-            width: 1.6rem;
-            height: 1.6rem;
+            width: 25.6px;
+            height: 25.6px;
             background: url('/assets/images/insu/icon-arrow-right.svg') no-repeat center center;
             background-size: 100%;
           }
@@ -241,19 +253,19 @@ const insuStatus = ref<InsuStatus>('unregistered')
     }
   }
   .wrap-btn-claim {
-    padding: 0 2rem;
+    padding: 0 32px;
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: 16px;
+    margin-top: 16px;
     .btn-claim {
-      padding: 2.4rem 2.4rem 1.6rem;
-      border-radius: 1.6rem;
+      padding: 38.4px 38.4px 25.6px;
+      border-radius: 25.6px;
       width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 0.4rem;
+      gap: 6.4px;
       @include mixin.rippleEffectWhite;
       &.no-doc {
         background-color: #4c7ff7;
@@ -262,102 +274,102 @@ const insuStatus = ref<InsuStatus>('unregistered')
         background-color: #31519e;
       }
       .text {
-        font-size: 1.6rem;
+        font-size: 25.6px;
         font-weight: 500;
         color: #fff;
         text-align: left;
         strong {
-          margin-top: 0.8rem;
-          font-size: 2rem;
+          margin-top: 12.8px;
+          font-size: 32px;
           font-weight: 700;
           font-weight: 130%;
         }
         .sub-text {
           text-align: left;
-          margin-top: 0.2rem;
-          font-size: 1.3rem;
+          margin-top: 3.2px;
+          font-size: 20.8px;
           font-weight: 500;
           color: #fbc700;
         }
       }
       .img-claim {
         align-self: flex-end;
-        width: 6rem;
+        width: 96px;
       }
     }
   }
   .btn-type-wrap {
-    margin-top: 1.2rem;
-    padding: 0 2rem;
-    gap: 1.2rem;
+    margin-top: 19.2px;
+    padding: 0 32px;
+    gap: 19.2px;
     &.smaller {
       .btn-type {
-        padding: 2.2rem 2.4rem;
-        background: #f6f9ff url('/assets/images/insu/img-claim-people.png') right bottom / 8.7rem 5.8rem no-repeat;
+        padding: 35.2px 38.4px;
+        background: #f6f9ff url('/assets/images/insu/img-claim-people.png') right bottom / 139.2px 92.8px no-repeat;
         .wrap-type-text {
           .text {
-            font-size: 1.6rem;
-            line-height: 2.2rem;
+            font-size: 25.6px;
+            line-height: 35.2px;
           }
         }
       }
     }
     .btn-type {
       position: relative;
-      padding: 3.1rem 2.4rem;
-      border-radius: 1.2rem;
-      box-shadow: 4px 4px 12px 0px #0000000a;
+      padding: 49.6px 38.4px;
+      border-radius: 19.2px;
+      box-shadow: 0.25rem 0.25rem 0.75rem 0rem #0000000a;
       width: 100%;
-      background: #f6f9ff url('/assets/images/insu/img-claim-people.png') right bottom / 11.1rem 7.4rem no-repeat;
+      background: #f6f9ff url('/assets/images/insu/img-claim-people.png') right bottom / 177.6px 118.4px no-repeat;
       @include mixin.rippleEffectPrimary;
       &.family {
-        background: #f6f9ff url('/assets/images/insu/img-claim-family.png') right bottom / 8.7rem 5.8rem no-repeat;
+        background: #f6f9ff url('/assets/images/insu/img-claim-family.png') right bottom / 139.2px 92.8px no-repeat;
       }
       .wrap-type-text {
         display: flex;
         align-items: center;
-        gap: 0.8rem;
+        gap: 12.8px;
         .text {
-          font-size: 2rem;
+          font-size: 32px;
           font-weight: 700;
           line-height: 130%;
           color: #2b2b2b;
           text-align: left;
         }
         .label {
-          font-size: 1.2rem;
+          font-size: 19.2px;
           line-height: 130%;
           font-weight: 500;
           color: #fff;
           background-color: #6449fc;
-          padding: 0.3rem 0.6rem;
-          border-radius: 0.4rem;
+          padding: 4.8px 9.6px;
+          border-radius: 6.4px;
         }
       }
     }
   }
 }
 h2.tit2 {
-  font-size: 1.8rem;
+  font-size: 28.8px;
   font-weight: 700;
   line-height: 140%;
   color: #2b2b2b;
-  margin-top: 3.2rem;
+  margin-top: 51.2px;
 }
 .wrap-payback {
-  margin-top: 1.2rem;
-  gap: 1.2rem;
+  margin-top: 19.2px;
+  gap: 19.2px;
   .item {
-    padding: 2.4rem 2rem;
-    border: 0.1rem solid #eeeeee;
-    border-radius: 2rem;
-    box-shadow: 0px 0px 2.3rem 0 #0000000f;
+    padding: 38.4px 32px;
+    border: 1.6px solid #eeeeee;
+    border-radius: 32px;
+    box-shadow: 0rem 0rem 36.8px 0 #0000000f;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
     &.type-a {
-      padding: 2.4rem;
+      padding: 38.4px;
       @include mixin.rippleEffectPrimary;
       &.blue {
         background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='226' height='124' viewBox='0 0 226 124' fill='none'%3E%3Cg opacity='0.2' filter='url(%23filter0_f_6424_62949)'%3E%3Cellipse cx='174.988' cy='10.1998' rx='113.156' ry='50.0123' transform='rotate(-25.7411 174.988 10.1998)' fill='%236A88AF'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_6424_62949' x='0.750366' y='-126.469' width='348.475' height='273.337' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='35' result='effect1_foregroundBlur_6424_62949'/%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E")
@@ -376,19 +388,19 @@ h2.tit2 {
     &.type-b {
       flex: 1;
       flex-direction: column;
-      padding: 1.6rem;
-      border-radius: 1.2rem;
+      padding: 25.6px;
+      border-radius: 19.2px;
       @include mixin.rippleEffectPrimary;
       .wrap-text {
         align-self: flex-start;
         .text {
-          font-size: 1.6rem;
-          line-height: 2.2rem;
+          font-size: 25.6px;
+          line-height: 35.2px;
           color: #555555;
         }
       }
       .img-payback {
-        width: 3.2rem;
+        width: 51.2px;
         align-self: flex-end;
       }
     }
@@ -406,21 +418,21 @@ h2.tit2 {
         align-items: center;
         width: 100%;
         .img-payback {
-          width: 8rem;
+          width: 128px;
           height: auto;
         }
       }
       .wrap-btn {
-        margin-top: 1.2rem;
+        margin-top: 19.2px;
         display: flex;
-        gap: 1.2rem;
+        gap: 19.2px;
         width: 100%;
         .btn-claim {
           background-color: #f4f4f4;
-          border-radius: 0.8rem;
-          padding: 1.2rem;
+          border-radius: 12.8px;
+          padding: 19.2px;
           color: #555555;
-          font-size: 1.4rem;
+          font-size: 22.4px;
           font-weight: 600;
           text-align: center;
           width: 100%;
@@ -432,43 +444,43 @@ h2.tit2 {
     .wrap-text {
       display: flex;
       flex-direction: column;
-      gap: 0.8rem;
+      gap: 12.8px;
       text-align: left;
       .text {
-        font-size: 1.8rem;
+        font-size: 28.8px;
         font-weight: 700;
       }
       .sub-text {
-        font-size: 1.6rem;
+        font-size: 25.6px;
         font-weight: 500;
         color: #555555;
       }
     }
     .img-payback {
-      width: 8rem;
+      width: 128px;
       height: auto;
     }
   }
 }
 .wrap-more {
-  margin: 1.6rem -2rem 0;
-  padding: 0 2rem;
+  margin: 25.6px -32px 0;
+  padding: 0 32px;
   display: flex;
-  gap: 1.2rem;
+  gap: 19.2px;
   overflow-x: auto;
   &::-webkit-scrollbar {
     display: none;
   }
   .item {
-    width: 14.8rem;
-    height: 16rem;
+    width: 236.8px;
+    height: 256px;
     flex: 1 0 auto;
-    padding: 2.4rem;
-    border-radius: 1.2rem;
+    padding: 38.4px;
+    border-radius: 19.2px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 2rem;
+    gap: 32px;
     &.purple {
       background-color: #e8eefa;
     }
@@ -479,21 +491,21 @@ h2.tit2 {
       background-color: #fef4cc;
     }
     .img-more {
-      width: 4.8rem;
+      width: 76.8px;
       height: auto;
     }
     .text {
       text-align: left;
-      font-size: 1.6rem;
+      font-size: 25.6px;
       font-weight: 700;
       color: #2b2b2b;
     }
   }
 }
 .wrap-qa {
-  margin-top: 1.2rem;
-  padding: 1.6rem 2rem;
-  border-radius: 1.2rem;
+  margin-top: 19.2px;
+  padding: 25.6px 32px;
+  border-radius: 19.2px;
   background-color: #f4f4f4;
   display: flex;
   flex-direction: column;
@@ -501,10 +513,10 @@ h2.tit2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-radius: 1.2rem;
-    padding: 1.2rem 0;
+    border-radius: 19.2px;
+    padding: 19.2px 0;
     &:not(:first-child) {
-      border-top: 0.1rem solid #e2e2e2;
+      border-top: 1.6px solid #e2e2e2;
     }
     &:first-child {
       padding-top: 0;
@@ -515,25 +527,25 @@ h2.tit2 {
     .item-qa-text {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 9.6px;
       .text {
-        font-size: 1.4rem;
+        font-size: 22.4px;
         font-weight: 500;
         color: #2b2b2b;
         strong {
-          margin-left: 0.6rem;
+          margin-left: 9.6px;
           font-weight: 600;
           color: #555555;
         }
       }
       .img-qa {
-        width: 3.2rem;
-        height: 3.2rem;
+        width: 51.2px;
+        height: 51.2px;
       }
     }
     i.icon-arrow-right {
-      width: 2.4rem;
-      height: 2.4rem;
+      width: 38.4px;
+      height: 38.4px;
       background: url('/assets/images/insu/icon-arrow-right.svg') no-repeat center center;
       background-size: 100%;
     }

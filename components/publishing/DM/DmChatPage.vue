@@ -21,12 +21,29 @@
       </div>
     </div>
     <div class="chat-body">
-      <DmBody />
+      <DmBody>
+        <template #uploaded-images>
+          <div v-if="imageFiles.length > 0" class="image-container">
+            <div v-for="(file, index) in imageFiles" :key="`img-${index}`" class="image-item">
+              <div class="image-wrapper">
+                <img :src="file.url" :alt="`업로드된 이미지 ${index + 1}`" class="uploaded-image" />
+                <button class="image-delete-btn" @click="deleteFile(file)">
+                  <i class="ri-close-fill"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
+      </DmBody>
     </div>
     <div class="chat-footer" :class="{ 'is-keyboard-open': isKeyboardOpen || isSearchInputFocused }">
       <div class="dm-footer-input">
         <FlexRowDiv class="gap-12">
-          <InputImage />
+          <label for="image-upload" class="upload-btn">
+            <i class="icon icon-photo"></i>
+          </label>
+          <input id="image-upload" ref="fileInputRef" type="file" multiple class="hidden" @change="handleImageUpload" />
+
           <BtnEmoji />
         </FlexRowDiv>
         <InputMessage @keyboard-open="handleKeyboardOpen" @keyboard-close="handleKeyboardClose" />
@@ -163,6 +180,63 @@ const ConfirmModalContent = ref('')
 const closeConfirmModal = () => {
   showConfirmModal.value = false
 }
+
+interface UploadedFile {
+  url: string
+  name: string
+  type: string
+  isImage: boolean
+}
+const imageFiles = computed(() => uploadedFiles.value.filter(file => file.isImage))
+const fileInputRef = ref<HTMLInputElement | null>(null) // 숨겨진 파일 입력 참조
+const uploadedFiles = ref<UploadedFile[]>([]) // 업로드된 파일 배열 (최대 5개)
+const handleImageUpload = (event: Event) => {
+  const files = (event.target as HTMLInputElement).files
+  if (!files || files.length === 0) return
+
+  const currentCount = uploadedFiles.value.length
+  const remainingSlots = 10 - currentCount
+
+  if (remainingSlots <= 0) {
+    alert('최대 10개의 파일까지 업로드할 수 있습니다.')
+    return
+  }
+
+  // 선택된 파일 수가 남은 슬롯보다 많으면 제한
+  const filesToProcess = Array.from(files).slice(0, remainingSlots)
+
+  if (files.length > filesToProcess.length) {
+    alert(`${filesToProcess.length}개의 파일만 업로드됩니다. (최대 10개 제한)`)
+  }
+
+  // 각 파일을 Base64로 변환하여 배열에 추가
+  filesToProcess.forEach(file => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = reader.result as string
+      const isImage = file.type.startsWith('image/')
+      uploadedFiles.value.push({
+        url: result,
+        name: file.name,
+        type: file.type,
+        isImage
+      })
+    }
+    reader.readAsDataURL(file)
+  })
+
+  // input 값 초기화 (같은 파일 재선택 가능하도록)
+  if (fileInputRef.value) {
+    fileInputRef.value.value = ''
+  }
+}
+// 파일 객체로 삭제
+const deleteFile = (file: UploadedFile) => {
+  const index = uploadedFiles.value.findIndex(f => f === file)
+  if (index !== -1) {
+    uploadedFiles.value.splice(index, 1)
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -189,7 +263,7 @@ const closeConfirmModal = () => {
   flex: 1;
   max-height: calc(100dvh - 12.8rem);
   overflow-y: auto;
-  padding: 0 2rem 1rem;
+  padding: 0 0 1rem;
   margin: 0 -2rem;
   background-color: #e7f4ff;
 }
@@ -293,6 +367,75 @@ const closeConfirmModal = () => {
       align-items: center;
       align-content: center;
     }
+  }
+}
+
+.image-container {
+  display: flex;
+  gap: 1.2rem;
+  margin: 0 -2rem;
+  padding-top: 0.6rem;
+  overflow-x: scroll;
+  &::-webkit-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    display: none;
+  }
+}
+.image-item {
+  flex: 1;
+  flex-shrink: 0;
+  max-width: 8rem;
+  height: 8rem;
+  aspect-ratio: 1;
+  &:first-child {
+    margin-left: 2rem;
+  }
+  &:last-child {
+    margin-right: 2rem;
+  }
+}
+.image-wrapper {
+  position: relative;
+  overflow: visible;
+  background: #fff;
+  width: 100%;
+  border: 0.1rem solid #eee;
+}
+.image-item .image-wrapper {
+  height: 100%;
+  border-radius: 0.8rem;
+}
+.image-item .uploaded-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 0.8rem;
+}
+
+.image-delete-btn {
+  position: absolute;
+  top: -0.6rem;
+  right: -0.6rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #4f5561
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M12 6L6 12M12 12L6 6' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")
+    center / 1.8rem no-repeat;
+  border-radius: 50%;
+}
+
+.hidden {
+  display: none;
+}
+.upload-btn {
+  i {
+    display: inline-block;
+    width: 2.4rem;
+    height: 2.4rem;
+    cursor: pointer;
   }
 }
 </style>

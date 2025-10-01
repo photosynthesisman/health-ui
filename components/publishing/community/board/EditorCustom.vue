@@ -548,8 +548,8 @@ const removeHealthData = (value: string) => {
     flex-shrink: 0; /* # 기호는 고정 크기 */
   }
   .hashtag-input {
-    width: 1rem;
-    min-width: 1rem;
+    width: fit-content !important;
+    min-width: 2rem;
   }
   .hashtag-input::placeholder {
     color: #9ca3af;

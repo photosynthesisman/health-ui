@@ -8,6 +8,8 @@
     :add-text="addTextDisplay"
     class="space-between"
   >
+    <!-- 2025-09-24 문구 추가 -->
+    <p class="fz-13 fc-body-02 mb-16 mt-8">Today 친구랭킹은 상위 200명까지만 노출됩니다.</p>
     <div class="rank-box-list flex flex-col">
       <template v-for="(item, index) in rankingData" :key="item.rank">
         <ChallengeRankingBoxMe

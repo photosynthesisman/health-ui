@@ -1,5 +1,13 @@
 <template>
-  <BaseBody :show-back-button="true" page-title="회원 프로필" logo-type="text" :has-setting="true" class="pb-36">
+  <BaseBody
+    :show-back-button="true"
+    page-title="비즈 프로필"
+    logo-type="text"
+    :has-tel-btn="true"
+    :has-chat="true"
+    :has-share-type2="true"
+    class="pb-36"
+  >
     <ProfileBox
       profile-type="expert"
       :profile-data="{

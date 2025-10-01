@@ -31,7 +31,7 @@ const canvasHeight = ref(430)
 let baseWidth = 335
 let baseHeight = 430
 
-const currentSteps = ref(170000) // 현재 걸음 수 (예시)
+const currentSteps = ref(350001) // 현재 걸음 수 (예시)
 const totalSteps = 500000
 const totalDays = 40
 
@@ -134,7 +134,7 @@ const getMilestones = () => {
   }))
 }
 
-// 진행 위치 (세그먼트 내 보간)
+// 진행 위치 (세그먼트 내 보간 + Y offset 적용)
 const getPositionAtSteps = (steps: number) => {
   const milestones = getMilestones()
   if (steps >= totalSteps) {
@@ -145,6 +145,32 @@ const getPositionAtSteps = (steps: number) => {
     const prev = milestones[i - 1]
     const curr = milestones[i]
     if (steps >= prev.steps && steps <= curr.steps) {
+      const segmentIndex = i - 1 // 현재 구간 인덱스
+
+      // 각 구간별 Y offset 값 (drawChallengePath와 동일하게 적용)
+      let startYOffset = 0
+      let endYOffset = 0
+
+      if (segmentIndex === 0) {
+        startYOffset = 5
+        endYOffset = 12
+      } else if (segmentIndex === 1) {
+        startYOffset = -12
+        endYOffset = 12
+      } else if (segmentIndex === 2) {
+        startYOffset = -12
+        endYOffset = 12
+      } else if (segmentIndex === 3) {
+        startYOffset = -12
+        endYOffset = 12
+      } else if (segmentIndex === 4) {
+        startYOffset = -12
+        endYOffset = 13
+      } else if (segmentIndex === 5) {
+        startYOffset = -15
+        endYOffset = 0
+      }
+
       const t = (steps - prev.steps) / (curr.steps - prev.steps)
       const dx = curr.x - prev.x
       const dy = curr.y - prev.y
@@ -153,9 +179,12 @@ const getPositionAtSteps = (steps: number) => {
       const uy = dy / (dist || 1)
       const offset = 10
       const sx = prev.x + ux * offset
-      const sy = prev.y + uy * offset
+      const sy = prev.y + uy * offset + startYOffset
       const ex = curr.x - ux * offset
-      const ey = curr.y - uy * offset
+      const ey = curr.y - uy * offset + endYOffset
+
+      // Y offset을 보간하여 적용
+      const currentYOffset = startYOffset + (endYOffset - startYOffset) * t
       return { x: sx + (ex - sx) * t, y: sy + (ey - sy) * t }
     }
   }
@@ -297,42 +326,101 @@ const drawChallengePath = () => {
   const normalRadius = 17
   const giftRadius = 24 // 48px / 2
   const nodeRadius = Math.max(normalRadius, giftRadius)
-  const cornerRadius = 12 // 코너 둥글림 강도 (원하는 대로 조정)
+  const cornerRadius = 3000 // 코너 둥글림 강도 (원하는 대로 조정)
 
-  // 1) 기본 경로 (흰색, 살짝 반투명)
-  // ── 기본 경로(흰색)
-  ctx.strokeStyle = 'rgba(255,255,255,0.7)'
-  ctx.lineWidth = 10
-  ctx.lineCap = 'round'
-  ctx.lineJoin = 'round'
-
-  const pts = milestones.map(m => ({ x: m.x, y: m.y }))
-  drawRoundedPolyline(ctx, pts, /*r=*/ 28) // ← 곡률 크게
-  ctx.stroke()
-
-  // ── 진행 경로(파란색)
-  ctx.strokeStyle = '#4C7FF7'
+  // 1) 각 구간을 개별 path로 그리기 (Y offset 적용)
   const effective = Math.min(currentSteps.value, totalSteps)
-  const progressedPts: Array<{ x: number; y: number }> = []
+  const segmentYOffset = 5 // 각 구간별 Y 오프셋
 
-  for (let i = 0; i < milestones.length; i++) {
-    const m = milestones[i]
-    if (effective >= m.steps) {
-      progressedPts.push({ x: m.x, y: m.y })
-    } else {
-      if (i > 0) {
-        const p = milestones[i - 1]
-        const t = (effective - p.steps) / (m.steps - p.steps)
-        if (t > 0) {
-          progressedPts.push({ x: p.x + (m.x - p.x) * t, y: p.y + (m.y - p.y) * t })
-        }
-      }
-      break
+  // 각 구간별로 선 그리기
+  for (let i = 0; i < milestones.length - 1; i++) {
+    const startMilestone = milestones[i]
+    const endMilestone = milestones[i + 1]
+
+    // 현재 구간이 진행되었는지 확인
+    const segmentStartSteps = startMilestone.steps
+    const segmentEndSteps = endMilestone.steps
+
+    // 각 라인별 시작점과 끝점에 다른 Y offset 적용
+    let startYOffset = 0
+    let endYOffset = 0
+
+    // 구간별 개별 조정
+    if (i === 0) {
+      // 구간 0 : 기본값 유지
+      startYOffset = 5
+      endYOffset = 12
+    } else if (i === 1) {
+      // 구간 1 : 왼쪽(시작)
+      startYOffset = -12
+      endYOffset = 12
+    } else if (i === 2) {
+      // 구간 2 : 왼쪽(시작)
+      startYOffset = -12
+      endYOffset = 12
+    } else if (i === 3) {
+      // 구간 3 : 왼쪽(시작)
+      startYOffset = -12
+      endYOffset = 12
+    } else if (i === 4) {
+      // 구간 4: 왼쪽(시작)
+      startYOffset = -12
+      endYOffset = 13
+    } else if (i === 5) {
+      // 구간 5 : 왼쪽(시작)
+      startYOffset = -15
+      endYOffset = 0
     }
-  }
-  if (progressedPts.length >= 2) {
-    drawRoundedPolyline(ctx, progressedPts, /*r=*/ 28)
-    ctx.stroke()
+
+    const offsetStart = {
+      x: startMilestone.x,
+      y: startMilestone.y + startYOffset,
+      steps: startMilestone.steps,
+      label: startMilestone.label
+    }
+    const offsetEnd = {
+      x: endMilestone.x,
+      y: endMilestone.y + endYOffset,
+      steps: endMilestone.steps,
+      label: endMilestone.label
+    }
+
+    // 구간별 진행 상태 판단
+    if (effective <= segmentStartSteps) {
+      // 아직 도달하지 않은 구간 - 흰색으로 그리기
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'
+      ctx.lineWidth = 10
+      ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
+      drawRoundedPolyline(ctx, [offsetStart, offsetEnd], 80)
+      ctx.stroke()
+    } else if (effective >= segmentEndSteps) {
+      // 완전히 지나간 구간 - 파란색
+      ctx.strokeStyle = '#4C7FF7'
+      ctx.lineWidth = 10
+      ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
+      drawRoundedPolyline(ctx, [offsetStart, offsetEnd], 80)
+      ctx.stroke()
+    } else {
+      // 현재 진행 중인 구간 - 먼저 전체를 흰색으로 그리고
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'
+      ctx.lineWidth = 10
+      ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
+      drawRoundedPolyline(ctx, [offsetStart, offsetEnd], 80)
+      ctx.stroke()
+
+      // 진행된 부분만 파란색으로 덮어쓰기
+      ctx.strokeStyle = '#4C7FF7'
+      const t = (effective - segmentStartSteps) / (segmentEndSteps - segmentStartSteps)
+      const progressEnd = {
+        x: offsetStart.x + (offsetEnd.x - offsetStart.x) * t,
+        y: offsetStart.y + (offsetEnd.y - offsetStart.y) * t
+      }
+      drawRoundedPolyline(ctx, [offsetStart, progressEnd], 80)
+      ctx.stroke()
+    }
   }
 
   // 3) 클릭 영역 초기화
@@ -343,7 +431,7 @@ const drawChallengePath = () => {
     const isStart = index === 0
     const isGoal = index === milestones.length - 1
     const effective = Math.min(currentSteps.value, totalSteps)
-    const isPassed = effective >= milestone.steps
+    const isPassed = effective > milestone.steps
     const isCompleted = completedMilestones.value.has(index)
     const shouldUseGift = isPassed && !isStart && !isGoal && !isCompleted
     const shouldUseComplete = isCompleted && !isStart && !isGoal
@@ -471,21 +559,54 @@ const drawChallengePath = () => {
       const days = Math.ceil(milestone.steps / (totalSteps / totalDays))
       const labelText = `${milestone.steps.toLocaleString()}걸음 / ${days}일`
 
-      const milestoneImage = milestoneImages[index]
-      let labelX = milestone.x
+      // 각 라벨별 X, Y offset 개별 설정
+      let labelXOffset = 0 // 기본 X offset
+      let labelYOffset = 5 // 기본 Y offset
       let textAlign: CanvasTextAlign = 'center'
-      if (milestoneImage === imgPointBlue) {
-        labelX = milestone.x + 35
+
+      if (index === 1) {
+        // 7만보 라벨
+        labelXOffset = -35 // 오른쪽으로
+        labelYOffset = 25 + 5
         textAlign = 'left'
-      } else if (milestoneImage === imgPointYellow) {
-        labelX = milestone.x - 35
+      } else if (index === 2) {
+        // 15만보 라벨
+        labelXOffset = 35 // 왼쪽으로
+        labelYOffset = 25 + 5
         textAlign = 'right'
-      } else if (milestoneImage === imgPointGoal) {
-        labelX = milestone.x + 20
+      } else if (index === 3) {
+        // 25만보 라벨
+        labelXOffset = -35 // 오른쪽으로
+        labelYOffset = 25 + 5
         textAlign = 'left'
+      } else if (index === 4) {
+        // 35만보 라벨
+        labelXOffset = 35 // 왼쪽으로
+        labelYOffset = 25 + 5
+        textAlign = 'right'
+      } else if (index === 5) {
+        // 45만보 라벨
+        labelXOffset = -35 // 오른쪽으로
+        labelYOffset = 28 + 5
+        textAlign = 'left'
+      } else if (index === 6) {
+        // 골 라벨
+        labelXOffset = 0 // 가운데
+        labelYOffset = 28 + 5
+        textAlign = 'center'
       }
+
       ctx.textAlign = textAlign
-      ctx.fillText(labelText, labelX, milestone.y + 5)
+
+      // 흰색 text-shadow 효과 (먼저 흰색 외곽선 그리기)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)'
+      ctx.lineWidth = 2
+      ctx.lineJoin = 'round'
+      ctx.miterLimit = 2
+      ctx.strokeText(labelText, milestone.x + labelXOffset, milestone.y + labelYOffset)
+
+      // 실제 텍스트 그리기
+      ctx.fillText(labelText, milestone.x + labelXOffset, milestone.y + labelYOffset)
     }
   })
 
@@ -615,8 +736,8 @@ onUnmounted(() => {
   }
 
   .steps-info {
-    position: absolute;
-    bottom: 18rem;
+    position: fixed;
+    bottom: 18.4rem;
     left: 2rem;
     font-size: 1.6rem;
     color: #2b2b2b;
@@ -659,6 +780,9 @@ onUnmounted(() => {
   position: absolute;
   top: 18%;
   @media (max-width: 375px) {
+    top: 7%;
+  }
+  @media (max-height: 700px) {
     top: 7%;
   }
 }

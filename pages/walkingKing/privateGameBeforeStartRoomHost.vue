@@ -11,6 +11,8 @@
   >
     <!-- <div>걷기왕 프라이빗 게임 시작전(방장) [걷기왕-걷기게임-시작전(초대완료시-방장화면)]</div> -->
     <PrivateGameMainBanner :game-title="'내일은 걷기왕 꼴찌 뽑기'" :profile-image="'walkingking/img-profile-2.png'">
+      <!-- 09-24 profile-image 설정이 안되어이 있는 케이스 추가 -->
+      <!-- <PrivateGameMainBanner :game-title="'내일은 걷기왕 꼴찌 뽑기'"> -->
       <template #badgeSlot>
         <CommonBadge color="purple">무조건많이걷기</CommonBadge>
         <CommonBadge color="orange">최하위가커피쏘기</CommonBadge>

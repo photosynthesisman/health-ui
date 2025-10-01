@@ -40,8 +40,9 @@ import { computed } from 'vue'
 // Props 정의
 const props = defineProps({
   btnType: {
+    default: '',
     type: String,
-    required: true,
+    required: false,
     validator: (value: string) =>
       ['primary', 'secondary', 'tertiary', 'line', 'link', 'text', 'gray', 'darkgray', 'primary-line'].includes(value)
   },
@@ -81,15 +82,15 @@ const props = defineProps({
   },
   width: {
     type: Number,
-    default: ''
+    default: 0
   },
   height: {
     type: Number,
-    default: ''
+    default: 0
   },
   borderRadius: {
     type: Number,
-    default: ''
+    default: 0
   },
   imageSrc: {
     type: String,

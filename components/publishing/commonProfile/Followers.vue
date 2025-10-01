@@ -21,17 +21,19 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 1.6rem 1rem;
-  background: #f9f9f9;
+  margin: 2.4rem -2rem 0;
+  padding: 0.15rem 0;
   justify-content: space-between;
   border-radius: 1.2rem;
   .flow-item {
+    position: relative;
     display: flex;
     flex: 1;
-    padding: 0 1rem;
     justify-content: space-between;
-    position: relative;
-    align-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 0.4rem 0;
     .tit {
       color: #555;
       font-size: 1.2rem;
@@ -48,7 +50,7 @@
       content: '';
       display: block;
       width: 0.1rem;
-      height: 2rem;
+      height: 4.1rem;
       background: #eee;
       position: absolute;
       left: 0;

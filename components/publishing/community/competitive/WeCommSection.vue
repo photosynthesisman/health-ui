@@ -1,15 +1,7 @@
 <template>
   <div class="weCommu-section">
     <TitleBox class="mt-32" title="우리 커뮤니티는?" />
-    <StickyTabsContainer>
-      <BoxedTabs
-        :tabs="boxTabs"
-        :active-key="activeBoxTab"
-        variant="fill-type"
-        @tab-change="onBoxTabChange"
-        class="mb-20"
-      />
-    </StickyTabsContainer>
+    <!-- 09-23 탭 제거 -->
     <WeCommSlideCard />
   </div>
 </template>

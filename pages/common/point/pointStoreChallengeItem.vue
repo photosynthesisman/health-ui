@@ -85,6 +85,34 @@
             @to-give-gift="openFriendsIndex('gift')"
             @update:cal-order-cost="handleCostUpdate"
             @navigate-to="handleNavigation"
+            @update:input-amount="handleUpdateInputAmount"
+          />
+        </template>
+      </BottomModal>
+
+      <BottomModal
+        :is-visible="isShowBottomModal2"
+        v-bind="bottomModalProps2"
+        @close="toggleBottomModal2"
+        @confirm="handleNavigation('/common/payment/finishedGift')"
+      >
+        <template #content>
+          <OrderItem
+            :only-gift-view="true"
+            :image-name="selectedItem?.imageName || RewardImage1"
+            :brand-name="selectedItem?.brand || '챌린지 부스터'"
+            :gift-name="selectedItem?.name || '정보 없음'"
+            :gift-type="selectedItem?.point ? `${selectedItem.point}P` : '정보 없음'"
+            :info-text="'상품정보 상세보기'"
+            :label="selectedFriendNickname + '에게'"
+            :beg-friend-image="begFriendImagePath"
+            :gift-friend-image="giftFriendImagePath"
+            @see-more-info="handleSeeMoreInfo"
+            @beg-for-gift="openFriendsIndex('beg')"
+            @to-give-gift="openFriendsIndex('gift')"
+            @update:cal-order-cost="handleCostUpdate"
+            @navigate-to="handleNavigation"
+            @update:input-amount="handleUpdateInputAmount"
           />
         </template>
       </BottomModal>
@@ -100,9 +128,20 @@
         @confirm="onConfirmFullModal"
       >
         <template #content>
-          <FriendsIndex v-model="friendsIndexSelectedId" @selected-image-path="handleSelectedImagePath" />
+          <FriendsIndex
+            v-model="friendsIndexSelectedId"
+            :action-type="currentActionType"
+            @selected-image-path="handleSelectedImagePath"
+            @selected-friend-id="handleSelectedNickname"
+          />
         </template>
       </FullModal>
+
+      <BottomToastSlot v-model="showToast" type="success" :duration="3000">
+        <p>
+          {{ selectedFriendNickname }}님에게{{ selectedItem?.name }}&nbsp;{{ toastInputAmount }}개를 조르기 완료했어요!
+        </p></BottomToastSlot
+      >
     </Teleport>
   </BaseBody>
 </template>
@@ -145,7 +184,7 @@ import SubImage2 from '~/assets/images/lottery/img-sub-2.svg'
 import SubImage3 from '~/assets/images/lottery/img-sub-3.svg'
 import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import PurchasePackageButton from '~/components/publishing/point/PurchasePackageButton.vue'
-
+import BottomToastSlot from '~/components/common/bottomToastSlot.vue'
 interface StoreItem {
   imageName: string
   name: string
@@ -153,6 +192,7 @@ interface StoreItem {
   brand?: string
 }
 const isShowBottomModal = ref(false)
+const isShowBottomModal2 = ref(false)
 // 선물받기 모달 props
 const selectedItem = ref<StoreItem | null>(null)
 const router = useRouter()
@@ -175,6 +215,17 @@ const bottomModalProps = computed(() => {
     confirmButtonText: `${currentCost.value}P 주문하기`,
     disabledCancelButton: false,
     disabledConfirmButton: shouldBeDisabled
+  }
+})
+
+const bottomModalProps2 = computed(() => {
+  return {
+    title: '주문하기',
+    isShowCloseButton: true,
+    isShowCancelButton: false,
+    isShowConfirmButton: true,
+    confirmButtonText: `${currentCost.value}P 주문하기`,
+    disabledCancelButton: false
   }
 })
 // LineTabs 데이터
@@ -201,6 +252,7 @@ const toggleBottomModal = (item: StoreItem | null = null) => {
   }
   isShowBottomModal.value = !isShowBottomModal.value
 }
+
 // 상품정보 상세보기
 const isShowFullModal1 = ref(false)
 const toggleFullModal1 = () => {
@@ -223,6 +275,13 @@ const isShowFullModal2 = ref(false)
 const toggleFullModal2 = () => {
   isShowFullModal2.value = !isShowFullModal2.value
 }
+const toggleBottomModal2 = () => {
+  isShowBottomModal2.value = !isShowBottomModal2.value
+  // 하단 모달이 닫힐 때 친구 이미지 경로 및 버튼 상태 초기화
+  begFriendImagePath.value = ''
+  giftFriendImagePath.value = ''
+  friendsIndexSelectedId.value = ''
+}
 
 const fullModalProps2 = ref({
   title: '선물하기',
@@ -243,6 +302,7 @@ const giftFriendImagePath = ref('')
 const openFriendsIndex = (actionType: 'beg' | 'gift') => {
   currentActionType.value = actionType // 현재 액션 타입 저장
   fullModalProps2.value.title = actionType === 'beg' ? '조르기' : '선물하기'
+  fullModalProps2.value.confirmButtonText = actionType === 'beg' ? '조르기' : '선택하기'
   toggleFullModal2()
 }
 
@@ -253,19 +313,38 @@ const handleSelectedImagePath = (imagePath: string) => {
     giftFriendImagePath.value = imagePath
   }
 }
+const selectedFriendNickname = ref('')
+const handleSelectedNickname = (nickname: string) => {
+  console.log('선택된 친구 닉네임:', nickname)
+  selectedFriendNickname.value = nickname
+}
 const handleNavigation = (path: string) => {
   router.push(path)
 }
-
+const showToast = ref(false)
 // FullModal의 confirm 이벤트가 발생했을 때 호출될 함수
 const onConfirmFullModal = () => {
+  // 전체 모달을 닫기
   toggleFullModal2()
-  currentActionType.value = null // 액션 타입 초기화
+  if (currentActionType.value === 'beg') {
+    // 조르기일 때
+    showToast.value = true
+  } else if (currentActionType.value === 'gift') {
+    // 선물하기일 때
+    isShowBottomModal.value = false
+    isShowBottomModal2.value = true
+  }
+
+  // 액션 타입 초기화
+  currentActionType.value = null
 }
 
 // FriendsIndex에서 v-model로 관리될 값
 const friendsIndexSelectedId = ref('')
-
+const toastInputAmount = ref('1') //
+const handleUpdateInputAmount = (amount: string | number) => {
+  toastInputAmount.value = amount.toString()
+}
 // 챌린지 참가권 데이터
 const ParticipateTickets: StoreItem[] = [
   {

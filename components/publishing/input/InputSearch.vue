@@ -31,7 +31,7 @@
         />
 
         <button v-if="inputValue" class="clear-btn" aria-label="삭제" @click="clearInput"></button>
-        <button class="ico-magnifying-glass" aria-label="검색" @click="onSearch"></button>
+        <button v-if="hasMagnifying" class="ico-magnifying-glass" aria-label="검색" @click="onSearch"></button>
       </div>
       <p v-if="isInvalid" class="feedback error">
         <span class="text">검색어를 입력하세요</span>
@@ -71,7 +71,8 @@ const props = defineProps({
   disabled: { type: Boolean, default: false },
   isInvalid: { type: Boolean, default: false },
   customSearchOptions: { type: Array as () => SearchOption[], default: () => [] },
-  size: { type: String, validator: (value: string) => ['lg', 'sm', 'normal'].includes(value), default: 'normal' }
+  size: { type: String, validator: (value: string) => ['lg', 'sm', 'normal'].includes(value), default: 'normal' },
+  hasMagnifying: { type: Boolean, default: true }
 })
 
 const emit = defineEmits(['update:modelValue', 'search', 'change'])
@@ -157,10 +158,16 @@ function onSearch() {
       }
     }
   }
+  &.bank-account {
+    .c-inp-el {
+      background-color: #fff;
+      border: 0.1rem solid #e2e2e2;
+    }
+  }
 }
 
 .c-label {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 400;
   line-height: 1.6rem;
   color: #555;

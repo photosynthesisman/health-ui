@@ -1,12 +1,5 @@
 <template>
-  <BaseBody
-    :show-back-button="true"
-    page-title="걸음수 통계"
-    logo-type="text"
-    :has-add-text="true"
-    :add-text-click-enabled="true"
-    add-text="<span style='color:#555;font-size:1.4rem;font-weight:600'>목표걸음수 설정</span>"
-  >
+  <BaseBody :show-back-button="true" page-title="걸음수 통계" logo-type="text" :has-add-text="true">
     <RoundTabs :tabs="roundTabs" :active-index="roundActiveIndex" class="mt-8" @tab-click="handleRoundTabClick" />
 
     <!-- 시간별 탭 -->
@@ -33,8 +26,8 @@
       <WalkingDashboard time="월" />
     </FlexColDiv>
 
-    <!-- 목표걸음수 설정 -->
-    <StepGoalModal ref="stepGoalModalRef" />
+    <!-- 목표걸음수 설정(사용안함) -->
+    <!-- <StepGoalModal ref="stepGoalModalRef" /> -->
   </BaseBody>
 </template>
 
@@ -48,25 +41,25 @@ import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import WalkingDateRange from '~/components/publishing/dashboard/WalkingDateRange.vue'
 import WalkingDashboard from '~/components/publishing/dashboard/WalkingDashboard.vue'
 
-import StepGoalModal from '~/components/publishing/dashboard/StepGoalModal.vue'
+// import StepGoalModal from '~/components/publishing/dashboard/StepGoalModal.vue'
 
 // StepGoalModal ref
-const stepGoalModalRef = ref<InstanceType<typeof StepGoalModal> | null>(null)
+// const stepGoalModalRef = ref<InstanceType<typeof StepGoalModal> | null>(null)
 
 // 레이아웃에서 addTextClick 핸들러 등록 기능 가져오기
 const setAddTextClickHandler = inject<(handler: () => void) => void>('setAddTextClickHandler')
 
 // 목표걸음수 설정 모달 열기
-const openStepGoalModal = () => {
-  stepGoalModalRef.value.openModal()
-}
+// const openStepGoalModal = () => {
+//   stepGoalModalRef.value.openModal()
+// }
 
 // 컴포넌트 마운트 시 addTextClick 핸들러 등록
-onMounted(() => {
-  if (setAddTextClickHandler) {
-    setAddTextClickHandler(openStepGoalModal)
-  }
-})
+// onMounted(() => {
+//   if (setAddTextClickHandler) {
+//     setAddTextClickHandler(openStepGoalModal)
+//   }
+// })
 
 // RoundTabs 데이터
 const roundTabs: RoundTab[] = [

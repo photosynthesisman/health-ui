@@ -9,7 +9,7 @@
         <span class="arrow-txt">실손보험 청구하기</span>
       </div>
 
-      <img src="~/assets/images/home/img-insu.svg" alt="" />
+      <img src="~/assets/images/home/img-insu.png" alt="" />
     </nuxt-link>
   </div>
 </template>

@@ -11,6 +11,7 @@
         </div>
         <span class="date" :class="item.dateClass">{{ item.date }}</span>
       </div>
+      <div v-if="standardLineHeight !== undefined" class="standard-line" :style="{ bottom: standardLineHeight }"></div>
     </div>
   </div>
 </template>
@@ -25,21 +26,42 @@ interface GraphDataItem {
 
 const graphContainer = ref<HTMLElement>()
 const isVisible = ref(false)
+const props = withDefaults(
+  defineProps<{
+    rawData?: GraphDataItem[]
+  }>(),
+  {
+    rawData: () => [
+      { height: '30%', date: '10', dateClass: 'today' },
+      { height: '100%', date: '11', dateClass: 'holiday' },
+      { height: '200%', date: '12', dateClass: '' },
+      { height: '30%', date: '13', dateClass: '' },
+      { height: '30%', date: '14', dateClass: '' },
+      { height: '30%', date: '15', dateClass: '' },
+      { height: '30%', date: '16', dateClass: '' }
+    ]
+  }
+)
+// 기준선 (일주일 평균) 높이 계산
+const standardLineHeight = computed(() => {
+  if (props.rawData.length === 0) {
+    // 데이터가 없으면 기준선을 표시하지 않음
+    return undefined
+  }
+  const heights = props.rawData.map(item => parseFloat(item.height))
+  const totalHeight = heights.reduce((sum, current) => sum + current, 0)
+  const averageHeight = totalHeight / props.rawData.length
 
-// 원본 데이터 (200% 등 큰 값이 있을 수 있음)
-const rawGraphData: GraphDataItem[] = [
-  { height: '30%', date: '10', dateClass: 'today' },
-  { height: '100%', date: '11', dateClass: 'holiday' },
-  { height: '200%', date: '12', dateClass: '' },
-  { height: '30%', date: '13', dateClass: '' },
-  { height: '30%', date: '14', dateClass: '' },
-  { height: '30%', date: '15', dateClass: '' },
-  { height: '30%', date: '16', dateClass: '' }
-]
+  if (averageHeight <= 15) {
+    return undefined
+  }
+
+  return `${averageHeight}%`
+})
 
 // 높이를 100%로 제한하는 computed
 const graphData = computed(() => {
-  return rawGraphData.map(item => {
+  return props.rawData.map(item => {
     const heightValue = parseInt(item.height)
     const limitedHeight = Math.min(heightValue, 100) // 최대 100%로 제한
     return {
@@ -179,12 +201,15 @@ onMounted(() => {
     }
   }
   .weeks-graph {
+    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     gap: 0.4rem 0;
     margin-top: 2rem;
     .graph-item {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-content: center;
@@ -210,6 +235,7 @@ onMounted(() => {
         color: #959595;
         font-size: 1.1rem;
         font-weight: 400;
+        text-align: center;
         &.holiday {
           color: #f14960;
         }
@@ -218,6 +244,13 @@ onMounted(() => {
         }
       }
     }
+  }
+  .standard-line {
+    position: absolute;
+    left: -0.8rem;
+    right: -0.8rem;
+    height: 0.1rem;
+    border: 0.1rem dashed #d2d2d2;
   }
 }
 </style>

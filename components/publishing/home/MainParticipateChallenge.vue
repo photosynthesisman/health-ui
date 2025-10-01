@@ -49,8 +49,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import CommonSwiper from '~/components/publishing/swiper/CommonSwiper.vue'
-import dummyImage1 from '~/assets/images/home/img-challenge-main.svg'
-import dummyImage2 from '~/assets/images/home/img-private-game.svg'
+import dummyImage1 from '~/assets/images/home/img-challenge-main.png'
+import dummyImage2 from '~/assets/images/home/img-private-game.png'
 
 // 슬라이드 데이터 타입 정의
 interface ChallengeSlide {
@@ -255,9 +255,10 @@ const emit = defineEmits<{
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-
+    width: 16.1rem;
     img {
       display: block;
+      width: 100%;
       max-width: 100%;
       height: auto;
     }

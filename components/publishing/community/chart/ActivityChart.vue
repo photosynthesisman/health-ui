@@ -148,6 +148,7 @@ onMounted(() => {
             top: -3.5rem;
             left: 50%;
             transform: translateX(-50%);
+            width: fit-content;
             background: #4f5561;
             color: #fff;
             font-size: 1.2rem;

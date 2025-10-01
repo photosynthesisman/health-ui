@@ -1,6 +1,7 @@
 <template>
   <div>
-    <legend>{{ legend }}</legend>
+    <!-- 25-09-30 디자인 변경에 따른 legend 삭제 -->
+    <!-- <legend>{{ legend }}</legend> -->
     <button
       :class="['category-select-btn', { 'is-placeholder': !displayLabel, 'is-modal-open': isModalOpen }]"
       @click="emit('click')"
@@ -49,10 +50,10 @@ legend {
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  min-height: 4.8rem;
-  padding: 1rem 1.5rem;
-  border: 0.1rem solid #e2e2e2;
-  border-radius: 0.8rem;
+  min-height: 5.6rem;
+  // padding: 1rem 1.5rem;
+  border-bottom: 0.1rem solid #eee;
+  // border-radius: 0.8rem;
   background-color: #fff;
   font-size: 1.6rem;
   font-size: 1.4rem;
@@ -64,13 +65,15 @@ legend {
     background-color: #f6f9ff;
   }
   &.is-placeholder {
+    font-size: 1.6rem;
+    font-weight: 500;
     color: #959595;
   }
   &::after {
     content: '';
     position: absolute;
     top: 50%;
-    right: 1.5rem;
+    right: 0;
     width: 2.4rem;
     height: 2.4rem;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 10L12.0008 14.58L17 10' stroke='%232B2B2B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");

@@ -16,7 +16,7 @@
     <!--      -->
     <div class="flex flex-row gap-4">
       <CommonBadge color="blue">개인전</CommonBadge>
-      <CommonBadge color="yellow">3,000P</CommonBadge>
+      <CommonBadge color="yellow">3,000원</CommonBadge>
     </div>
     <div class="challenge-tit mt-16">
       <span class="img-wrap">
@@ -30,7 +30,7 @@
     <div class="challenge-detail">
       <dl class="reward-info">
         <dt>총 상금</dt>
-        <dd>6,224,500P <span class="increase-amount">+45,000</span></dd>
+        <dd>6,224,500원 <span class="increase-amount">+45,000</span></dd>
       </dl>
       <dl class="recruit-number">
         <dt>참가자</dt>
@@ -41,7 +41,7 @@
       <div class="rank-info-wrap">
         <dl class="ranking-info">
           <dt>현재순위</dt>
-          <dd>46 <span class="rank-number up">23</span></dd>
+          <dd>46 <span class="rank-number" :class="status">23</span></dd>
         </dl>
         <div class="total-steps">
           <i class="icon ico-shoe" aria-label="hidden"></i> <span class="counting">{{ formattedSteps }}</span>
@@ -58,12 +58,19 @@ import { ref, onMounted, computed, defineProps } from 'vue'
 const props = defineProps({
   isInactivity: { type: Boolean, default: false },
   haveRank: { type: Boolean, default: false },
-  flagTit: { type: String, default: '챌린지 진행중' },
+  flagTit: { type: String, default: '챌린지 참가중' },
   isOpenSoon: { type: Boolean, default: false },
   isRecruitEnd: { type: Boolean, default: false },
   isRecruiting: { type: Boolean, default: false },
   isUpComing: { type: Boolean, default: false },
-  isEnded: { type: Boolean, default: false }
+  isEnded: { type: Boolean, default: false },
+  status: {
+    type: String,
+    default: 'no-change',
+    validator: (value: string) => {
+      return ['up', 'down', 'no-change'].includes(value)
+    }
+  }
 })
 // 프로그레스 바 애니메이션을 위한 반응형 데이터
 const progressWidth = ref(0)
@@ -330,6 +337,12 @@ function startCountingAnimation() {
             color: vars.$blue-primary;
             &:before {
               background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cg transform='rotate(180 7 7)'%3E%3Cpath d='M5.82294 4.16667C6.34608 3.27778 7.65392 3.27778 8.17706 4.16667L11.3159 9.5C11.839 10.3889 11.1851 11.5 10.1388 11.5H3.86118C2.8149 11.5 2.16098 10.3889 2.68412 9.5L5.82294 4.16667Z' fill='%234C7FF7'/%3E%3C/g%3E%3C/svg%3E%0A");
+            }
+          }
+          &.no-change {
+            color: #555;
+            &:before {
+              background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Crect x='3' y='5.5' width='8' height='3' rx='1' fill='%23555555'/%3E%3C/svg%3E");
             }
           }
         }

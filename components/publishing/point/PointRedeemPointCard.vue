@@ -117,7 +117,7 @@ const checkbox1 = ref(false)
       font-weight: 500;
       margin-top: 0.5rem;
       &::after {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
       }
     }
   }

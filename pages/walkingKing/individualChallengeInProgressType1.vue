@@ -40,6 +40,10 @@
     <ChallengeRankingBoxRival rank="5" changed="up" changed-rank="2" />
     <ChallengeRankingBox rank="6" changed="up" changed-rank="2" user-name="곰탱이" user-location="서울금천" />
     <ChallengeRankingBox rank="7" changed="up" changed-rank="2" user-name="곰탱이" user-location="서울금천" />
+    <!-- 09-22 친구 없는 경우 케이스 -->
+    <!-- <FlexColDiv class="justify-center" style="height: 30rem">
+      <HasNoFriends />
+    </FlexColDiv> -->
     <!-- 매일 부스터 미션 / 부스터 온  -->
     <EverydayBoosterMission @show-modal="handleShowModal" @hide-modal="handleHideModal" />
 
@@ -47,7 +51,9 @@
       <!-- 일일 걸음수 내역 모달 -->
       <BottomModal :is-visible="isShowStepHistoryModal" v-bind="StepHistoryModalProps" @close="toggleStepHistoryModal">
         <template #content>
-          <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
+          <p class="fz-13 fc-body-02">걸음내역은 일일 마감 이후 업데이트 됩니다.</p>
+          <StepsHistoryItem :date="'2025.06.25'" :steps="'-'" :mission="'-'" :item="'-'" />
+          <StepsHistoryItem :date="'2025.06.25'" :steps="'0'" :mission="'0'" :item="'1'" />
           <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
           <StepsHistoryItem :date="'2025.06.25'" :steps="'8,471'" :mission="'1,600'" :item="'254'" />
         </template>
@@ -177,7 +183,7 @@ import FlexColDiv from '~/components/page/FlexColDiv.vue'
 import FlexRowDiv from '~/components/page/FlexRowDiv.vue'
 import RoundTabs, { type RoundTab } from '~/components/tabbar/RoundTabs.vue'
 import { BottomModal, BaseModal } from '@lemonhc/fo-ui/components/modal'
-
+import HasNoFriends from '~/components/publishing/walkking/HasNoFriends.vue'
 // 레이아웃에서 addTextClick 핸들러 등록 기능 가져오기
 const setAddTextClickHandler = inject<(handler: () => void) => void>('setAddTextClickHandler')
 // 컴포넌트 마운트 시 addTextClick 핸들러 등록

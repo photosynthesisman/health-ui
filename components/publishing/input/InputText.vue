@@ -258,7 +258,7 @@ function onMaskingClick() {
 
 .c-label {
   // SCSS 변수 테스트: vars.$fs12 변수를 사용
-  font-size: vars.$fs12; // 1.2rem과 동일
+  font-size: 1.4rem;
   font-weight: vars.$regular; // 400과 동일
   line-height: 1.6rem;
   color: #555;
@@ -311,7 +311,7 @@ function onMaskingClick() {
       color: #959595;
     }
     &:has(.has-no-border) {
-      padding: 2.1rem 0.8rem 2.1rem 0;
+      padding: 2.75rem 0.8rem 2.75rem 0;
       border: none;
       border-bottom: 0.1rem solid #eee;
       border-radius: 0;
@@ -323,6 +323,7 @@ function onMaskingClick() {
       }
       .c-inp {
         font-weight: 700;
+        font-size: 1.8rem;
       }
     }
 
